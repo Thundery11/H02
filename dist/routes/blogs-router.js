@@ -9,9 +9,12 @@ exports.blogsRouter.get('/', (req, res) => {
     res.status(types_1.HTTP_STATUSES.OK_200).send(blogs_db_1.blogsDb);
 });
 exports.blogsRouter.get('/:id', (req, res) => {
-    const id = req.params.id;
+    const id = req.params.id.toString();
     const blog = blogs_db_1.blogsDb.find(b => b.id === id);
     if (!blog) {
         res.status(types_1.HTTP_STATUSES.NOT_FOUND_404).send(blog);
+    }
+    else {
+        res.sendStatus(types_1.HTTP_STATUSES.OK_200).send(blog);
     }
 });
