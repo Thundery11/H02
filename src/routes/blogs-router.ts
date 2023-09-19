@@ -3,6 +3,9 @@ import { HTTP_STATUSES, RequestWithParams } from "../types";
 import { blogsDb } from "../db/blogs-db";
 
 export const blogsRouter = Router({})
+blogsRouter.get('/', (req: Request, res: Response)=>{
+    res.status(HTTP_STATUSES.OK_200).send(blogsDb)
+})
 
 blogsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response)=>{
     const id = req.params.id
