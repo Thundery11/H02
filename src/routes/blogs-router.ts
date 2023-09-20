@@ -23,7 +23,18 @@ blogsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response)=>{
 blogsRouter.post('/', (req: RequestWithBody<{name: string,
     description: string, websiteUrl: string}>, res: Response)=>{
 
-    let {name, description, websiteUrl} = req.body
+    const {name, description, websiteUrl} = req.body
     const createdBlog = blogsRepository.createBlog(name,description, websiteUrl)
     res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
+})
+blogsRouter.delete('/:id', (req: RequestWithParams<{id: string}>, res: Response) => {
+    const id = req.params.id
+    blogsRepository.deleteBlog(id)
+    res.send(HTTP_STATUSES.NO_CONTENT_204)
+})
+blogsRouter.put('/:id',(req: RequestWithParamsAndBody<{id: string, name: string, description: string, websiteUrl: string}>, res: Response) => {
+    const id = req.params.id
+    const{name, description, websiteUrl} = req.body
+    blogsRepository.changeBlog(id, name, description, websiteUrl)
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

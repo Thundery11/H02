@@ -25,4 +25,21 @@ exports.blogsRepository = {
         exports.blogsDb.push(newBlog);
         return newBlog;
     },
+    deleteBlog(id) {
+        for (let i = 0; i < exports.blogsDb.length; i++) {
+            if (exports.blogsDb[i].id === id) {
+                exports.blogsDb.splice(i, 1);
+                return;
+            }
+        }
+    },
+    changeBlog(id, name, description, websiteUrl) {
+        const changingBlog = exports.blogsDb.find(b => b.id === id);
+        if (changingBlog) {
+            changingBlog.name = name;
+            changingBlog.description = description;
+            changingBlog.websiteUrl = websiteUrl;
+        }
+        return;
+    }
 };

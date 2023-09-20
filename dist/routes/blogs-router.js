@@ -19,7 +19,18 @@ exports.blogsRouter.get('/:id', (req, res) => {
     }
 });
 exports.blogsRouter.post('/', (req, res) => {
-    let { name, description, websiteUrl } = req.body;
+    const { name, description, websiteUrl } = req.body;
     const createdBlog = blogs_repository_1.blogsRepository.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
+});
+exports.blogsRouter.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    blogs_repository_1.blogsRepository.deleteBlog(id);
+    res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+});
+exports.blogsRouter.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const { name, description, websiteUrl } = req.body;
+    blogs_repository_1.blogsRepository.changeBlog(id, name, description, websiteUrl);
+    res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });

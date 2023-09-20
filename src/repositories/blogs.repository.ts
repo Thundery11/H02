@@ -29,5 +29,23 @@ export const blogsRepository = {
         blogsDb.push(newBlog)
         return newBlog
     },
+    deleteBlog(id: string){
+        for(let i = 0; i < blogsDb.length; i++){
+            if(blogsDb[i].id  === id){
+            blogsDb.splice(i , 1)
+            return
+            }
+        }
+    },
+    changeBlog(id: string, name: string, description: string, websiteUrl: string){
+
+        const changingBlog = blogsDb.find(b => b.id === id)
+        if(changingBlog){
+            changingBlog.name = name
+            changingBlog.description = description
+            changingBlog.websiteUrl = websiteUrl
+        } return
+        
+    }
     
 }
