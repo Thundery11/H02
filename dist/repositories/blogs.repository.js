@@ -17,7 +17,7 @@ exports.blogsRepository = {
     },
     createBlog(name, description, websiteUrl) {
         const newBlog = {
-            id: Math.floor(Math.random() * 100).toString(),
+            id: Math.floor(Math.random() * 10000).toString(),
             name,
             description,
             websiteUrl
