@@ -19,6 +19,6 @@ exports.blogsRouter.get('/:id', (req, res) => {
 });
 exports.blogsRouter.post('/', (req, res) => {
     let { name, description, websiteUrl } = req.body;
-    const createdBlog = blogs_repository_1.blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
+    const createdBlog = blogs_repository_1.blogsRepository.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
 });

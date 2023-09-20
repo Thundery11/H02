@@ -20,6 +20,6 @@ blogsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response)=>{
 
 blogsRouter.post('/', (req: RequestWithBody<{name: string, description: string, websiteUrl: string}>, res: Response)=>{
     let {name, description, websiteUrl} = req.body
-    const createdBlog = blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
+    const createdBlog = blogsRepository.createBlog(name, description, websiteUrl)
     res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
 })
