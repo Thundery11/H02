@@ -1,12 +1,12 @@
 import request from 'supertest'
 import {app} from '../src/settings'
-import { HTTP_STATUSES } from '../src/types'
-import { blogsDb } from '../src/db/blogs-db'
+import { HTTP_STATUSES } from '../src/types/statuses'
+import { blogsDb } from '../src/repositories/blogs.repository'
 
 
 describe('blogs',()=>{
 
-    it('should return 204 and delete all videos',async () => {
+    it('should return 204 and delete all blogs',async () => {
         await request(app)
         .delete('/testing/all-data')
         .expect(HTTP_STATUSES.NO_CONTENT_204)
@@ -18,4 +18,5 @@ describe('blogs',()=>{
           .get('/blogs')
           .expect(HTTP_STATUSES.OK_200, blogsDb)
       })
+    
 })
