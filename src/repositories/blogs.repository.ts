@@ -14,7 +14,17 @@ export const blogsRepository = {
     },
     findBlog(id: string){
         const blog = blogsDb.find(i => i.id === id)
-       return blog
-    }
-      
+        return blog
+    },
+    createBlog(name: string, description: string, websiteUrl: string){
+        const newBlog : blogsDbType = {
+            id: (new Date()).toString(),
+            name: name,
+            description: description,
+            websiteUrl: websiteUrl
+        }
+        blogsDb.push(newBlog)
+        return newBlog
+    },
+    
 }
