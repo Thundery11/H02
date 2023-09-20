@@ -9,17 +9,25 @@ export const blogsDb : blogsDbType[] = [{
 
 
 export const blogsRepository = {
+
     getAllBlogs(){
         return blogsDb
     },
+
     findBlog(id: string){
         const blog = blogsDb.find(i => i.id === id)
         return blog
     },
-    createBlog(newBlog: blogsDbType){
-     
+
+    createBlog(name: string, description: string, websiteUrl: string){
+        const newBlog : blogsDbType = {
+            id: Math.random().toString(),
+            name,
+            description,
+            websiteUrl
+        }
         blogsDb.push(newBlog)
         return newBlog
     },
-    // name: string, description: string, websiteUrl: string
+    
 }
