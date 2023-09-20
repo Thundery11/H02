@@ -16,15 +16,10 @@ export const blogsRepository = {
         const blog = blogsDb.find(i => i.id === id)
         return blog
     },
-    createBlog(name: string, description: string, websiteUrl: string){
-        const newBlog : blogsDbType = {
-            id: Math.random().toString(),
-            name: name,
-            description: description,
-            websiteUrl: websiteUrl
-        }
+    createBlog(newBlog: blogsDbType){
+     
         blogsDb.push(newBlog)
         return newBlog
     },
-    
+    // name: string, description: string, websiteUrl: string
 }

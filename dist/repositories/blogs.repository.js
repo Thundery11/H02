@@ -15,14 +15,9 @@ exports.blogsRepository = {
         const blog = exports.blogsDb.find(i => i.id === id);
         return blog;
     },
-    createBlog(name, description, websiteUrl) {
-        const newBlog = {
-            id: Math.random().toString(),
-            name: name,
-            description: description,
-            websiteUrl: websiteUrl
-        };
+    createBlog(newBlog) {
         exports.blogsDb.push(newBlog);
         return newBlog;
     },
+    // name: string, description: string, websiteUrl: string
 };
