@@ -1,8 +1,9 @@
 import {Request, Response, Router } from "express";
-import { postsDb } from "../db/posts-db";
+import { blogsDb } from "../repositories/blogs.repository";
+
 export const testingAllDataRouter = Router({})
 
 testingAllDataRouter.delete('/', (req : Request, res: Response)=>{
-    postsDb.length = 0;
+   blogsDb.length = 0;
 res.send(204)
 })

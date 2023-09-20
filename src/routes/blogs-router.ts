@@ -2,16 +2,17 @@ import { Router, Request, Response } from "express";
 import { HTTP_STATUSES} from "../types/statuses";
 import { blogsDb, blogsRepository } from "../repositories/blogs.repository";
 import { RequestWithParams, RequestWithBody, RequestWithParamsAndBody } from "../types/requestsTypes";
-import { blogsDbType } from "../types/blogsTypes";
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', (req: Request, res: Response)=>{
-    res.status(HTTP_STATUSES.OK_200).send(blogsRepository.getAllBlogs)
+    const allBlogs = blogsRepository.getAllBlogs()
+    res.status(HTTP_STATUSES.OK_200).send(allBlogs)
 })
 
 blogsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response)=>{
     const blog = blogsRepository.findBlog(req.params.id)
+
         if(!blog){
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
     } else{
@@ -19,14 +20,10 @@ blogsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response)=>{
     }
 })
 
-blogsRouter.post('/', (req: RequestWithBody<{name: string, description: string, websiteUrl: string}>, res: Response)=>{
+blogsRouter.post('/', (req: RequestWithBody<{name: string,
+    description: string, websiteUrl: string}>, res: Response)=>{
+
     let {name, description, websiteUrl} = req.body
-    const newBlog : blogsDbType = {
-        id: Math.random().toString(),
-        name,
-        description,
-        websiteUrl
-    }
-    const createdBlog = blogsRepository.createBlog(newBlog)
+    const createdBlog = blogsRepository.createBlog(name,description, websiteUrl)
     res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
 })

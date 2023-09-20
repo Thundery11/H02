@@ -6,7 +6,8 @@ const statuses_1 = require("../types/statuses");
 const blogs_repository_1 = require("../repositories/blogs.repository");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => {
-    res.status(statuses_1.HTTP_STATUSES.OK_200).send(blogs_repository_1.blogsRepository.getAllBlogs);
+    const allBlogs = blogs_repository_1.blogsRepository.getAllBlogs();
+    res.status(statuses_1.HTTP_STATUSES.OK_200).send(allBlogs);
 });
 exports.blogsRouter.get('/:id', (req, res) => {
     const blog = blogs_repository_1.blogsRepository.findBlog(req.params.id);
@@ -19,12 +20,6 @@ exports.blogsRouter.get('/:id', (req, res) => {
 });
 exports.blogsRouter.post('/', (req, res) => {
     let { name, description, websiteUrl } = req.body;
-    const newBlog = {
-        id: Math.random().toString(),
-        name,
-        description,
-        websiteUrl
-    };
-    const createdBlog = blogs_repository_1.blogsRepository.createBlog(newBlog);
+    const createdBlog = blogs_repository_1.blogsRepository.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
 });
