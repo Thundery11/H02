@@ -40,11 +40,14 @@ export const blogsRepository = {
     changeBlog(id: string, name: string, description: string, websiteUrl: string){
 
         const changingBlog = blogsDb.find(b => b.id === id)
-        if(changingBlog){
+        if(!changingBlog){
+            return false
+        }
+        
             changingBlog.name = name
             changingBlog.description = description
             changingBlog.websiteUrl = websiteUrl
-        } return
+        return true 
         
     }
     

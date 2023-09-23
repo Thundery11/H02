@@ -39,12 +39,13 @@ exports.postsRepository = {
     },
     updatePost(id, title, shortDescription, content, blogId) {
         const updatingPost = exports.postsDb.find(p => p.id === id);
-        if (updatingPost) {
-            updatingPost.title = title;
-            updatingPost.shortDescription = shortDescription;
-            updatingPost.content = content;
-            updatingPost.blogId = blogId;
+        if (!updatingPost) {
+            return false;
         }
-        return;
+        updatingPost.title = title;
+        updatingPost.shortDescription = shortDescription;
+        updatingPost.content = content;
+        updatingPost.blogId = blogId;
+        return true;
     }
 };

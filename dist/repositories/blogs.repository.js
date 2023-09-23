@@ -35,11 +35,12 @@ exports.blogsRepository = {
     },
     changeBlog(id, name, description, websiteUrl) {
         const changingBlog = exports.blogsDb.find(b => b.id === id);
-        if (changingBlog) {
-            changingBlog.name = name;
-            changingBlog.description = description;
-            changingBlog.websiteUrl = websiteUrl;
+        if (!changingBlog) {
+            return false;
         }
-        return;
+        changingBlog.name = name;
+        changingBlog.description = description;
+        changingBlog.websiteUrl = websiteUrl;
+        return true;
     }
 };

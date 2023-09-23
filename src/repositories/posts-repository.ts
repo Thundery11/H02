@@ -44,12 +44,15 @@ export const postsRepository = {
     content: string, blogId: string){
         const updatingPost = postsDb.find(p => p.id === id)
 
-        if(updatingPost){
+        if(!updatingPost){
+            return false
+        }
             updatingPost.title = title
             updatingPost.shortDescription = shortDescription
             updatingPost.content = content
             updatingPost.blogId = blogId    
-        } return
+    
+            return true
     
     
     }

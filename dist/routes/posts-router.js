@@ -4,6 +4,9 @@ exports.postsRouter = void 0;
 const express_1 = require("express");
 const statuses_1 = require("../types/statuses");
 const posts_repository_1 = require("../repositories/posts-repository");
+const posts_input_validation_1 = require("../middlewares/posts-input-validation");
+const erros_validation_1 = require("../middlewares/erros-validation");
+const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/', (req, res) => {
     res.status(statuses_1.HTTP_STATUSES.OK_200).send(posts_repository_1.postsRepository.getAllPosts());
@@ -18,19 +21,25 @@ exports.postsRouter.get('/:id', (req, res) => {
         res.status(statuses_1.HTTP_STATUSES.OK_200).send(post);
     }
 });
-exports.postsRouter.post('/', (req, res) => {
+exports.postsRouter.post('/', authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => {
     let { title, shortDescription, content, blogId } = req.body;
     const createdPost = posts_repository_1.postsRepository.createPost(title, shortDescription, content, blogId);
     res.send(createdPost);
 });
-exports.postsRouter.delete('/:id', (req, res) => {
+exports.postsRouter.delete('/:id', authorisationMiddleware_1.authGuardMiddleware, (req, res) => {
     const id = req.params.id;
     posts_repository_1.postsRepository.deletePost(id);
     res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
 });
-exports.postsRouter.put('/:id', (req, res) => {
+exports.postsRouter.put('/:id', authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => {
     const id = req.params.id;
     const { title, shortDescription, content, blogId } = req.body;
-    posts_repository_1.postsRepository.updatePost(id, title, shortDescription, content, blogId);
-    res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+    const changedPost = posts_repository_1.postsRepository.updatePost(id, title, shortDescription, content, blogId);
+    if (!changedPost) {
+        res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        return;
+    }
+    else {
+        res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+    }
 });
