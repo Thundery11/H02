@@ -24,7 +24,7 @@ exports.postsRouter.get('/:id', (req, res) => {
 exports.postsRouter.post('/', authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => {
     let { title, shortDescription, content, blogId } = req.body;
     const createdPost = posts_repository_1.postsRepository.createPost(title, shortDescription, content, blogId);
-    res.send(createdPost);
+    res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPost);
 });
 exports.postsRouter.delete('/:id', authorisationMiddleware_1.authGuardMiddleware, (req, res) => {
     const id = req.params.id;

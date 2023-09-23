@@ -35,7 +35,7 @@ errosValidation,
 
     let {title, shortDescription, content, blogId} = req.body
     const createdPost = postsRepository.createPost(title, shortDescription, content, blogId)
-    res.send(createdPost)
+    res.status(HTTP_STATUSES.CREATED_201).send(createdPost)
 })
 
 postsRouter.delete('/:id',
