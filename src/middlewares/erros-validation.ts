@@ -1,6 +1,7 @@
 
 import { NextFunction , Request, Response} from "express";
 import { validationResult , ValidationError, ErrorFormatter} from "express-validator";
+import { HTTP_STATUSES } from "../types/statuses";
 
 const ErrorFormatter = (error: ValidationError) => {
     switch(error.type){
@@ -24,7 +25,7 @@ export const errosValidation = (req: Request, res: Response, next: NextFunction)
     
     if(!errors.isEmpty()){
         const errorsMessages = errors.array().map(ErrorFormatter)
-        res.send(errorsMessages)
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).send(errorsMessages)
         return
     } else{
         next()
