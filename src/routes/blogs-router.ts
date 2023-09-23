@@ -9,7 +9,7 @@ import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 export const blogsRouter = Router({})
 
 blogsRouter.get('/',
- (req: Request, res: Response)=>{
+(req: Request, res: Response)=>{
     const allBlogs = blogsRepository.getAllBlogs()
     res.status(HTTP_STATUSES.OK_200).send(allBlogs)
 })

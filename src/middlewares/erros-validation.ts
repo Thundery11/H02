@@ -24,7 +24,7 @@ export const errosValidation = (req: Request, res: Response, next: NextFunction)
     const errors = validationResult(req)
     
     if(!errors.isEmpty()){
-        const errorsMessages = errors.array().map(ErrorFormatter)
+        const errorsMessages = {errorsMessages: errors.array().map(ErrorFormatter)}
         
         res.status(HTTP_STATUSES.BAD_REQUEST_400).send(errorsMessages)
         return
