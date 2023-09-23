@@ -12,11 +12,7 @@ exports.blogsRepository = {
         return exports.blogsDb;
     },
     findBlog(id) {
-        const blog = exports.blogsDb.find(i => i.id === id);
-        if (!blog) {
-            return false;
-        }
-        return true;
+        return exports.blogsDb.find(i => i.id === id);
     },
     createBlog(name, description, websiteUrl) {
         const newBlog = {

@@ -16,6 +16,7 @@ exports.blogsRouter.get('/:id', (req, res) => {
     const blog = blogs_repository_1.blogsRepository.findBlog(req.params.id);
     if (!blog) {
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        return;
     }
     else {
         res.status(statuses_1.HTTP_STATUSES.OK_200).send(blog);
@@ -28,12 +29,12 @@ exports.blogsRouter.post('/', authorisationMiddleware_1.authGuardMiddleware, (0,
 });
 exports.blogsRouter.delete('/:id', authorisationMiddleware_1.authGuardMiddleware, (req, res) => {
     const id = req.params.id;
-    if (!id) {
+    const isDeletedBlog = blogs_repository_1.blogsRepository.deleteBlog(id);
+    if (!isDeletedBlog) {
         res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
         return;
     }
     else {
-        blogs_repository_1.blogsRepository.deleteBlog(id);
         res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
     }
 });

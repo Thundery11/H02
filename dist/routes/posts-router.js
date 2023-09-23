@@ -16,20 +16,27 @@ exports.postsRouter.get('/:id', (req, res) => {
     const post = posts_repository_1.postsRepository.getPost(id);
     if (!post) {
         res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        return;
     }
     else {
         res.status(statuses_1.HTTP_STATUSES.OK_200).send(post);
     }
 });
 exports.postsRouter.post('/', authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => {
-    let { title, shortDescription, content, blogId } = req.body;
+    const { title, shortDescription, content, blogId } = req.body;
     const createdPost = posts_repository_1.postsRepository.createPost(title, shortDescription, content, blogId);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPost);
 });
 exports.postsRouter.delete('/:id', authorisationMiddleware_1.authGuardMiddleware, (req, res) => {
     const id = req.params.id;
-    posts_repository_1.postsRepository.deletePost(id);
-    res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+    const isDeletedPost = posts_repository_1.postsRepository.deletePost(id);
+    if (!isDeletedPost) {
+        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        return;
+    }
+    else {
+        res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+    }
 });
 exports.postsRouter.put('/:id', authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => {
     const id = req.params.id;

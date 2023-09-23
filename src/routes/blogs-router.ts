@@ -19,6 +19,7 @@ blogsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response)=>{
 
         if(!blog){
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
     } else{
         res.status(HTTP_STATUSES.OK_200).send(blog)
     }
@@ -40,11 +41,11 @@ blogsRouter.delete('/:id',
 authGuardMiddleware,
 (req: RequestWithParams<{id: string}>, res: Response) => {
     const id = req.params.id
-    if(!id){
+    const isDeletedBlog = blogsRepository.deleteBlog(id)
+        if(!isDeletedBlog){
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
-    }else{
-    blogsRepository.deleteBlog(id)
+    }else {
     res.send(HTTP_STATUSES.NO_CONTENT_204)
     }
 })

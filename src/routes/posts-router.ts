@@ -19,6 +19,7 @@ postsRouter.get('/:id', (req: RequestWithParams<{id: string}>, res: Response) =>
 
     if(!post){
         res.send(HTTP_STATUSES.NOT_FOUND_404)
+        return
     } else {
         res.status(HTTP_STATUSES.OK_200).send(post)
     }
@@ -33,7 +34,7 @@ errosValidation,
     content: string, blogId: string,
 }>, res: Response) => {
 
-    let {title, shortDescription, content, blogId} = req.body
+    const {title, shortDescription, content, blogId} = req.body
     const createdPost = postsRepository.createPost(title, shortDescription, content, blogId)
     res.status(HTTP_STATUSES.CREATED_201).send(createdPost)
 })
@@ -42,8 +43,13 @@ postsRouter.delete('/:id',
 authGuardMiddleware,
 (req: RequestWithParams<{id: string}>, res: Response) => {
     const id = req.params.id
-    postsRepository.deletePost(id)
+    const isDeletedPost = postsRepository.deletePost(id)
+    if(!isDeletedPost){
+        res.send(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    } else{
     res.send(HTTP_STATUSES.NO_CONTENT_204)
+    }
 })
 
 postsRouter.put('/:id', 

@@ -7,10 +7,9 @@ const ErrorFormatter = (error: ValidationError) => {
     switch(error.type){
 
         case "field":
-            return { errorsMessages:[{
+            return { 
                 message: error.msg,
                 field: error.path
-            }]
             } 
             default:
         return {
@@ -26,6 +25,7 @@ export const errosValidation = (req: Request, res: Response, next: NextFunction)
     
     if(!errors.isEmpty()){
         const errorsMessages = errors.array().map(ErrorFormatter)
+        
         res.status(HTTP_STATUSES.BAD_REQUEST_400).send(errorsMessages)
         return
     } else{

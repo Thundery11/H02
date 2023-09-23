@@ -14,8 +14,7 @@ exports.postsRepository = {
         return exports.postsDb;
     },
     getPost(id) {
-        const post = exports.postsDb.find(i => i.id === id);
-        return post;
+        return exports.postsDb.find(i => i.id === id);
     },
     createPost(title, shortDescription, content, blogId) {
         const newPost = {

@@ -15,10 +15,7 @@ export const blogsRepository = {
     },
 
     findBlog(id: string){
-        const blog = blogsDb.find(i => i.id === id)
-        if(!blog){
-            return false
-        } return true
+        return blogsDb.find(i => i.id === id)
     },
 
     createBlog(name: string, description: string, websiteUrl: string){
