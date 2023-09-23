@@ -30,11 +30,13 @@ exports.postsRepository = {
         return newPost;
     },
     deletePost(id) {
-        for (let i = 0; i < exports.postsDb.length; i++) {
-            if (exports.postsDb[i].id === id) {
-                exports.postsDb.splice(i, 1);
-                return;
-            }
+        const indexOfDeletedPost = exports.postsDb.findIndex(post => post.id === id);
+        if (indexOfDeletedPost === -1) {
+            return false;
+        }
+        else {
+            exports.postsDb.splice(indexOfDeletedPost, 1);
+            return true;
         }
     },
     updatePost(id, title, shortDescription, content, blogId) {

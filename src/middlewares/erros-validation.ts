@@ -7,9 +7,10 @@ const ErrorFormatter = (error: ValidationError) => {
     switch(error.type){
 
         case "field":
-            return {
+            return { errorsMessages:[{
                 message: error.msg,
                 field: error.path
+            }]
             } 
             default:
         return {

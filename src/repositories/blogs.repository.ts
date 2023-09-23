@@ -16,7 +16,9 @@ export const blogsRepository = {
 
     findBlog(id: string){
         const blog = blogsDb.find(i => i.id === id)
-        return blog
+        if(!blog){
+            return false
+        } return true
     },
 
     createBlog(name: string, description: string, websiteUrl: string){
@@ -30,11 +32,12 @@ export const blogsRepository = {
         return newBlog
     },
     deleteBlog(id: string){
-        for(let i = 0; i < blogsDb.length; i++){
-            if(blogsDb[i].id  === id){
-            blogsDb.splice(i , 1)
-            return
-            }
+        const indexOfDeletedBlog = blogsDb.findIndex(blog => blog.id === id)
+        if(indexOfDeletedBlog === -1){
+            return false
+        } else {
+            blogsDb.splice(indexOfDeletedBlog, 1)
+            return true
         }
     },
     changeBlog(id: string, name: string, description: string, websiteUrl: string){

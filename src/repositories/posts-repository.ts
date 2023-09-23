@@ -33,11 +33,12 @@ export const postsRepository = {
     },
     deletePost(id: string){
 
-        for(let i = 0; i< postsDb.length; i++){
-            if(postsDb[i].id === id){
-                postsDb.splice(i, 1)
-                return
-            }
+        const indexOfDeletedPost = postsDb.findIndex(post => post.id === id)
+        if(indexOfDeletedPost === -1){
+            return false
+        } else {
+            postsDb.splice(indexOfDeletedPost, 1)
+            return true
         }
     },
     updatePost(id: string, title: string, shortDescription: string, 

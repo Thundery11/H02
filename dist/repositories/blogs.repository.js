@@ -13,7 +13,10 @@ exports.blogsRepository = {
     },
     findBlog(id) {
         const blog = exports.blogsDb.find(i => i.id === id);
-        return blog;
+        if (!blog) {
+            return false;
+        }
+        return true;
     },
     createBlog(name, description, websiteUrl) {
         const newBlog = {
@@ -26,11 +29,13 @@ exports.blogsRepository = {
         return newBlog;
     },
     deleteBlog(id) {
-        for (let i = 0; i < exports.blogsDb.length; i++) {
-            if (exports.blogsDb[i].id === id) {
-                exports.blogsDb.splice(i, 1);
-                return;
-            }
+        const indexOfDeletedBlog = exports.blogsDb.findIndex(blog => blog.id === id);
+        if (indexOfDeletedBlog === -1) {
+            return false;
+        }
+        else {
+            exports.blogsDb.splice(indexOfDeletedBlog, 1);
+            return true;
         }
     },
     changeBlog(id, name, description, websiteUrl) {
