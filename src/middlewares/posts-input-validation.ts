@@ -40,14 +40,14 @@ export const postsInputValidation = () =>{
         .bail()
         .isString()
         .bail()
-        // .custom(id =>{
-        //     const blogIsExist = blogsRepository.findBlog(id)
+        .custom(id =>{
+            const blogIsExist = blogsRepository.findBlog(id)
 
-        //     if(!blogIsExist){
-        //         throw new Error('Blog doesnt exist')
-        //     } 
-        //     return true
-        // })
+            if(!blogIsExist){
+                throw new Error('Blog doesnt exist')
+            } 
+            return true
+        })
         .withMessage('Invalid blogId'),
     ]
 }
