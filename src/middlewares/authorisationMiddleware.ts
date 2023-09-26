@@ -19,11 +19,10 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
         res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401)
         return
     }
-    
-    return next()
-}catch(e){
+}
+    catch(e){
     console.log('authGuardMiddleware:', e)
     return res.sendStatus(401)
-}
-//
+    }
+return next()
 }
