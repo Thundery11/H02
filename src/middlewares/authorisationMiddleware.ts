@@ -5,6 +5,7 @@ import { atob } from "buffer"
 const expectedAuthHeader = 'admin:qwerty'
 export const authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
+
     if(!authHeader || !authHeader.startsWith('Basic ')){
         res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401)
         return
@@ -12,9 +13,11 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
 
     const splitHeader = authHeader.split(' ')[1]
     const encodeHeader = atob(splitHeader)
+
     if(encodeHeader !== expectedAuthHeader){
         res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401)
         return
     }
+    
     return next()
 }
