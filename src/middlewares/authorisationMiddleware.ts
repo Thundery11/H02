@@ -12,17 +12,20 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
     }
 
     const splitHeader = authHeader.split(' ')[1]
+    const type = authHeader.split(' ')[0]
+    let encodeHeader
     try{
-    const encodeHeader = atob(splitHeader)
+        encodeHeader = atob(splitHeader)
+    } catch(e){
+        console.log('authGuardMiddleware:', e)
+        return res.send(HTTP_STATUSES.UNAUTHORISED_401)
+    }
 
-    if(encodeHeader !== expectedAuthHeader){
-        res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401)
-        return
+    if(type !== 'Basic' || encodeHeader !== "admin:qwerty"){
+        return  res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401)
+        
     }
-}
-    catch(e){
-    console.log('authGuardMiddleware:', e)
-    return res.sendStatus(401)
-    }
-return next()
+    
+    return next()
+
 }
