@@ -12,6 +12,7 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
     }
 
     const splitHeader = authHeader.split(' ')[1]
+    try{
     const encodeHeader = atob(splitHeader)
 
     if(encodeHeader !== expectedAuthHeader){
@@ -20,4 +21,8 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
     }
     
     return next()
+}catch(e){
+    console.log('authGuardMiddleware:', e)
+    return res.sendStatus(401)
+}
 }
