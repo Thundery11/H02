@@ -4,7 +4,8 @@ export const blogsDb : blogsDbType[] = [{
     id: '0',
     name: "Ilya",
     description: "string",
-    websiteUrl: "string"
+    websiteUrl: "string",
+    createdAt: "sdsdsds"
 }]
 
 
@@ -19,11 +20,14 @@ export const blogsRepository = {
     },
 
     async createBlog(name: string, description: string, websiteUrl: string): Promise<blogsDbType>{
+        const createdat = new Date()
         const newBlog : blogsDbType = {
             id: Math.floor(Math.random()* 10000).toString(),
             name,
             description,
-            websiteUrl
+            websiteUrl,
+            createdAt : createdat.toISOString()
+
         }
         blogsDb.push(newBlog)
         return newBlog
