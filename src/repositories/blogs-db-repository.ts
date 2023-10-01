@@ -1,13 +1,13 @@
 import { blogsDbType } from "../types/blogsTypes"
 import { client } from "./dataBase/blogsDb"
 
-export const __blogsDb : blogsDbType[] = [{
-    id: '0',
-    name: "Ilya",
-    description: "string",
-    websiteUrl: "string",
-    createdAt: "2023-09-12T15:45:16.047Z"
-}]
+// export const __blogsDb : blogsDbType[] = [{
+//     id: '0',
+//     name: "Ilya",
+//     description: "string",
+//     websiteUrl: "string",
+//     createdAt: "2023-09-12T15:45:16.047Z"
+// }]
 
 
 export const blogsRepository = {
