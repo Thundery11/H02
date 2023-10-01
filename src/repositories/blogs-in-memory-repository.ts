@@ -10,15 +10,15 @@ export const blogsDb : blogsDbType[] = [{
 
 export const blogsRepository = {
 
-    getAllBlogs(){
+    async getAllBlogs() : Promise<blogsDbType[]>{
         return blogsDb
     },
 
-    findBlog(id: string){
+    async findBlog(id: string) : Promise<blogsDbType | undefined>{
         return blogsDb.find(i => i.id === id)
     },
 
-    createBlog(name: string, description: string, websiteUrl: string){
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<blogsDbType>{
         const newBlog : blogsDbType = {
             id: Math.floor(Math.random()* 10000).toString(),
             name,
@@ -28,7 +28,7 @@ export const blogsRepository = {
         blogsDb.push(newBlog)
         return newBlog
     },
-    deleteBlog(id: string){
+    async deleteBlog(id: string): Promise<boolean>{
         const indexOfDeletedBlog = blogsDb.findIndex(blog => blog.id === id)
         if(indexOfDeletedBlog === -1){
             return false
@@ -37,7 +37,7 @@ export const blogsRepository = {
             return true
         }
     },
-    changeBlog(id: string, name: string, description: string, websiteUrl: string){
+    async changeBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean>{
 
         const changingBlog = blogsDb.find(b => b.id === id)
         if(!changingBlog){

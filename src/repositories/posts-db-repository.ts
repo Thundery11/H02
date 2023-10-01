@@ -10,15 +10,15 @@ export const postsDb : postsDbType[] = [{
 }]
 
 export const postsRepository = {
-    getAllPosts(){
+    async getAllPosts() : Promise<postsDbType[]>{
         return postsDb
     },
-    getPost(id : string){
+    async getPost(id : string) : Promise<postsDbType | undefined>{
         return postsDb.find(i => i.id === id)
         
     },
-    createPost(title: string, shortDescription: string, 
-    content: string, blogId: string){
+    async createPost(title: string, shortDescription: string, 
+    content: string, blogId: string) : Promise<postsDbType>{
 
         const newPost : postsDbType = {
             id: Math.floor(Math.random() * 10000).toString(),
@@ -31,9 +31,10 @@ export const postsRepository = {
         postsDb.push(newPost)
         return newPost
     },
-    deletePost(id: string){
+    async deletePost(id: string): Promise<boolean>{
 
         const indexOfDeletedPost = postsDb.findIndex(post => post.id === id)
+        
         if(indexOfDeletedPost === -1){
             return false
         } else {
@@ -41,8 +42,8 @@ export const postsRepository = {
             return true
         }
     },
-    updatePost(id: string, title: string, shortDescription: string, 
-    content: string, blogId: string){
+    async updatePost(id: string, title: string, shortDescription: string, 
+    content: string, blogId: string): Promise<boolean>{
         const updatingPost = postsDb.find(p => p.id === id)
 
         if(!updatingPost){

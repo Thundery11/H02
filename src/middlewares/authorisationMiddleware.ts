@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express"
 import { HTTP_STATUSES } from "../types/statuses"
 import { atob } from "buffer"
 
-const expectedAuthHeader = 'admin:qwerty'
 export const authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
 
