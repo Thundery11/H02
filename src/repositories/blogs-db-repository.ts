@@ -4,12 +4,12 @@ import { blogsCollection, client } from "./dataBase/blogsDb"
 export const blogsRepository = {
 
     async getAllBlogs() : Promise<blogsDbType[]>{
-        return await blogsCollection.find({}, { projection: {  _id: 0 } }).toArray()
+        return await blogsCollection.find({}, { projection: {  _id: 0 }}).toArray()
     },
 
     async findBlog(id: string) : Promise<blogsDbType | null>{
 
-        return await blogsCollection.findOne({id : id}, { projection: {  _id: 0 } })
+        return await blogsCollection.findOne({id : id}, { projection: {  _id: 0 }})
     },
 
     async createBlog(name: string, description: string, websiteUrl: string): Promise<blogsDbType>{
