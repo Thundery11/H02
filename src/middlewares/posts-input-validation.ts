@@ -41,7 +41,7 @@ export const postsInputValidation = () =>{
         .isString()
         .bail()
         .custom(id =>{
-            const blogIsExist = blogsRepository.findBlog(id)
+            const blogIsExist = blogsRepository.findBlog("1")
 
             if(!blogIsExist){
                 throw new Error('Blog doesnt exist')
