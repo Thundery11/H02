@@ -39,7 +39,7 @@ export const blogsRepository = {
             name: name,
             description: description,
             websiteUrl: websiteUrl,
-        }, $currentDate: {lastModified: true}})   //  ? current date
+        }})   //  ? current date
 
         return result.matchedCount === 1
     }

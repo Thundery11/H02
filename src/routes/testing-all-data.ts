@@ -1,11 +1,11 @@
-// import {Request, Response, Router } from "express";
-// import { __blogsDb } from "../repositories/blogs-db-repository";
-// import { postsDb } from "../repositories/posts-db-repository";
+import {Request, Response, Router } from "express";
+import { blogsCollection, postsCollection } from "../repositories/dataBase/blogsDb";
 
-// export const testingAllDataRouter = Router({})
 
-// testingAllDataRouter.delete('/', (req : Request, res: Response)=>{
-//    __blogsDb.length = 0
-//    postsDb.length = 0
-// res.send(204)
-// })
+export const testingAllDataRouter = Router({})
+
+testingAllDataRouter.delete('/', async (req : Request, res: Response)=>{
+    await blogsCollection.deleteMany({})
+    await postsCollection.deleteMany({})
+res.send(204)
+})
