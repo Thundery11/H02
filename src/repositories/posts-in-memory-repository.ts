@@ -6,7 +6,8 @@ export const postsDb : postsDbType[] = [{
     shortDescription: "can",
     content: "i",
     blogId: "do",
-    blogName: "string"
+    blogName: "string",
+    createdAt: "Ssss"
 }]
 
 export const postsRepository = {
@@ -19,14 +20,15 @@ export const postsRepository = {
     },
     async createPost(title: string, shortDescription: string, 
     content: string, blogId: string) : Promise<postsDbType>{
-
+        const createdAt = new Date()
         const newPost : postsDbType = {
             id: Math.floor(Math.random() * 10000).toString(),
             title,
             shortDescription,
             content,
             blogId,
-            blogName : "some blog"
+            blogName : "some blog",
+            createdAt: createdAt.toISOString()
         }
         postsDb.push(newPost)
         return newPost

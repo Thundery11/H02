@@ -5,7 +5,8 @@ export const blogsDb : blogsDbType[] = [{
     name: "Ilya",
     description: "string",
     websiteUrl: "string",
-    createdAt: "sdsdsds"
+    createdAt: "sdsdsds",
+    isMembership: true
 }]
 
 
@@ -26,7 +27,8 @@ export const blogsRepository = {
             name,
             description,
             websiteUrl,
-            createdAt : createdat.toISOString()
+            createdAt : createdat.toISOString(),
+            isMembership: true
 
         }
         blogsDb.push(newBlog)

@@ -1,24 +1,15 @@
 import { blogsDbType } from "../types/blogsTypes"
-import { client } from "./dataBase/blogsDb"
-
-// export const __blogsDb : blogsDbType[] = [{
-//     id: '0',
-//     name: "Ilya",
-//     description: "string",
-//     websiteUrl: "string",
-//     createdAt: "2023-09-12T15:45:16.047Z"
-// }]
-
+import { blogsCollection, client } from "./dataBase/blogsDb"
 
 export const blogsRepository = {
 
     async getAllBlogs() : Promise<blogsDbType[]>{
-        return await client.db('blogsDb').collection<blogsDbType>('blogs').find({}).toArray()
+        return await blogsCollection.find({}).toArray()
     },
 
     async findBlog(id: string) : Promise<blogsDbType | null>{
 
-        return await client.db('blogsDb').collection<blogsDbType>('blogs').findOne({id : id})
+        return await blogsCollection.findOne({id : id})
     },
 
     async createBlog(name: string, description: string, websiteUrl: string): Promise<blogsDbType>{
@@ -30,20 +21,21 @@ export const blogsRepository = {
             name,
             description,
             websiteUrl,
-            createdAt: createdat.toISOString()
+            createdAt: createdat.toISOString(),
+            isMembership: true
         }
 
-        const result = await client.db('blogsDb').collection<blogsDbType>('blogs').insertOne(newBlog)
+        const result = await blogsCollection.insertOne(newBlog)
         return newBlog
     },
 
     async deleteBlog(id: string): Promise<boolean>{
-        const result = await client.db('blogsDb').collection<blogsDbType>('blogs').deleteOne({id: id})
+        const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async changeBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean>{
 
-        const result = await client.db('blogsDb').collection<blogsDbType>('blogs').updateOne({id: id}, {$set: {
+        const result = await blogsCollection.updateOne({id: id}, {$set: {
             name: name,
             description: description,
             websiteUrl: websiteUrl,

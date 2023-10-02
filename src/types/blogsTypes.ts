@@ -3,6 +3,7 @@ export type blogsDbType = {
     name: string,
     description: string,
     websiteUrl: string,
-    createdAt: string
+    createdAt: string,
+    isMembership: boolean
 }
 //s
