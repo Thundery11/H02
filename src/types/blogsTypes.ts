@@ -6,4 +6,3 @@ export type blogsDbType = {
     createdAt: string,
     isMembership: boolean
 }
-//s

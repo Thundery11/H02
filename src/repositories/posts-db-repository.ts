@@ -1,24 +1,17 @@
 import { postsDbType } from "../types/postsTypes";
+import { postsCollection } from "./dataBase/blogsDb";
 
-export const postsDb : postsDbType[] = [{
-    id: "334343",
-    title: "what",
-    shortDescription: "can",
-    content: "i",
-    blogId: "do",
-    blogName: "string",
-    createdAt: "ssdsdsd"
-}]
 
 export const postsRepository = {
-    async getAllPosts() : Promise<postsDbType[]>{
 
-        return postsDb
+    async getAllPosts() : Promise<postsDbType[]>{
+        return await postsCollection.find({}).toArray()
     },
-    async getPost(id : string) : Promise<postsDbType | undefined>{
-        return postsDb.find(i => i.id === id)
-        
+
+    async getPost(id : string) : Promise<postsDbType | null>{
+        return await postsCollection.findOne({id: id})        
     },
+
     async createPost(title: string, shortDescription: string, 
     content: string, blogId: string) : Promise<postsDbType>{
         const createdAt = new Date()
@@ -31,35 +24,25 @@ export const postsRepository = {
             blogName : "some blog",
             createdAt: createdAt.toISOString()
         }
-        postsDb.push(newPost)
+        const result = await postsCollection.insertOne(newPost)
         return newPost
     },
-    async deletePost(id: string): Promise<boolean>{
 
-        const indexOfDeletedPost = postsDb.findIndex(post => post.id === id)
-        
-        if(indexOfDeletedPost === -1){
-            return false
-        } else {
-            postsDb.splice(indexOfDeletedPost, 1)
-            return true
-        }
+    async deletePost(id: string): Promise<boolean>{
+        const result = await postsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
     },
+
     async updatePost(id: string, title: string, shortDescription: string, 
     content: string, blogId: string): Promise<boolean>{
-        const updatingPost = postsDb.find(p => p.id === id)
 
-        if(!updatingPost){
-            return false
-        }
-            updatingPost.title = title
-            updatingPost.shortDescription = shortDescription
-            updatingPost.content = content
-            updatingPost.blogId = blogId    
-    
-            return true
-    
-    
+        const result = await postsCollection.updateOne({id: id}, {$set: {
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId
+        }})
+        return result.matchedCount === 1    
     }
 
 }
