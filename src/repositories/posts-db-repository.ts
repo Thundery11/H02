@@ -5,11 +5,11 @@ import { postsCollection } from "./dataBase/blogsDb";
 export const postsRepository = {
 
     async getAllPosts() : Promise<postsDbType[]>{
-        return await postsCollection.find({}).toArray()
+        return await postsCollection.find({}, { projection: {  _id: 0 } }).toArray()
     },
 
     async getPost(id : string) : Promise<postsDbType | null>{
-        return await postsCollection.findOne({id: id})        
+        return await postsCollection.findOne({id: id}, { projection: {  _id: 0 } })        
     },
 
     async createPost(title: string, shortDescription: string, 
