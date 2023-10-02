@@ -2,7 +2,7 @@ import { body } from "express-validator"
 import { blogsRepository } from "../repositories/blogs-db-repository"
 
 
-export const postsInputValidation = () =>{
+export  const postsInputValidation = () =>{
     return [
         body('title')
         .trim()
@@ -40,8 +40,8 @@ export const postsInputValidation = () =>{
         .bail()
         .isString()
         .bail()
-        .custom(id =>{
-            const blogIsExist = blogsRepository.findBlog("1")
+        .custom(async id =>{
+            const blogIsExist =  await blogsRepository.findBlog(id)
 
             if(!blogIsExist){
                 throw new Error('Blog doesnt exist')
