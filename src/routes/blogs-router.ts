@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { HTTP_STATUSES} from "../types/statuses";
-import { blogsService } from "../domain/blogs-service";
+import { blogsService } from "../domain/blogs-service/blogs-service";
 import { RequestWithParams, RequestWithBody, RequestWithParamsAndBody } from "../types/requestsTypes";
 import { blogsInputValidation } from "../middlewares/blogs-input-vadation";
 import { errosValidation } from "../middlewares/erros-validation";

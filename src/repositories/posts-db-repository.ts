@@ -12,18 +12,8 @@ export const postsRepository = {
         return await postsCollection.findOne({id: id}, { projection: {  _id: 0 }})  
     },
 
-    async createPost(title: string, shortDescription: string, 
-    content: string, blogId: string) : Promise<postsDbType>{
-        const createdAt = new Date()
-        const newPost : postsDbType = {
-            id: Math.floor(Math.random() * 10000).toString(),
-            title,
-            shortDescription,
-            content,
-            blogId,
-            blogName : "some blog",
-            createdAt: createdAt.toISOString(),
-        }
+    async createPost(newPost: postsDbType) : Promise<postsDbType>{
+
         const result = await postsCollection.insertOne({...newPost})
         return newPost
     },
