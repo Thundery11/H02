@@ -7,6 +7,10 @@ export const blogsService = {
     async getAllBlogs() : Promise<blogsDbType[]>{
         return await blogsRepository.getAllBlogs()
     },
+    
+    async getAllPostsForBlogs(): Promise<postsDbType[]>{
+        return await blogsRepository.getAllPostsForBlogs()
+    },
 
     async findBlog(id: string) : Promise<blogsDbType | null>{
 

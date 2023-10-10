@@ -16,7 +16,7 @@
 //     // const sortDirection = req.query.sortDirection || desc
 //     // const pageNumber: number = +req.query.pageNumber! || 1
 //     // const pageSize: number = +req.query.pageSize! || 10
-//     let {sortBy, sortDirection, pageNumber, pageSize} = req.query
+//     let {sortBy, sortDirection, pageNumber = 1, pageSize = 10} = req.query
 //     if(!sortBy) sortBy = req.body.createdAt
 //     if(!sortDirection) sortDirection = 'desc'
 //     if(!pageNumber) pageNumber = "1"

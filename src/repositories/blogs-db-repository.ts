@@ -8,6 +8,9 @@ export const blogsRepository = {
         
         return await blogsCollection.find({}, { projection: {  _id: 0 }}).toArray()
     },
+    async getAllPostsForBlogs(): Promise<postsDbType[]>{
+        return await postsForBlogsCollection.find({}, {projection: {_id: 0}}).toArray()
+    },
 
     async findBlog(id: string) : Promise<blogsDbType | null>{
 

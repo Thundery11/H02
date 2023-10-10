@@ -8,6 +8,8 @@ import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { blogsDbType } from "../types/blogsTypes";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { blogsRepository } from "../repositories/blogs-db-repository";
+import { postsDbType } from "../types/postsTypes";
+import { postsForBlogsInputValidation } from "../middlewares/posts-for-blogs-validation";
 
 export const blogsRouter = Router({})
 
@@ -28,6 +30,17 @@ blogsRouter.get('/:id', async (req: RequestWithParams<{id: string}>, res: Respon
         res.status(HTTP_STATUSES.OK_200).send(blog)
     }
 })
+blogsRouter.get('/:blogId/posts', async (req: RequestWithParams<{blogId: string}>, res: Response)=>{
+    const blogId = req.params.blogId
+    const blog = await blogsService.findBlog(blogId)
+    if(!blog){
+        res.sendStatus(404)
+        return
+    } else{
+        const allPostsForBlog: postsDbType[] = await blogsService.getAllPostsForBlogs()
+        res.status(HTTP_STATUSES.OK_200).send(allPostsForBlog)
+    }
+})
 
 blogsRouter.post('/',
 authGuardMiddleware,
@@ -43,7 +56,7 @@ async (req: RequestWithBody<{name: string,
 
 blogsRouter.post('/:blogId/posts', 
 authGuardMiddleware,
-postsInputValidation(),
+postsForBlogsInputValidation(),
 errosValidation,
 async (req: RequestWithParamsAndBody<{blogId: string, title: string, shortDescription: string,
     content: string}>, res: Response) =>{
@@ -56,7 +69,7 @@ async (req: RequestWithParamsAndBody<{blogId: string, title: string, shortDescri
         const {title, shortDescription, content} = req.body
         const blogName = blog.name;
         const createdPostForBlogs = await blogsService.createPostForBlog(blogId, title, shortDescription, content, blogName)
-        
+
         res.status(HTTP_STATUSES.CREATED_201).send(createdPostForBlogs)
         }
     }

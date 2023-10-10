@@ -16,7 +16,7 @@ const blogs_service_1 = require("../domain/blogs-service/blogs-service");
 const blogs_input_vadation_1 = require("../middlewares/blogs-input-vadation");
 const erros_validation_1 = require("../middlewares/erros-validation");
 const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
-const posts_input_validation_1 = require("../middlewares/posts-input-validation");
+const posts_for_blogs_validation_1 = require("../middlewares/posts-for-blogs-validation");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const allBlogs = yield blogs_service_1.blogsService.getAllBlogs();
@@ -32,12 +32,24 @@ exports.blogsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(statuses_1.HTTP_STATUSES.OK_200).send(blog);
     }
 }));
+exports.blogsRouter.get('/:blogId/posts', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const blogId = req.params.blogId;
+    const blog = yield blogs_service_1.blogsService.findBlog(blogId);
+    if (!blog) {
+        res.sendStatus(404);
+        return;
+    }
+    else {
+        const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs();
+        res.status(statuses_1.HTTP_STATUSES.OK_200).send(allPostsForBlog);
+    }
+}));
 exports.blogsRouter.post('/', authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description, websiteUrl } = req.body;
     const createdBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
 }));
-exports.blogsRouter.post('/:blogId/posts', authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/:blogId/posts', authorisationMiddleware_1.authGuardMiddleware, (0, posts_for_blogs_validation_1.postsForBlogsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const blogId = req.params.blogId;
     const blog = yield blogs_service_1.blogsService.findBlog(blogId);
     if (!blog) {
