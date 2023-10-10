@@ -6,13 +6,15 @@ import { blogsInputValidation } from "../middlewares/blogs-input-vadation";
 import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { blogsDbType } from "../types/blogsTypes";
+import { postsInputValidation } from "../middlewares/posts-input-validation";
+import { blogsRepository } from "../repositories/blogs-db-repository";
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', 
 async (req: Request, res: Response)=>{
+    
     const allBlogs: blogsDbType[] = await blogsService.getAllBlogs()
-
     res.status(HTTP_STATUSES.OK_200).send(allBlogs)
 })
 
@@ -38,6 +40,27 @@ async (req: RequestWithBody<{name: string,
     const createdBlog = await blogsService.createBlog(name,description, websiteUrl)
     res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
 })
+
+blogsRouter.post('/:blogId/posts', 
+authGuardMiddleware,
+postsInputValidation(),
+errosValidation,
+async (req: RequestWithParamsAndBody<{blogId: string, title: string, shortDescription: string,
+    content: string}>, res: Response) =>{
+        const blogId = req.params.blogId
+        const blog = await blogsService.findBlog(blogId)
+        if(!blog){
+            res.sendStatus(404)
+            return
+        } else{
+        const {title, shortDescription, content} = req.body
+        const blogName = blog.name;
+        const createdPostForBlogs = await blogsService.createPostForBlog(blogId, title, shortDescription, content, blogName)
+        
+        res.status(HTTP_STATUSES.CREATED_201).send(createdPostForBlogs)
+        }
+    }
+)
 
 blogsRouter.delete('/:id', 
 authGuardMiddleware,

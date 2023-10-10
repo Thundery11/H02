@@ -13,8 +13,10 @@ if(!mongoUri){
 export const client = new MongoClient(mongoUri)
 const blogsDb = client.db('blogsDb')
 const postsDb = client.db('postsDb')
+const postsOfBlogsDb = client.db('postsOfBlogsDb')
 export const postsCollection = postsDb.collection<postsDbType>('posts')
 export const blogsCollection = blogsDb.collection<blogsDbType>('blogs')
+export const postsForBlogsCollection = postsOfBlogsDb.collection<postsDbType>('postsOfBlogs')
 
 export async function runDb() {
     try{

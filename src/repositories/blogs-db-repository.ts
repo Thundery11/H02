@@ -1,9 +1,11 @@
 import { blogsDbType } from "../types/blogsTypes"
-import { blogsCollection} from "./dataBase/blogsDb"
+import { postsDbType } from "../types/postsTypes"
+import { blogsCollection, postsForBlogsCollection} from "./dataBase/blogsDb"
 
 export const blogsRepository = {
 
     async getAllBlogs() : Promise<blogsDbType[]>{
+        
         return await blogsCollection.find({}, { projection: {  _id: 0 }}).toArray()
     },
 
@@ -16,6 +18,10 @@ export const blogsRepository = {
 
         const result = await blogsCollection.insertOne({...newBlog})
         return newBlog
+    },
+    async createPostForBlog(newPostForBlog: postsDbType): Promise<postsDbType>{
+        const result = await postsForBlogsCollection.insertOne({...newPostForBlog})
+        return newPostForBlog
     },
 
     async deleteBlog(id: string): Promise<boolean>{
