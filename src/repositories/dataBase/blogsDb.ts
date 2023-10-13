@@ -2,10 +2,12 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { blogsDbType } from "../../types/blogsTypes";
 import { postsDbType } from "../../types/postsTypes";
+import { usersDbType } from "../../types/usersTypes";
 
 dotenv.config()
 
 
+// const mongoUri = 'mongodb://0.0.0.0:27017'
 const mongoUri = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
 if(!mongoUri){
     throw new Error(`! Url doesn't found`)
@@ -14,9 +16,11 @@ export const client = new MongoClient(mongoUri)
 const blogsDb = client.db('blogsDb')
 const postsDb = client.db('postsDb')
 const postsOfBlogsDb = client.db('postsOfBlogsDb')
+const usersDb = client.db('users')
 export const postsCollection = postsDb.collection<postsDbType>('posts')
 export const blogsCollection = blogsDb.collection<blogsDbType>('blogs')
 export const postsForBlogsCollection = postsOfBlogsDb.collection<postsDbType>('postsOfBlogs')
+export const usersCollection = usersDb.collection<usersDbType>('users')
 
 export async function runDb() {
     try{

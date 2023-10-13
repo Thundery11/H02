@@ -1,8 +1,17 @@
 import request from 'supertest'
 import {app} from '../src/settings'
 import { HTTP_STATUSES } from '../src/types/statuses'
-import { blogsDb } from '../src/repositories/blogs.repository'
+import { blogsCollection } from '../src/repositories/dataBase/blogsDb'
 
+
+// beforeAll(done => {
+//     done()
+// })
+// afterAll(done => {
+//     // Closing the DB connection allows Jest to exit successfully.
+//     mongoose.connection.close()
+//     done()
+//   })
 
 describe('blogs',()=>{
 
@@ -15,8 +24,9 @@ describe('blogs',()=>{
 
     it('should return 200 and array of objects', async ()=>{
         await  request(app)
-          .get('/blogs')
-          .expect(HTTP_STATUSES.OK_200, blogsDb)
-      })
+        .get('/blogs')
+        .expect(HTTP_STATUSES.OK_200, blogsCollection.find({}).toArray())
+    })
+    
     
 })
