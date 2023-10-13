@@ -19,7 +19,14 @@ const authorisationMiddleware_1 = require("../middlewares/authorisationMiddlewar
 const posts_for_blogs_validation_1 = require("../middlewares/posts-for-blogs-validation");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const allBlogs = yield blogs_service_1.blogsService.getAllBlogs();
+    const { desc, searchNameTerm = "", sortBy = req.body.createdAt, sortDirection = desc, pageNumber = 1, pageSize = 10, } = req.query;
+    // const query = { $text: { $search: searchNameTerm } };
+    const query = { name: new RegExp(searchNameTerm, "i") };
+    // const query = { name: /vl/i };
+    const skip = (pageNumber - 1) * pageSize;
+    console.log(skip);
+    console.log(pageSize);
+    const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
     res.status(statuses_1.HTTP_STATUSES.OK_200).send(allBlogs);
 }));
 exports.blogsRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

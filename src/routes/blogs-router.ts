@@ -5,11 +5,12 @@ import {
   RequestWithParams,
   RequestWithBody,
   RequestWithParamsAndBody,
+  RequestWithQueryAndBody,
 } from "../models/requestsTypes";
 import { blogsInputValidation } from "../middlewares/blogs-input-vadation";
 import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
-import { blogsDbType } from "../models/blogsTypes";
+import { BlogQueryParams, blogsDbType } from "../models/blogsTypes";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { blogsRepository } from "../repositories/blogs-db-repository";
 import { postsDbType } from "../models/postsTypes";
@@ -17,10 +18,36 @@ import { postsForBlogsInputValidation } from "../middlewares/posts-for-blogs-val
 
 export const blogsRouter = Router({});
 
-blogsRouter.get("/", async (req: Request, res: Response) => {
-  const allBlogs: blogsDbType[] = await blogsService.getAllBlogs();
-  res.status(HTTP_STATUSES.OK_200).send(allBlogs);
-});
+blogsRouter.get(
+  "/",
+  async (req: RequestWithQueryAndBody<BlogQueryParams>, res: Response) => {
+    const {
+      desc,
+      searchNameTerm = "",
+      sortBy = req.body.createdAt,
+      sortDirection = desc,
+      pageNumber = 1,
+      pageSize = 10,
+    } = req.query;
+
+    // const query = { $text: { $search: searchNameTerm } };
+    const query = { name: new RegExp(searchNameTerm, "i") };
+    // const query = { name: /vl/i };
+
+    const skip = (pageNumber - 1) * pageSize;
+    console.log(skip);
+    console.log(pageSize);
+
+    const allBlogs: blogsDbType[] = await blogsService.getAllBlogs(
+      query,
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip
+    );
+    res.status(HTTP_STATUSES.OK_200).send(allBlogs);
+  }
+);
 
 blogsRouter.get(
   "/:id",

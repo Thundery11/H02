@@ -3,8 +3,19 @@ import { postsDbType } from "../models/postsTypes";
 import { blogsCollection, postsForBlogsCollection } from "./dataBase/blogsDb";
 
 export const blogsRepository = {
-  async getAllBlogs(): Promise<blogsDbType[]> {
-    return await blogsCollection.find({}, { projection: { _id: 0 } }).toArray();
+  async getAllBlogs(
+    query: object,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number
+  ): Promise<blogsDbType[]> {
+    return await blogsCollection
+      .find(query)
+      .sort({ [sortBy]: sortDirection === "desc" ? -1 : 1 })
+      .skip(skip)
+      .limit(Number(pageSize))
+      .toArray();
   },
   async getAllPostsForBlogs(): Promise<postsDbType[]> {
     return await postsForBlogsCollection

@@ -3,8 +3,20 @@ import { blogsRepository } from "../../repositories/blogs-db-repository";
 import { postsDbType } from "../../models/postsTypes";
 
 export const blogsService = {
-  async getAllBlogs(): Promise<blogsDbType[]> {
-    return await blogsRepository.getAllBlogs();
+  async getAllBlogs(
+    query: object,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number
+  ): Promise<blogsDbType[]> {
+    return await blogsRepository.getAllBlogs(
+      query,
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip
+    );
   },
 
   async getAllPostsForBlogs(): Promise<postsDbType[]> {
