@@ -20,19 +20,17 @@ const posts_for_blogs_validation_1 = require("../middlewares/posts-for-blogs-val
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { desc, searchNameTerm = "", sortBy = req.body.createdAt, sortDirection = desc, pageNumber = 1, pageSize = 10, } = req.query;
-    // const query = { $text: { $search: searchNameTerm } };
     const query = { name: new RegExp(searchNameTerm, "i") };
-    // const query = { name: { $regex: `${searchNameTerm}` } };
-    // const query = { name: /vl/i };
     const skip = (pageNumber - 1) * pageSize;
     const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
-    const totalCount = allBlogs.length;
-    const pagesCount = Math.ceil(totalCount / pageSize);
+    const countedDocuments = yield blogs_service_1.blogsService.countDocuments(query);
+    // const totalCount: number = allBlogs.length;
+    const pagesCount = Math.ceil(countedDocuments / pageSize);
     const presentationAllblogs = {
         pagesCount,
         page: pageNumber,
         pageSize,
-        totalCount,
+        totalCount: countedDocuments,
         items: allBlogs,
     };
     res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationAllblogs);

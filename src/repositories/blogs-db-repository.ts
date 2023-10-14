@@ -16,6 +16,11 @@ export const blogsRepository = {
       .skip(skip)
       .limit(Number(pageSize))
       .toArray();
+    //countDocuments(query)
+  },
+
+  async countDocuments(query: object): Promise<number> {
+    return await blogsCollection.countDocuments(query);
   },
 
   async getAllPostsForBlogs(): Promise<postsDbType[]> {

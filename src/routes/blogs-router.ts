@@ -30,11 +30,7 @@ blogsRouter.get(
       pageSize = 10,
     } = req.query;
 
-    // const query = { $text: { $search: searchNameTerm } };
     const query = { name: new RegExp(searchNameTerm, "i") };
-    // const query = { name: { $regex: `${searchNameTerm}` } };
-    // const query = { name: /vl/i };
-
     const skip = (pageNumber - 1) * pageSize;
 
     const allBlogs: blogsDbType[] = await blogsService.getAllBlogs(
@@ -44,13 +40,14 @@ blogsRouter.get(
       pageSize,
       skip
     );
-    const totalCount: number = allBlogs.length;
-    const pagesCount: number = Math.ceil(totalCount / pageSize);
+    const countedDocuments = await blogsService.countDocuments(query);
+    // const totalCount: number = allBlogs.length;
+    const pagesCount: number = Math.ceil(countedDocuments / pageSize);
     const presentationAllblogs = {
       pagesCount,
       page: pageNumber,
       pageSize,
-      totalCount,
+      totalCount: countedDocuments,
       items: allBlogs,
     };
     res.status(HTTP_STATUSES.OK_200).send(presentationAllblogs);

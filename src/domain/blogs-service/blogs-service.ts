@@ -19,6 +19,10 @@ export const blogsService = {
     );
   },
 
+  async countDocuments(query: object): Promise<number> {
+    return await blogsRepository.countDocuments(query);
+  },
+
   async getAllPostsForBlogs(): Promise<postsDbType[]> {
     return await blogsRepository.getAllPostsForBlogs();
   },
