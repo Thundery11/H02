@@ -17,6 +17,7 @@ export const blogsRepository = {
       .limit(Number(pageSize))
       .toArray();
   },
+
   async getAllPostsForBlogs(): Promise<postsDbType[]> {
     return await postsForBlogsCollection
       .find({}, { projection: { _id: 0 } })

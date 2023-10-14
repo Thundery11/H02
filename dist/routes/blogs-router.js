@@ -22,12 +22,20 @@ exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, fun
     const { desc, searchNameTerm = "", sortBy = req.body.createdAt, sortDirection = desc, pageNumber = 1, pageSize = 10, } = req.query;
     // const query = { $text: { $search: searchNameTerm } };
     const query = { name: new RegExp(searchNameTerm, "i") };
+    // const query = { name: { $regex: `${searchNameTerm}` } };
     // const query = { name: /vl/i };
     const skip = (pageNumber - 1) * pageSize;
-    console.log(skip);
-    console.log(pageSize);
     const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
-    res.status(statuses_1.HTTP_STATUSES.OK_200).send(allBlogs);
+    const totalCount = allBlogs.length;
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const presentationAllblogs = {
+        pagesCount,
+        page: pageNumber,
+        pageSize,
+        totalCount,
+        items: allBlogs,
+    };
+    res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationAllblogs);
 }));
 exports.blogsRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const blog = yield blogs_service_1.blogsService.findBlog(req.params.id);

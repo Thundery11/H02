@@ -33,7 +33,7 @@
 //     const skip = (pageNumber - 1) * pageSize;
 //     console.log(skip);
 //     console.log(pageSize);
-
+// const query = { name: new RegExp(searchNameTerm, "i") };
 //     const allBlogs: blogsDbType[] = await blogsCollection
 //       .find({})
 //       .sort({ [sortBy]: sortDirection === "desc" ? -1 : 1 })

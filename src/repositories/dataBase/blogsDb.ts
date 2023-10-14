@@ -5,7 +5,6 @@ import { postsDbType } from "../../models/postsTypes";
 import { usersDbType } from "../../models/usersTypes";
 
 dotenv.config();
-console.log(`BlogDbts.js hello pidari`);
 
 // const mongoUri = 'mongodb://0.0.0.0:27017'
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
@@ -14,7 +13,6 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const blogsDb = client.db("blogsDb");
-// blogsDb.createIndex("text", "text");
 
 const postsDb = client.db("postsDb");
 const postsOfBlogsDb = client.db("postsOfBlogsDb");
