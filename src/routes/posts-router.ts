@@ -4,19 +4,51 @@ import {
   RequestWithParams,
   RequestWithBody,
   RequestWithParamsAndBody,
+  RequestWithQueryAndBody,
 } from "../models/requestsTypes";
 import { postsService } from "../domain/posts-service/posts-service";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
-import { postsDbType } from "../models/postsTypes";
+import { PostsQueryParams, postsDbType } from "../models/postsTypes";
 
 export const postsRouter = Router({});
 
-postsRouter.get("/", async (req: Request, res: Response) => {
-  const getAllPosts: postsDbType[] = await postsService.getAllPosts();
-  res.status(HTTP_STATUSES.OK_200).send(getAllPosts);
-});
+postsRouter.get(
+  "/",
+  async (req: RequestWithQueryAndBody<PostsQueryParams>, res: Response) => {
+    const {
+      desc,
+      searchNameTerm = "",
+      sortBy = req.body.createdAt,
+      sortDirection = desc,
+      pageNumber = 1,
+      pageSize = 10,
+    } = req.query;
+
+    const query = { name: new RegExp(searchNameTerm, "i") };
+    const skip = (pageNumber - 1) * pageSize;
+
+    const allPosts: postsDbType[] = await postsService.getAllPosts(
+      query,
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip
+    );
+    const countedDocuments = await postsService.countDocuments(query);
+    // const totalCount: number = allBlogs.length;
+    const pagesCount: number = Math.ceil(countedDocuments / pageSize);
+    const presentationAllposts = {
+      pagesCount,
+      page: pageNumber,
+      pageSize,
+      totalCount: countedDocuments,
+      items: allPosts,
+    };
+    res.status(HTTP_STATUSES.OK_200).send(presentationAllposts);
+  }
+);
 
 postsRouter.get(
   "/:id",

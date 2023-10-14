@@ -2,8 +2,24 @@ import { postsDbType } from "../../models/postsTypes";
 import { postsRepository } from "../../repositories/posts-db-repository";
 
 export const postsService = {
-  async getAllPosts(): Promise<postsDbType[]> {
-    return await postsRepository.getAllPosts();
+  async getAllPosts(
+    query: object,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number
+  ): Promise<postsDbType[]> {
+    return await postsRepository.getAllPosts(
+      query,
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip
+    );
+  },
+
+  async countDocuments(query: object): Promise<number> {
+    return await postsRepository.countDocuments(query);
   },
 
   async getPost(id: string): Promise<postsDbType | null> {

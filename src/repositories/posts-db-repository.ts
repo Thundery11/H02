@@ -2,8 +2,23 @@ import { postsDbType } from "../models/postsTypes";
 import { postsCollection } from "./dataBase/blogsDb";
 
 export const postsRepository = {
-  async getAllPosts(): Promise<postsDbType[]> {
-    return await postsCollection.find({}, { projection: { _id: 0 } }).toArray();
+  async getAllPosts(
+    query: object,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number
+  ): Promise<postsDbType[]> {
+    return await postsCollection
+      .find(query, { projection: { _id: 0 } })
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
+      .skip(skip)
+      .limit(Number(pageSize))
+      .toArray();
+  },
+
+  async countDocuments(query: object): Promise<number> {
+    return await postsCollection.countDocuments(query);
   },
 
   async getPost(id: string): Promise<postsDbType | null> {
