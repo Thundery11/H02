@@ -11,7 +11,7 @@ export const blogsRepository = {
     skip: number
   ): Promise<blogsDbType[]> {
     return await blogsCollection
-      .find(query)
+      .find(query, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection === "desc" ? -1 : 1 })
       .skip(skip)
       .limit(Number(pageSize))
