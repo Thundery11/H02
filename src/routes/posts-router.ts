@@ -35,13 +35,14 @@ postsRouter.get(
       pageSize,
       skip
     );
+    console.log(allPosts);
     const countedDocuments = await postsService.countDocuments(query);
 
     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
     const presentationAllposts = {
       pagesCount,
-      page: pageNumber,
-      pageSize,
+      page: Number(pageNumber),
+      pageSize: Number(pageSize),
       totalCount: countedDocuments,
       items: allPosts,
     };
