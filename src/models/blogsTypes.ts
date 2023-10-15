@@ -8,11 +8,17 @@ export type blogsDbType = {
 };
 
 export interface BlogQueryParams {
-  desc: string;
   searchNameTerm?: string;
   sortBy: string;
   sortDirection: string;
   pageNumber: number;
   pageSize: number;
-  createdAt: string;
+}
+
+export interface PostsForBlogsQueryParams {
+  sortBy: string;
+  sortDirection: string;
+  pageNumber: number;
+  pageSize: number;
+  blogId: string;
 }

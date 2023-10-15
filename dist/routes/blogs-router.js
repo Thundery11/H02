@@ -19,7 +19,7 @@ const authorisationMiddleware_1 = require("../middlewares/authorisationMiddlewar
 const posts_for_blogs_validation_1 = require("../middlewares/posts-for-blogs-validation");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { desc, searchNameTerm = "", sortBy = req.body.createdAt, sortDirection = desc, pageNumber = 1, pageSize = 10, } = req.query;
+    const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
     const query = { name: new RegExp(searchNameTerm, "i") };
     const skip = (pageNumber - 1) * pageSize;
     const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
@@ -46,15 +46,27 @@ exports.blogsRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 }));
 exports.blogsRouter.get("/:blogId/posts", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
     const blogId = req.params.blogId;
+    const skip = (pageNumber - 1) * pageSize;
+    const sorting = sortDirection === "ask" ? 1 : -1;
     const blog = yield blogs_service_1.blogsService.findBlog(blogId);
     if (!blog) {
         res.sendStatus(404);
         return;
     }
     else {
-        const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId);
-        res.status(statuses_1.HTTP_STATUSES.OK_200).send(allPostsForBlog);
+        const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId, sortBy, sortDirection, pageSize, skip);
+        const countedDocuments = yield blogs_service_1.blogsService.countAllDocuments();
+        const pagesCount = Math.ceil(countedDocuments / pageSize);
+        const presentationPostsForBlogs = {
+            pagesCount,
+            page: pageNumber,
+            pageSize,
+            totalCount: countedDocuments,
+            items: allPostsForBlog,
+        };
+        res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
     }
 }));
 exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

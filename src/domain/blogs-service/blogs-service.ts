@@ -22,9 +22,24 @@ export const blogsService = {
   async countDocuments(query: object): Promise<number> {
     return await blogsRepository.countDocuments(query);
   },
+  async countAllDocuments(): Promise<number> {
+    return await blogsRepository.countAllDocuments();
+  },
 
-  async getAllPostsForBlogs(blogId: string): Promise<postsDbType[]> {
-    return await blogsRepository.getAllPostsForBlogs(blogId);
+  async getAllPostsForBlogs(
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number,
+    blogId: string
+  ): Promise<postsDbType[]> {
+    return await blogsRepository.getAllPostsForBlogs(
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip,
+      blogId
+    );
   },
 
   async findBlog(id: string): Promise<blogsDbType | null> {

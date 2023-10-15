@@ -5,12 +5,17 @@ import {
   RequestWithParams,
   RequestWithBody,
   RequestWithParamsAndBody,
-  RequestWithQueryAndBody,
+  RequestWithQuery,
+  RequestWithParamsAndQuery,
 } from "../models/requestsTypes";
 import { blogsInputValidation } from "../middlewares/blogs-input-vadation";
 import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
-import { BlogQueryParams, blogsDbType } from "../models/blogsTypes";
+import {
+  BlogQueryParams,
+  PostsForBlogsQueryParams,
+  blogsDbType,
+} from "../models/blogsTypes";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { blogsRepository } from "../repositories/blogs-db-repository";
 import { postsDbType } from "../models/postsTypes";
@@ -20,12 +25,11 @@ export const blogsRouter = Router({});
 
 blogsRouter.get(
   "/",
-  async (req: RequestWithQueryAndBody<BlogQueryParams>, res: Response) => {
+  async (req: RequestWithQuery<BlogQueryParams>, res: Response) => {
     const {
-      desc,
       searchNameTerm = "",
-      sortBy = req.body.createdAt,
-      sortDirection = desc,
+      sortBy = "createdAt",
+      sortDirection = "desc",
       pageNumber = 1,
       pageSize = 10,
     } = req.query;
@@ -69,16 +73,46 @@ blogsRouter.get(
 );
 blogsRouter.get(
   "/:blogId/posts",
-  async (req: RequestWithParams<{ blogId: string }>, res: Response) => {
-    const blogId: string = req.params.blogId;
+  async (
+    req: RequestWithParamsAndQuery<PostsForBlogsQueryParams>,
+    res: Response
+  ) => {
+    const {
+      sortBy = "createdAt",
+      sortDirection = "desc",
+      pageNumber = 1,
+      pageSize = 10,
+    } = req.query;
+
+    const blogId = req.params.blogId;
+
+    const skip = (pageNumber - 1) * pageSize;
+    const sorting = sortDirection === "ask" ? 1 : -1;
     const blog: blogsDbType | null = await blogsService.findBlog(blogId);
     if (!blog) {
       res.sendStatus(404);
       return;
     } else {
       const allPostsForBlog: postsDbType[] =
-        await blogsService.getAllPostsForBlogs(blogId);
-      res.status(HTTP_STATUSES.OK_200).send(allPostsForBlog);
+        await blogsService.getAllPostsForBlogs(
+          blogId,
+          sortBy,
+          sortDirection,
+          pageSize,
+          skip
+        );
+      const countedDocuments = await blogsService.countAllDocuments();
+
+      const pagesCount: number = Math.ceil(countedDocuments / pageSize);
+      const presentationPostsForBlogs = {
+        pagesCount,
+        page: pageNumber,
+        pageSize,
+        totalCount: countedDocuments,
+        items: allPostsForBlog,
+      };
+
+      res.status(HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
     }
   }
 );

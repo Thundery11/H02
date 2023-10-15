@@ -4,7 +4,7 @@ import {
   RequestWithParams,
   RequestWithBody,
   RequestWithParamsAndBody,
-  RequestWithQueryAndBody,
+  RequestWithQuery,
 } from "../models/requestsTypes";
 import { postsService } from "../domain/posts-service/posts-service";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
@@ -16,11 +16,11 @@ export const postsRouter = Router({});
 
 postsRouter.get(
   "/",
-  async (req: RequestWithQueryAndBody<PostsQueryParams>, res: Response) => {
+  async (req: RequestWithQuery<PostsQueryParams>, res: Response) => {
     const {
       desc,
       searchNameTerm = "",
-      sortBy = req.body.createdAt,
+      sortBy = "createdAt",
       sortDirection = desc,
       pageNumber = 1,
       pageSize = 10,
@@ -37,7 +37,7 @@ postsRouter.get(
       skip
     );
     const countedDocuments = await postsService.countDocuments(query);
-    // const totalCount: number = allBlogs.length;
+
     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
     const presentationAllposts = {
       pagesCount,

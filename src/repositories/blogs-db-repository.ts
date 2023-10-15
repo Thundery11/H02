@@ -16,16 +16,27 @@ export const blogsRepository = {
       .skip(skip)
       .limit(Number(pageSize))
       .toArray();
-    //countDocuments(query)
   },
 
   async countDocuments(query: object): Promise<number> {
     return await blogsCollection.countDocuments(query);
   },
+  async countAllDocuments(): Promise<number> {
+    return await blogsCollection.countDocuments({});
+  },
 
-  async getAllPostsForBlogs(blogId: string): Promise<postsDbType[]> {
+  async getAllPostsForBlogs(
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number,
+    blogId: string
+  ): Promise<postsDbType[]> {
     return await postsForBlogsCollection
       .find({ blogId: blogId }, { projection: { _id: 0 } })
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
+      .skip(Number(skip))
+      .limit(Number(pageSize))
       .toArray();
   },
 
