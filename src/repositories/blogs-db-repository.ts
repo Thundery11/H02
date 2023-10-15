@@ -23,9 +23,9 @@ export const blogsRepository = {
     return await blogsCollection.countDocuments(query);
   },
 
-  async getAllPostsForBlogs(): Promise<postsDbType[]> {
+  async getAllPostsForBlogs(blogId: string): Promise<postsDbType[]> {
     return await postsForBlogsCollection
-      .find({}, { projection: { _id: 0 } })
+      .find({ blogId: blogId }, { projection: { _id: 0 } })
       .toArray();
   },
 

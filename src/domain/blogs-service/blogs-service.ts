@@ -23,8 +23,8 @@ export const blogsService = {
     return await blogsRepository.countDocuments(query);
   },
 
-  async getAllPostsForBlogs(): Promise<postsDbType[]> {
-    return await blogsRepository.getAllPostsForBlogs();
+  async getAllPostsForBlogs(blogId: string): Promise<postsDbType[]> {
+    return await blogsRepository.getAllPostsForBlogs(blogId);
   },
 
   async findBlog(id: string): Promise<blogsDbType | null> {

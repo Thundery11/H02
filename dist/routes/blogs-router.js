@@ -53,7 +53,7 @@ exports.blogsRouter.get("/:blogId/posts", (req, res) => __awaiter(void 0, void 0
         return;
     }
     else {
-        const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs();
+        const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId);
         res.status(statuses_1.HTTP_STATUSES.OK_200).send(allPostsForBlog);
     }
 }));

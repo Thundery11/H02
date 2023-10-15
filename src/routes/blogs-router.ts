@@ -70,14 +70,14 @@ blogsRouter.get(
 blogsRouter.get(
   "/:blogId/posts",
   async (req: RequestWithParams<{ blogId: string }>, res: Response) => {
-    const blogId = req.params.blogId;
-    const blog = await blogsService.findBlog(blogId);
+    const blogId: string = req.params.blogId;
+    const blog: blogsDbType | null = await blogsService.findBlog(blogId);
     if (!blog) {
       res.sendStatus(404);
       return;
     } else {
       const allPostsForBlog: postsDbType[] =
-        await blogsService.getAllPostsForBlogs();
+        await blogsService.getAllPostsForBlogs(blogId);
       res.status(HTTP_STATUSES.OK_200).send(allPostsForBlog);
     }
   }
