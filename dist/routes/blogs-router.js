@@ -28,8 +28,8 @@ exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, fun
     const pagesCount = Math.ceil(countedDocuments / pageSize);
     const presentationAllblogs = {
         pagesCount,
-        page: pageNumber,
-        pageSize,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
         totalCount: countedDocuments,
         items: allBlogs,
     };

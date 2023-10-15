@@ -49,8 +49,8 @@ blogsRouter.get(
     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
     const presentationAllblogs = {
       pagesCount,
-      page: pageNumber,
-      pageSize,
+      page: Number(pageNumber),
+      pageSize: Number(pageSize),
       totalCount: countedDocuments,
       items: allBlogs,
     };
