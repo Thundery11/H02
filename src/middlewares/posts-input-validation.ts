@@ -39,8 +39,8 @@ export const postsInputValidation = () => {
       .bail()
       .isString()
       .bail()
-      .custom(async (id) => {
-        const blogIsExist = await blogsRepository.findBlog(id);
+      .custom(async (blogId) => {
+        const blogIsExist = await blogsRepository.findBlog(blogId);
 
         if (!blogIsExist) {
           throw new Error("Blog doesnt exist");

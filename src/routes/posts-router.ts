@@ -18,10 +18,9 @@ postsRouter.get(
   "/",
   async (req: RequestWithQuery<PostsQueryParams>, res: Response) => {
     const {
-      desc,
       searchNameTerm = "",
       sortBy = "createdAt",
-      sortDirection = desc,
+      sortDirection = "desc",
       pageNumber = 1,
       pageSize = 10,
     } = req.query;

@@ -18,7 +18,7 @@ const erros_validation_1 = require("../middlewares/erros-validation");
 const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { desc, searchNameTerm = "", sortBy = "createdAt", sortDirection = desc, pageNumber = 1, pageSize = 10, } = req.query;
+    const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
     const query = { name: new RegExp(searchNameTerm, "i") };
     const skip = (pageNumber - 1) * pageSize;
     const allPosts = yield posts_service_1.postsService.getAllPosts(query, sortBy, sortDirection, pageSize, skip);

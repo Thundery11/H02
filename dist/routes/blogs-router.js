@@ -61,8 +61,8 @@ exports.blogsRouter.get("/:blogId/posts", (req, res) => __awaiter(void 0, void 0
         const pagesCount = Math.ceil(countedDocuments / pageSize);
         const presentationPostsForBlogs = {
             pagesCount,
-            page: pageNumber,
-            pageSize,
+            page: Number(pageNumber),
+            pageSize: Number(pageSize),
             totalCount: countedDocuments,
             items: allPostsForBlog,
         };

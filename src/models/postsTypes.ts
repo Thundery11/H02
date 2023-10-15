@@ -9,11 +9,9 @@ export type postsDbType = {
 };
 
 export interface PostsQueryParams {
-  desc: string;
   searchNameTerm?: string;
   sortBy: string;
   sortDirection: string;
   pageNumber: number;
   pageSize: number;
-  createdAt: string;
 }
