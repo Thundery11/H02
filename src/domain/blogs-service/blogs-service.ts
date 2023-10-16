@@ -27,11 +27,11 @@ export const blogsService = {
   },
 
   async getAllPostsForBlogs(
+    blogId: string,
     sortBy: string,
     sortDirection: string,
     pageSize: number,
-    skip: number,
-    blogId: string
+    skip: number
   ): Promise<postsDbType[]> {
     return await blogsRepository.getAllPostsForBlogs(
       sortBy,

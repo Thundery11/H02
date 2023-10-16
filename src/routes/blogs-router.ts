@@ -87,7 +87,7 @@ blogsRouter.get(
     const blogId = req.params.blogId;
 
     const skip = (pageNumber - 1) * pageSize;
-    const sorting = sortDirection === "ask" ? 1 : -1;
+    // const sorting = sortDirection === "ask" ? 1 : -1;
     const blog: blogsDbType | null = await blogsService.findBlog(blogId);
     if (!blog) {
       res.sendStatus(404);

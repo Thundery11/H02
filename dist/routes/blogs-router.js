@@ -49,7 +49,7 @@ exports.blogsRouter.get("/:blogId/posts", (req, res) => __awaiter(void 0, void 0
     const { sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
     const blogId = req.params.blogId;
     const skip = (pageNumber - 1) * pageSize;
-    const sorting = sortDirection === "ask" ? 1 : -1;
+    // const sorting = sortDirection === "ask" ? 1 : -1;
     const blog = yield blogs_service_1.blogsService.findBlog(blogId);
     if (!blog) {
         res.sendStatus(404);

@@ -1,6 +1,6 @@
 import { blogsDbType } from "../models/blogsTypes";
 import { postsDbType } from "../models/postsTypes";
-import { blogsCollection, postsForBlogsCollection } from "./dataBase/blogsDb";
+import { blogsCollection, postsCollection } from "./dataBase/blogsDb";
 
 export const blogsRepository = {
   async getAllBlogs(
@@ -32,7 +32,7 @@ export const blogsRepository = {
     skip: number,
     blogId: string
   ): Promise<postsDbType[]> {
-    return await postsForBlogsCollection
+    return await postsCollection
       .find({ blogId: blogId }, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(Number(skip))
@@ -52,7 +52,7 @@ export const blogsRepository = {
     return newBlog;
   },
   async createPostForBlog(newPostForBlog: postsDbType): Promise<postsDbType> {
-    const result = await postsForBlogsCollection.insertOne({
+    const result = await postsCollection.insertOne({
       ...newPostForBlog,
     });
     return newPostForBlog;
