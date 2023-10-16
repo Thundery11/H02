@@ -10,7 +10,7 @@ export const postsRepository = {
     skip: number
   ): Promise<postsDbType[]> {
     return await postsCollection
-      .find(query, { projection: { _id: 0 } })
+      .find({}, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(pageSize))
@@ -18,7 +18,7 @@ export const postsRepository = {
   },
 
   async countDocuments(query: object): Promise<number> {
-    return await postsCollection.countDocuments(query);
+    return await postsCollection.countDocuments({});
   },
 
   async getPost(id: string): Promise<postsDbType | null> {
