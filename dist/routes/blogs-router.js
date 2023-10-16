@@ -57,7 +57,7 @@ exports.blogsRouter.get("/:blogId/posts", (req, res) => __awaiter(void 0, void 0
     }
     else {
         const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId, sortBy, sortDirection, pageSize, skip);
-        const countedDocuments = yield blogs_service_1.blogsService.countAllDocuments();
+        const countedDocuments = yield blogs_service_1.blogsService.countAllDocuments(blogId);
         const pagesCount = Math.ceil(countedDocuments / pageSize);
         const presentationPostsForBlogs = {
             pagesCount,

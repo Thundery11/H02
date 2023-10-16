@@ -101,7 +101,7 @@ blogsRouter.get(
           pageSize,
           skip
         );
-      const countedDocuments = await blogsService.countAllDocuments();
+      const countedDocuments = await blogsService.countAllDocuments(blogId);
 
       const pagesCount: number = Math.ceil(countedDocuments / pageSize);
       const presentationPostsForBlogs = {

@@ -21,8 +21,8 @@ export const blogsRepository = {
   async countDocuments(query: object): Promise<number> {
     return await blogsCollection.countDocuments(query);
   },
-  async countAllDocuments(): Promise<number> {
-    return await blogsCollection.countDocuments({});
+  async countAllDocuments(blogId: string): Promise<number> {
+    return await postsCollection.countDocuments({ blogId });
   },
 
   async getAllPostsForBlogs(
