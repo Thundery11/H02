@@ -16,10 +16,11 @@ const posts_service_1 = require("../domain/posts-service/posts-service");
 const posts_input_validation_1 = require("../middlewares/posts-input-validation");
 const erros_validation_1 = require("../middlewares/erros-validation");
 const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
+const blogs_db_repository_1 = require("../repositories/blogs-db-repository");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
-    const query = { name: new RegExp(searchNameTerm, "i") };
+    const query = {};
     const skip = (pageNumber - 1) * pageSize;
     const allPosts = yield posts_service_1.postsService.getAllPosts(query, sortBy, sortDirection, pageSize, skip);
     console.log(allPosts);
@@ -47,8 +48,14 @@ exports.postsRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, 
 }));
 exports.postsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, shortDescription, content, blogId } = req.body;
-    const createdPost = yield posts_service_1.postsService.createPost(title, shortDescription, content, blogId);
-    res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPost);
+    const blog = yield blogs_db_repository_1.blogsRepository.findBlog(blogId);
+    if (!blog) {
+        res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+    else {
+        const createdPost = yield posts_service_1.postsService.createPost(title, shortDescription, content, blogId, blog.name);
+        res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPost);
+    }
 }));
 exports.postsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;

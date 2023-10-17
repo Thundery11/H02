@@ -30,7 +30,8 @@ export const postsService = {
     title: string,
     shortDescription: string,
     content: string,
-    blogId: string
+    blogId: string,
+    blogName: string
   ): Promise<postsDbType> {
     const createdAt = new Date();
     const newPost: postsDbType = {
@@ -39,7 +40,7 @@ export const postsService = {
       shortDescription,
       content,
       blogId,
-      blogName: "some blog",
+      blogName,
       createdAt: createdAt.toISOString(),
     };
 

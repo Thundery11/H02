@@ -11,6 +11,7 @@ import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { PostsQueryParams, postsDbType } from "../models/postsTypes";
+import { blogsRepository } from "../repositories/blogs-db-repository";
 
 export const postsRouter = Router({});
 
@@ -25,7 +26,7 @@ postsRouter.get(
       pageSize = 10,
     } = req.query;
 
-    const query = { name: new RegExp(searchNameTerm, "i") };
+    const query = {};
     const skip = (pageNumber - 1) * pageSize;
 
     const allPosts: postsDbType[] = await postsService.getAllPosts(
@@ -80,13 +81,20 @@ postsRouter.post(
     res: Response
   ) => {
     const { title, shortDescription, content, blogId } = req.body;
-    const createdPost = await postsService.createPost(
-      title,
-      shortDescription,
-      content,
-      blogId
-    );
-    res.status(HTTP_STATUSES.CREATED_201).send(createdPost);
+
+    const blog = await blogsRepository.findBlog(blogId);
+    if (!blog) {
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    } else {
+      const createdPost = await postsService.createPost(
+        title,
+        shortDescription,
+        content,
+        blogId,
+        blog.name
+      );
+      res.status(HTTP_STATUSES.CREATED_201).send(createdPost);
+    }
   }
 );
 
