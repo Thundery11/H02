@@ -3,7 +3,7 @@ import { HTTP_STATUSES } from "../models/statuses";
 import { atob } from "buffer";
 
 export const authGuardMiddleware = (
-  req: Request,
+  req: Request<any, any, any, any>,
   res: Response,
   next: NextFunction
 ) => {

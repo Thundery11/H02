@@ -1,8 +1,17 @@
 import { Router, Request, Response } from "express";
-import { RequestWithBody, RequestWithParams } from "../../models/requestsTypes";
+import {
+  RequestWithBody,
+  RequestWithParams,
+  RequestWithQuery,
+} from "../../models/requestsTypes";
 import { usersService } from "../../domain/users-service/users-service";
 import { HTTP_STATUSES } from "../../models/statuses";
-import { usersDbType, usersOutputType } from "../../models/usersTypes";
+import {
+  UsersBodyParams,
+  UsersQueryParams,
+  usersDbType,
+  usersOutputType,
+} from "../../models/usersTypes";
 import { authGuardMiddleware } from "../../middlewares/authorisationMiddleware";
 import { usersInputValidation } from "../../middlewares/users-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
@@ -12,7 +21,15 @@ export const usersRouter = Router({});
 usersRouter.get(
   "/",
   authGuardMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: RequestWithQuery<UsersQueryParams>, res: Response) => {
+    const {
+      sortBy = "createdAt",
+      sortDirection = "desc",
+      pageNumber = 1,
+      pageSize = 10,
+      searchLoginTerm = "",
+      searchEmailTerm = "",
+    } = req.query;
     const allUsers: usersOutputType[] = await usersService.findAllUsers();
     res.status(HTTP_STATUSES.OK_200).send(allUsers);
   }
@@ -23,10 +40,7 @@ usersRouter.post(
   authGuardMiddleware,
   usersInputValidation(),
   errosValidation,
-  async (
-    req: RequestWithBody<{ login: string; email: string; password: string }>,
-    res: Response
-  ) => {
+  async (req: RequestWithBody<UsersBodyParams>, res: Response) => {
     const { login, email, password } = req.body;
     const newUser = await usersService.createUser(login, email, password);
     res.status(HTTP_STATUSES.CREATED_201).send(newUser);

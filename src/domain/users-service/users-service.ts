@@ -4,14 +4,9 @@ import { usersRepository } from "../../repositories/users-repository/users-repos
 export const usersService = {
   async findAllUsers(): Promise<usersOutputType[]> {
     const foundUser = await usersRepository.findAllUsers();
-    return foundUser.map((u) => {
-      return {
-        id: u.id,
-        login: u.login,
-        email: u.email,
-        createdAt: u.createdAt,
-      };
-    });
+    return foundUser.map(({ passwordHash, passwordSalt, ...rest }) => ({
+      ...rest,
+    }));
   },
 
   async createUser(

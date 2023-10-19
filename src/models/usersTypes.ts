@@ -13,3 +13,18 @@ export type usersOutputType = {
   email: string;
   createdAt: string;
 };
+
+export interface UsersBodyParams {
+  login: string;
+  email: string;
+  password: string;
+}
+
+export interface UsersQueryParams {
+  sortBy: string;
+  sortDirection: string;
+  pageNumber: number;
+  pageSize: number;
+  searchLoginTerm: string;
+  searchEmailTerm: string;
+}
