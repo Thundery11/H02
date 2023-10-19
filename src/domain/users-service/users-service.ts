@@ -1,16 +1,24 @@
-import { usersDbType } from "../../models/usersTypes";
+import { usersDbType, usersOutputType } from "../../models/usersTypes";
 import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 export const usersService = {
-  async findAllUsers(): Promise<usersDbType[]> {
-    return await usersRepository.findAllUsers();
+  async findAllUsers(): Promise<usersOutputType[]> {
+    const foundUser = await usersRepository.findAllUsers();
+    return foundUser.map((u) => {
+      return {
+        id: u.id,
+        email: u.email,
+        login: u.login,
+        createdAt: u.createdAt,
+      };
+    });
   },
 
   async createUser(
     login: string,
     email: string,
     password: string
-  ): Promise<usersDbType> {
+  ): Promise<usersOutputType> {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(password, passwordSalt);
 

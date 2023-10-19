@@ -3,6 +3,13 @@ export type usersDbType = {
   login: string;
   email: string;
   createdAt: string;
-  // passwordHash: string,
-  // passwordSalt: string
+  passwordHash: string;
+  passwordSalt: string;
+};
+
+export type usersOutputType = {
+  id: string;
+  login: string;
+  email: string;
+  createdAt: string;
 };

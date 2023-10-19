@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { RequestWithBody, RequestWithParams } from "../../models/requestsTypes";
 import { usersService } from "../../domain/users-service/users-service";
 import { HTTP_STATUSES } from "../../models/statuses";
-import { usersDbType } from "../../models/usersTypes";
+import { usersDbType, usersOutputType } from "../../models/usersTypes";
 import { authGuardMiddleware } from "../../middlewares/authorisationMiddleware";
 import { usersInputValidation } from "../../middlewares/users-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
@@ -13,7 +13,7 @@ usersRouter.get(
   "/",
   authGuardMiddleware,
   async (req: Request, res: Response) => {
-    const allUsers: usersDbType[] = await usersService.findAllUsers();
+    const allUsers: usersOutputType[] = await usersService.findAllUsers();
     res.status(HTTP_STATUSES.OK_200).send(allUsers);
   }
 );
