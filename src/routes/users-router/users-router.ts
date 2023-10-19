@@ -6,7 +6,6 @@ import { usersDbType } from "../../models/usersTypes";
 import { authGuardMiddleware } from "../../middlewares/authorisationMiddleware";
 import { usersInputValidation } from "../../middlewares/users-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
-import { UsersBodyParams } from "../../models/users-types";
 
 export const usersRouter = Router({});
 
@@ -24,13 +23,12 @@ usersRouter.post(
   authGuardMiddleware,
   usersInputValidation(),
   errosValidation,
-  async (req: RequestWithBody<UsersBodyParams>, res: Response) => {
+  async (
+    req: RequestWithBody<{ login: string; email: string; password: string }>,
+    res: Response
+  ) => {
     const { login, email, password } = req.body;
     const newUser = await usersService.createUser(login, email, password);
-
-    delete newUser.passwordHash;
-    console.log(newUser);
-    delete newUser.passwordSalt;
     res.status(HTTP_STATUSES.CREATED_201).send(newUser);
   }
 );
