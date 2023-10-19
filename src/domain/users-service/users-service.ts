@@ -24,8 +24,15 @@ export const usersService = {
       passwordHash: passwordHash,
       passwordSalt: passwordSalt,
     };
-    const createdUser = usersRepository.createUser(newUser);
-    return createdUser;
+
+    await usersRepository.createUser(newUser);
+
+    return {
+      id: newUser.id,
+      login: login,
+      email: email,
+      createdAt: createdat.toISOString(),
+    };
   },
   async deleteUser(id: string): Promise<boolean> {
     return await usersRepository.deleteUser(id);
