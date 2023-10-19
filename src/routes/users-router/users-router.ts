@@ -38,7 +38,7 @@ usersRouter.delete(
   authGuardMiddleware,
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
     const id = req.params.id;
-    const isDeletedUser = usersService.deleteUser(id);
+    const isDeletedUser = await usersService.deleteUser(id);
     if (!isDeletedUser) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     } else {

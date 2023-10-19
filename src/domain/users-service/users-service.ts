@@ -7,8 +7,8 @@ export const usersService = {
     return foundUser.map((u) => {
       return {
         id: u.id,
-        email: u.email,
         login: u.login,
+        email: u.email,
         createdAt: u.createdAt,
       };
     });
