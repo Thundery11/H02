@@ -2,13 +2,31 @@ import { usersDbType, usersOutputType } from "../../models/usersTypes";
 import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 export const usersService = {
-  async findAllUsers(): Promise<usersOutputType[]> {
-    const foundUser = await usersRepository.findAllUsers();
+  async findAllUsers(
+    query: object,
+    searchLoginTerm: string,
+    searchEmailTerm: string,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number
+  ): Promise<usersOutputType[]> {
+    const foundUser = await usersRepository.findAllUsers(
+      query,
+      searchLoginTerm,
+      searchEmailTerm,
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip
+    );
     return foundUser.map(({ passwordHash, passwordSalt, ...rest }) => ({
       ...rest,
     }));
   },
-
+  async countUsers(): Promise<number> {
+    return await usersRepository.countUsers();
+  },
   async createUser(
     login: string,
     email: string,

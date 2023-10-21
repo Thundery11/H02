@@ -7,6 +7,15 @@ export type usersDbType = {
   passwordSalt: string;
 };
 
+export type usersRequestType = {
+  query: object;
+  searchLoginTerm: string;
+  searchEmailTerm: string;
+  id: string;
+  login: string;
+  email: string;
+  createdAt: string;
+};
 export type usersOutputType = {
   id: string;
   login: string;

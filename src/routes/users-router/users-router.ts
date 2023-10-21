@@ -27,11 +27,36 @@ usersRouter.get(
       sortDirection = "desc",
       pageNumber = 1,
       pageSize = 10,
-      searchLoginTerm = "",
-      searchEmailTerm = "",
+      searchLoginTerm = "r",
+      searchEmailTerm = "d",
     } = req.query;
-    const allUsers: usersOutputType[] = await usersService.findAllUsers();
-    res.status(HTTP_STATUSES.OK_200).send(allUsers);
+
+    const query = {
+      login: new RegExp(searchLoginTerm, "i"),
+      // email: new RegExp(`\^${searchEmailTerm}, "i"`),
+    };
+    const skip = (pageNumber - 1) * pageSize;
+
+    const allUsers: usersOutputType[] = await usersService.findAllUsers(
+      query,
+      searchLoginTerm,
+      searchEmailTerm,
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip
+    );
+    const countedUsers = await usersService.countUsers();
+    const pagesCount: number = Math.ceil(countedUsers / pageSize);
+    const presentationUsers = {
+      pagesCount,
+      page: Number(pageNumber),
+      pageSize: Number(pageSize),
+      totalCount: countedUsers,
+      items: allUsers,
+    };
+    console.log(countedUsers);
+    res.status(HTTP_STATUSES.OK_200).send(presentationUsers);
   }
 );
 
