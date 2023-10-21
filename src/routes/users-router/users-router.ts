@@ -27,8 +27,8 @@ usersRouter.get(
       sortDirection = "desc",
       pageNumber = 1,
       pageSize = 10,
-      searchLoginTerm = "r",
-      searchEmailTerm = "d",
+      searchLoginTerm = "",
+      searchEmailTerm = "",
     } = req.query;
 
     const query = {
@@ -56,7 +56,7 @@ usersRouter.get(
       items: allUsers,
     };
     console.log(countedUsers);
-    res.status(HTTP_STATUSES.OK_200).send(presentationUsers);
+    res.status(HTTP_STATUSES.CREATED_201).send(presentationUsers);
   }
 );
 
