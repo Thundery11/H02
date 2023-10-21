@@ -6,7 +6,6 @@ export const usersRepository = {
     return newUser;
   },
   async findAllUsers(
-    query: object,
     searchLoginTerm: string,
     searchEmailTerm: string,
     sortBy: string,

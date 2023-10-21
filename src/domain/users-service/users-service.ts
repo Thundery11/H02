@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 export const usersService = {
   async findAllUsers(
-    query: object,
     searchLoginTerm: string,
     searchEmailTerm: string,
     sortBy: string,
@@ -12,7 +11,6 @@ export const usersService = {
     skip: number
   ): Promise<usersOutputType[]> {
     const foundUser = await usersRepository.findAllUsers(
-      query,
       searchLoginTerm,
       searchEmailTerm,
       sortBy,

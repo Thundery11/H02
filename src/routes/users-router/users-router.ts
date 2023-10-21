@@ -31,14 +31,13 @@ usersRouter.get(
       searchEmailTerm = "",
     } = req.query;
 
-    const query = {
-      login: new RegExp(searchLoginTerm, "i"),
-      // email: new RegExp(`\^${searchEmailTerm}, "i"`),
-    };
+    // const query = {
+    //   login: new RegExp(searchLoginTerm, "i"),
+    //   // email: new RegExp(`\^${searchEmailTerm}, "i"`),
+    // };
     const skip = (pageNumber - 1) * pageSize;
 
     const allUsers: usersOutputType[] = await usersService.findAllUsers(
-      query,
       searchLoginTerm,
       searchEmailTerm,
       sortBy,
