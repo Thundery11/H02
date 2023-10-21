@@ -18,8 +18,8 @@ export const usersRepository = {
         {
           // $or: [{ login: { $regex: /^s/i } }, { email: { $regex: /^s/i } }],
           $or: [
-            { login: { $regex: `\^${searchLoginTerm}`, $options: "i" } },
-            { email: { $regex: `\^${searchEmailTerm}`, $options: "i" } },
+            { login: { $regex: searchLoginTerm, $options: "i" } },
+            { email: { $regex: searchEmailTerm, $options: "i" } },
           ],
         },
         { projection: { _id: 0 } }
@@ -35,8 +35,8 @@ export const usersRepository = {
   ): Promise<number> {
     return await usersCollection.countDocuments({
       $or: [
-        { login: { $regex: `\^${searchLoginTerm}`, $options: "i" } },
-        { email: { $regex: `\^${searchEmailTerm}`, $options: "i" } },
+        { login: { $regex: searchLoginTerm, $options: "i" } },
+        { email: { $regex: searchEmailTerm, $options: "i" } },
       ],
     });
   },
