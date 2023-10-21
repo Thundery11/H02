@@ -52,7 +52,7 @@ usersRouter.get(
       pagesCount,
       page: Number(pageNumber),
       pageSize: Number(pageSize),
-      totalCount: countedUsers,
+      totalCount: countedUsers - 1,
       items: allUsers,
     };
     console.log(countedUsers);
