@@ -24,8 +24,11 @@ export const usersService = {
       ...rest,
     }));
   },
-  async countUsers(): Promise<number> {
-    return await usersRepository.countUsers();
+  async countUsers(
+    searchLoginTerm: string,
+    searchEmailTerm: string
+  ): Promise<number> {
+    return await usersRepository.countUsers(searchLoginTerm, searchEmailTerm);
   },
   async createUser(
     login: string,

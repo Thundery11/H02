@@ -30,8 +30,16 @@ export const usersRepository = {
       .limit(+pageSize)
       .toArray();
   },
-  async countUsers(): Promise<number> {
-    return await usersCollection.countDocuments({});
+  async countUsers(
+    searchLoginTerm: string,
+    searchEmailTerm: string
+  ): Promise<number> {
+    return await usersCollection.countDocuments({
+      $or: [
+        { login: { $regex: `\^${searchLoginTerm}`, $options: "i" } },
+        { email: { $regex: `\^${searchEmailTerm}`, $options: "i" } },
+      ],
+    });
   },
 
   async findByLoginOrEmail(loginOrEmail: string) {

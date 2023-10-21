@@ -46,7 +46,10 @@ usersRouter.get(
       pageSize,
       skip
     );
-    const countedUsers = await usersService.countUsers();
+    const countedUsers = await usersService.countUsers(
+      searchLoginTerm,
+      searchEmailTerm
+    );
     const pagesCount: number = Math.ceil(countedUsers / pageSize);
     const presentationUsers = {
       pagesCount,
