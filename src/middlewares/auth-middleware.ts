@@ -19,6 +19,7 @@ export const authMiddleware = async (
   if (userId) {
     req.user = await usersService.findUserById(userId);
     next();
+    return;
   }
   res.send(HTTP_STATUSES.UNAUTHORISED_401);
 };

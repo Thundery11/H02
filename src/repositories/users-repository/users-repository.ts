@@ -1,4 +1,4 @@
-import { usersDbType } from "../../models/usersTypes";
+import { UserForJwtService, usersDbType } from "../../models/usersTypes";
 import { usersCollection } from "../dataBase/blogsDb";
 export const usersRepository = {
   async createUser(newUser: usersDbType): Promise<usersDbType> {

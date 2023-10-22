@@ -1,4 +1,8 @@
-import { usersDbType, usersOutputType } from "../../models/usersTypes";
+import {
+  UserForJwtService,
+  usersDbType,
+  usersOutputType,
+} from "../../models/usersTypes";
 import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 export const usersService = {

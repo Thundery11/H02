@@ -22,6 +22,11 @@ export type usersOutputType = {
   email: string;
   createdAt: string;
 };
+export interface UserForJwtService {
+  email: string;
+  login: string;
+  userId: string;
+}
 
 export interface UsersBodyParams {
   login: string;
