@@ -9,7 +9,6 @@ import { HTTP_STATUSES } from "../../models/statuses";
 import {
   UsersBodyParams,
   UsersQueryParams,
-  usersDbType,
   usersOutputType,
 } from "../../models/usersTypes";
 import { authGuardMiddleware } from "../../middlewares/authorisationMiddleware";
@@ -31,10 +30,6 @@ usersRouter.get(
       searchEmailTerm = "",
     } = req.query;
 
-    // const query = {
-    //   login: new RegExp(searchLoginTerm, "i"),
-    //   // email: new RegExp(`\^${searchEmailTerm}, "i"`),
-    // };
     const skip = (pageNumber - 1) * pageSize;
 
     const allUsers: usersOutputType[] = await usersService.findAllUsers(
@@ -59,6 +54,17 @@ usersRouter.get(
     };
     console.log(countedUsers);
     res.status(HTTP_STATUSES.OK_200).send(presentationUsers);
+  }
+);
+usersRouter.get(
+  "/:id",
+  authGuardMiddleware,
+  async (req: RequestWithParams<{ id: string }>, res: Response) => {
+    const user = await usersService.findUserById(req.params.id);
+    if (!user) {
+      res.send(HTTP_STATUSES.NOT_FOUND_404);
+    }
+    res.status(HTTP_STATUSES.OK_200).send(user);
   }
 );
 

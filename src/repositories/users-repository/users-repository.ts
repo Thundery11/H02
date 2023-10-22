@@ -29,6 +29,13 @@ export const usersRepository = {
       .limit(+pageSize)
       .toArray();
   },
+  async findUserById(id: string): Promise<usersDbType | null> {
+    return await usersCollection.findOne(
+      { id: id },
+      { projection: { _id: 0 } }
+    );
+  },
+
   async countUsers(
     searchLoginTerm: string,
     searchEmailTerm: string

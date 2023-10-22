@@ -6,6 +6,9 @@ import { usersRouter } from "./routes/users-router/users-router";
 import { authRouter } from "./routes/auth-router/auth-router";
 
 export const app = express();
+export const settings = {
+  JWT_SECRET: process.env.JWT_SECRET || "123",
+};
 
 app.use(express.json());
 app.use("/testing/all-data", testingAllDataRouter);

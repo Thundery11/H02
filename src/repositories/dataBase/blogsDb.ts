@@ -6,7 +6,7 @@ import { usersDbType } from "../../models/usersTypes";
 
 dotenv.config();
 
-// const mongoUri = 'mongodb://0.0.0.0:27017'
+// const mongoUri = "mongodb://0.0.0.0:27017";
 const mongoUri = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
 if (!mongoUri) {
   throw new Error(`! Url doesn't found`);

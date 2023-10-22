@@ -22,6 +22,9 @@ export const usersService = {
       ...rest,
     }));
   },
+  async findUserById(id: string): Promise<usersDbType | null> {
+    return usersRepository.findUserById(id);
+  },
   async countUsers(
     searchLoginTerm: string,
     searchEmailTerm: string
@@ -67,7 +70,7 @@ export const usersService = {
     if (user.passwordHash !== passwordHash) {
       return false;
     }
-    return true;
+    return user;
   },
 
   async _generateHash(password: string, salt: string) {

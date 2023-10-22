@@ -4,6 +4,7 @@ import { usersService } from "../../domain/users-service/users-service";
 import { HTTP_STATUSES } from "../../models/statuses";
 import { authInputValidation } from "../../middlewares/auth-input-validation-middleware";
 import { errosValidation } from "../../middlewares/erros-validation";
+import { jwtService } from "../../application/jwt-service";
 
 export const authRouter = Router({});
 
@@ -15,14 +16,15 @@ authRouter.post(
     req: RequestWithBody<{ loginOrEmail: string; password: string }>,
     res: Response
   ) => {
-    const checkResult = await usersService.checkCredantials(
+    const user = await usersService.checkCredantials(
       req.body.loginOrEmail,
       req.body.password
     );
-    if (!checkResult) {
-      res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+    if (user) {
+      const token = await jwtService.createJWT(user);
+      res.status(HTTP_STATUSES.OK_200).send(token);
     } else {
-      res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+      res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
     }
   }
 );
