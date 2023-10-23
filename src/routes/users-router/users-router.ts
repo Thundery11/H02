@@ -14,6 +14,7 @@ import {
 import { authGuardMiddleware } from "../../middlewares/authorisationMiddleware";
 import { usersInputValidation } from "../../middlewares/users-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
+import { authMiddleware } from "../../middlewares/auth-middleware";
 
 export const usersRouter = Router({});
 
@@ -58,9 +59,10 @@ usersRouter.get(
 );
 usersRouter.get(
   "/:id",
-  authGuardMiddleware,
+  // authGuardMiddleware,
+  authMiddleware,
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const user = await usersService.findUserById(req.params.id);
+    const user = await usersService.findUserById(req.params.id, req.user!.id);
     if (!user) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
     }

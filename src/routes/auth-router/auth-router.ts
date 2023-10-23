@@ -5,6 +5,7 @@ import { HTTP_STATUSES } from "../../models/statuses";
 import { authInputValidation } from "../../middlewares/auth-input-validation-middleware";
 import { errosValidation } from "../../middlewares/erros-validation";
 import { jwtService } from "../../application/jwt-service";
+import { authMiddleware } from "../../middlewares/auth-middleware";
 
 export const authRouter = Router({});
 
@@ -28,3 +29,15 @@ authRouter.post(
     }
   }
 );
+
+authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
+  const userId = "3073";
+  req.user?.id;
+  console.log(req.user?.email);
+  if (!userId) {
+    res.send(HTTP_STATUSES.UNAUTHORISED_401);
+  } else {
+    const infoAboutMe = await usersService.findUserById(userId);
+    res.send(infoAboutMe);
+  }
+});

@@ -32,7 +32,7 @@ export const usersRepository = {
   async findUserById(id: string): Promise<usersDbType | null> {
     return await usersCollection.findOne(
       { id: id },
-      { projection: { _id: 0 } }
+      { projection: { _id: 0, passwordSalt: 0, passwordHash: 0, createdAt: 0 } }
     );
   },
 
