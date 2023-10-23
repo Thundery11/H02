@@ -28,7 +28,23 @@ export const postsRepository = {
       { projection: { _id: 0 } }
     );
   },
-
+  async getComments(
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number,
+    postId: string
+  ): Promise<CommentsDbType[]> {
+    return await commentsCollection
+      .find({ postId: postId })
+      .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
+      .skip(skip)
+      .limit(Number(pageSize))
+      .toArray();
+  },
+  async countAllComments(postId: string): Promise<number> {
+    return await commentsCollection.countDocuments({ postId });
+  },
   async createPost(newPost: postsDbType): Promise<postsDbType> {
     const result = await postsCollection.insertOne({ ...newPost });
     return newPost;

@@ -5,6 +5,7 @@ import {
   RequestWithBody,
   RequestWithParamsAndBody,
   RequestWithQuery,
+  RequestWithParamsAndQuery,
 } from "../models/requestsTypes";
 import { postsService } from "../domain/posts-service/posts-service";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
@@ -14,7 +15,7 @@ import { PostsQueryParams, postsDbType } from "../models/postsTypes";
 import { blogsRepository } from "../repositories/blogs-db-repository";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { commentsInputValidation } from "../middlewares/comments-input-validation";
-import { CommentsDbType } from "../models/comments-types";
+import { CommentsDbType, CommentsQueryParams } from "../models/comments-types";
 
 export const postsRouter = Router({});
 
@@ -114,6 +115,7 @@ postsRouter.post(
     console.log(isExistPost);
     if (!isExistPost) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
+      return;
     } else {
       const userId = req.user?.id;
       const userLogin = req.user?.login;
@@ -124,6 +126,47 @@ postsRouter.post(
         userLogin!
       );
       res.status(HTTP_STATUSES.CREATED_201).send(createdComment);
+    }
+  }
+);
+
+postsRouter.get(
+  "/:postId/comments",
+  async (
+    req: RequestWithParamsAndQuery<CommentsQueryParams>,
+    res: Response
+  ) => {
+    const postId = req.params.postId;
+    const isExistPost = await postsService.getPost(postId);
+    if (!isExistPost) {
+      res.send(HTTP_STATUSES.NOT_FOUND_404);
+      return;
+    } else {
+      const {
+        sortBy = "createdAt",
+        sortDirection = "desc",
+        pageSize = 10,
+        pageNumber = 1,
+      } = req.query;
+      const skip = (pageNumber - 1) * pageSize;
+      const recivedComments = await postsService.getComments(
+        sortBy,
+        sortDirection,
+        pageSize,
+        skip,
+        postId
+      );
+      console.log(recivedComments);
+      const countedComments = await postsService.countAllComments(postId);
+      const pagesCount = Math.ceil(countedComments / pageSize);
+      const presentationComments = {
+        pagesCount,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
+        totalCount: countedComments,
+        items: recivedComments,
+      };
+      res.status(HTTP_STATUSES.OK_200).send(presentationComments);
     }
   }
 );

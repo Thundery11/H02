@@ -55,7 +55,7 @@ export const postsService = {
   ): Promise<CommentsDbType> {
     const createdAt = new Date();
     const newComment: CommentsDbType = {
-      id: Math.floor(Math.random() * 1000).toString(),
+      id: Math.floor(Math.random() * 10000).toString(),
       content: content,
       commentatorInfo: {
         userId: userId,
@@ -64,6 +64,24 @@ export const postsService = {
       createdAt: createdAt.toISOString(),
     };
     return await postsRepository.createCommet(newComment);
+  },
+  async getComments(
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    skip: number,
+    postId: string
+  ): Promise<CommentsDbType[]> {
+    return await postsRepository.getComments(
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip,
+      postId
+    );
+  },
+  async countAllComments(postId: string): Promise<number> {
+    return postsRepository.countAllComments(postId);
   },
 
   async deletePost(id: string): Promise<boolean> {
