@@ -1,3 +1,4 @@
+import { CommentsDbType } from "../../models/comments-types";
 import { postsDbType } from "../../models/postsTypes";
 import { postsRepository } from "../../repositories/posts-db-repository";
 
@@ -46,6 +47,23 @@ export const postsService = {
 
     const createdPost = await postsRepository.createPost(newPost);
     return createdPost;
+  },
+  async createCommet(
+    content: string,
+    userId: string,
+    userLogin: string
+  ): Promise<CommentsDbType> {
+    const createdAt = new Date();
+    const newComment: CommentsDbType = {
+      id: Math.floor(Math.random() * 1000).toString(),
+      content: content,
+      commentatorInfo: {
+        userId: userId,
+        userLogin: userLogin,
+      },
+      createdAt: createdAt.toISOString(),
+    };
+    return await postsRepository.createCommet(newComment);
   },
 
   async deletePost(id: string): Promise<boolean> {

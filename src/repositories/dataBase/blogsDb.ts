@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { blogsDbType } from "../../models/blogsTypes";
 import { postsDbType } from "../../models/postsTypes";
 import { usersDbType } from "../../models/usersTypes";
+import { CommentsDbType } from "../../models/comments-types";
 
 dotenv.config();
 
@@ -13,15 +14,14 @@ if (!mongoUri) {
 }
 export const client = new MongoClient(mongoUri);
 const blogsDb = client.db("blogsDb");
-
 const postsDb = client.db("postsDb");
-const postsOfBlogsDb = client.db("postsOfBlogsDb");
 const usersDb = client.db("users");
+const commentsDb = client.db("comments");
 export const postsCollection = postsDb.collection<postsDbType>("posts");
 export const blogsCollection = blogsDb.collection<blogsDbType>("blogs");
-//export const postsForBlogsCollection =
-//  postsOfBlogsDb.collection<postsDbType>("postsOfBlogs");
 export const usersCollection = usersDb.collection<usersDbType>("users");
+export const commentsCollection =
+  commentsDb.collection<CommentsDbType>("comments");
 
 export async function runDb() {
   try {

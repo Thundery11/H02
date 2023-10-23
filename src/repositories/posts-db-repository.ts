@@ -1,5 +1,6 @@
+import { CommentsDbType } from "../models/comments-types";
 import { postsDbType } from "../models/postsTypes";
-import { postsCollection } from "./dataBase/blogsDb";
+import { commentsCollection, postsCollection } from "./dataBase/blogsDb";
 
 export const postsRepository = {
   async getAllPosts(
@@ -31,6 +32,10 @@ export const postsRepository = {
   async createPost(newPost: postsDbType): Promise<postsDbType> {
     const result = await postsCollection.insertOne({ ...newPost });
     return newPost;
+  },
+  async createCommet(newComment: CommentsDbType): Promise<CommentsDbType> {
+    const result = await commentsCollection.insertOne({ ...newComment });
+    return newComment;
   },
 
   async deletePost(id: string): Promise<boolean> {

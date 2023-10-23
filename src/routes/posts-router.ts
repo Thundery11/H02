@@ -12,6 +12,9 @@ import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { PostsQueryParams, postsDbType } from "../models/postsTypes";
 import { blogsRepository } from "../repositories/blogs-db-repository";
+import { authMiddleware } from "../middlewares/auth-middleware";
+import { commentsInputValidation } from "../middlewares/comments-input-validation";
+import { CommentsDbType } from "../models/comments-types";
 
 export const postsRouter = Router({});
 
@@ -94,6 +97,33 @@ postsRouter.post(
         blog.name
       );
       res.status(HTTP_STATUSES.CREATED_201).send(createdPost);
+    }
+  }
+);
+postsRouter.post(
+  "/:postId/comments",
+  authMiddleware,
+  commentsInputValidation(),
+  errosValidation,
+  async (
+    req: RequestWithParamsAndBody<{ postId: string; content: string }>,
+    res: Response
+  ) => {
+    const postId = req.params.postId;
+    const isExistPost = await postsService.getPost(postId);
+    console.log(isExistPost);
+    if (!isExistPost) {
+      res.send(HTTP_STATUSES.NOT_FOUND_404);
+    } else {
+      const userId = req.user?.id;
+      const userLogin = req.user?.login;
+      const content = req.body.content;
+      const createdComment = await postsService.createCommet(
+        content,
+        userId!,
+        userLogin!
+      );
+      res.status(HTTP_STATUSES.CREATED_201).send(createdComment);
     }
   }
 );
