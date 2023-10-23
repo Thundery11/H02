@@ -31,13 +31,16 @@ authRouter.post(
 );
 
 authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
-  const userId = "3073";
-  req.user?.id;
-  console.log(req.user?.email);
+  const userId = req.user?.id;
   if (!userId) {
     res.send(HTTP_STATUSES.UNAUTHORISED_401);
   } else {
     const infoAboutMe = await usersService.findUserById(userId);
-    res.send(infoAboutMe);
+    const mappedInfo = {
+      email: infoAboutMe?.email,
+      login: infoAboutMe?.login,
+      userId: infoAboutMe?.id,
+    };
+    res.send(mappedInfo);
   }
 });
