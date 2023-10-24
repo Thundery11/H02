@@ -23,3 +23,15 @@ commentsRouter.get(
     }
   }
 );
+commentsRouter.delete(
+  "/:id",
+  async (req: RequestWithParams<{ id: string }>, res: Response) => {
+    const commentId = req.params.id;
+    const isDeletedComment = await commentsService.deleteComment(commentId);
+    if (isDeletedComment) {
+      res.send(HTTP_STATUSES.NO_CONTENT_204);
+    } else {
+      res.send(HTTP_STATUSES.NOT_FOUND_404);
+    }
+  }
+);

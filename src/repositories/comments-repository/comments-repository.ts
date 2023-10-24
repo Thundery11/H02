@@ -8,4 +8,8 @@ export const commentsRepository = {
       { projection: { _id: 0, postId: 0 } }
     );
   },
+  async deleteComment(commentId: string): Promise<boolean> {
+    const result = await commentsCollection.deleteOne({ id: commentId });
+    return result.deletedCount === 1;
+  },
 };
