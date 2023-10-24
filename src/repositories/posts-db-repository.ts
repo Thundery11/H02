@@ -36,7 +36,7 @@ export const postsRepository = {
     postId: string
   ): Promise<CommentsDbType[]> {
     return await commentsCollection
-      .find({ postId: postId })
+      .find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(pageSize))

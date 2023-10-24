@@ -121,6 +121,7 @@ postsRouter.post(
       const userLogin = req.user?.login;
       const content = req.body.content;
       const createdComment = await postsService.createCommet(
+        postId,
         content,
         userId!,
         userLogin!
@@ -137,7 +138,9 @@ postsRouter.get(
     res: Response
   ) => {
     const postId = req.params.postId;
+    console.log(postId);
     const isExistPost = await postsService.getPost(postId);
+    console.log(isExistPost);
     if (!isExistPost) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
       return;
@@ -149,15 +152,15 @@ postsRouter.get(
         pageNumber = 1,
       } = req.query;
       const skip = (pageNumber - 1) * pageSize;
-      const recivedComments = await postsService.getComments(
+      const recivedComments: CommentsDbType[] = await postsService.getComments(
         sortBy,
         sortDirection,
         pageSize,
         skip,
         postId
       );
-      console.log(recivedComments);
       const countedComments = await postsService.countAllComments(postId);
+      console.log(countedComments);
       const pagesCount = Math.ceil(countedComments / pageSize);
       const presentationComments = {
         pagesCount,

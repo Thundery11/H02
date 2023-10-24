@@ -72,13 +72,15 @@ exports.postsRouter.post("/:postId/comments", auth_middleware_1.authMiddleware, 
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         const userLogin = (_b = req.user) === null || _b === void 0 ? void 0 : _b.login;
         const content = req.body.content;
-        const createdComment = yield posts_service_1.postsService.createCommet(content, userId, userLogin);
+        const createdComment = yield posts_service_1.postsService.createCommet(postId, content, userId, userLogin);
         res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdComment);
     }
 }));
 exports.postsRouter.get("/:postId/comments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.postId;
+    console.log(postId);
     const isExistPost = yield posts_service_1.postsService.getPost(postId);
+    console.log(isExistPost);
     if (!isExistPost) {
         res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
         return;
@@ -87,8 +89,8 @@ exports.postsRouter.get("/:postId/comments", (req, res) => __awaiter(void 0, voi
         const { sortBy = "createdAt", sortDirection = "desc", pageSize = 10, pageNumber = 1, } = req.query;
         const skip = (pageNumber - 1) * pageSize;
         const recivedComments = yield posts_service_1.postsService.getComments(sortBy, sortDirection, pageSize, skip, postId);
-        console.log(recivedComments);
         const countedComments = yield posts_service_1.postsService.countAllComments(postId);
+        console.log(countedComments);
         const pagesCount = Math.ceil(countedComments / pageSize);
         const presentationComments = {
             pagesCount,
