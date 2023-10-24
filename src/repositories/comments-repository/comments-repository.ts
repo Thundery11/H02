@@ -12,4 +12,12 @@ export const commentsRepository = {
     const result = await commentsCollection.deleteOne({ id: commentId });
     return result.deletedCount === 1;
   },
+
+  async changeComment(commentId: string, content: string): Promise<boolean> {
+    const result = await commentsCollection.updateOne(
+      { id: commentId },
+      { $set: { content: content } }
+    );
+    return result.matchedCount === 1;
+  },
 };

@@ -1,4 +1,7 @@
-import { CommentsDbType } from "../../models/comments-types";
+import {
+  CommentsDbType,
+  CommentsOutputType,
+} from "../../models/comments-types";
 import { postsDbType } from "../../models/postsTypes";
 import { postsRepository } from "../../repositories/posts-db-repository";
 
@@ -35,6 +38,7 @@ export const postsService = {
     blogName: string
   ): Promise<postsDbType> {
     const createdAt = new Date();
+
     const newPost: postsDbType = {
       id: Math.floor(Math.random() * 10000).toString(),
       title,
@@ -48,13 +52,15 @@ export const postsService = {
     const createdPost = await postsRepository.createPost(newPost);
     return createdPost;
   },
+
   async createCommet(
     postId: string,
     content: string,
     userId: string,
     userLogin: string
-  ): Promise<CommentsDbType> {
+  ): Promise<CommentsOutputType> {
     const createdAt = new Date();
+
     const newComment: CommentsDbType = {
       postId,
       id: Math.floor(Math.random() * 10000).toString(),
@@ -65,8 +71,10 @@ export const postsService = {
       },
       createdAt: createdAt.toISOString(),
     };
+
     await postsRepository.createCommet(newComment);
-    return {
+
+    const outPutcommet: CommentsOutputType = {
       id: Math.floor(Math.random() * 10000).toString(),
       content: content,
       commentatorInfo: {
@@ -75,7 +83,9 @@ export const postsService = {
       },
       createdAt: createdAt.toISOString(),
     };
+    return outPutcommet;
   },
+
   async getComments(
     sortBy: string,
     sortDirection: string,
@@ -91,6 +101,7 @@ export const postsService = {
       postId
     );
   },
+
   async countAllComments(postId: string): Promise<number> {
     return postsRepository.countAllComments(postId);
   },

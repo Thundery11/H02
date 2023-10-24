@@ -62,7 +62,7 @@ usersRouter.get(
   // authGuardMiddleware,
   authMiddleware,
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const user = await usersService.findUserById(req.params.id, req.user!.id);
+    const user = await usersService.findUserById(req.params.id);
     if (!user) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
     }
