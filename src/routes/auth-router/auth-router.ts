@@ -25,7 +25,7 @@ authRouter.post(
       const token = await jwtService.createJWT(user);
       res.status(HTTP_STATUSES.OK_200).send(token);
     } else {
-      res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+      res.status(HTTP_STATUSES.UNAUTHORISED_401).send();
     }
   }
 );
