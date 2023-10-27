@@ -64,7 +64,7 @@ exports.postsRouter.post("/:postId/comments", auth_middleware_1.authMiddleware, 
     const postId = req.params.postId;
     const isExistPost = yield posts_service_1.postsService.getPost(postId);
     if (!isExistPost) {
-        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        res.status(statuses_1.HTTP_STATUSES.NOT_FOUND_404).send();
         return;
     }
     else {
