@@ -9,6 +9,7 @@ import { HTTP_STATUSES } from "../../models/statuses";
 import { authMiddleware } from "../../middlewares/auth-middleware";
 import { commentsInputValidation } from "../../middlewares/comments-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
+import { commentsRepository } from "../../repositories/comments-repository/comments-repository";
 
 export const commentsRouter = Router({});
 
@@ -34,11 +35,20 @@ commentsRouter.delete(
   authMiddleware,
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
     const commentId = req.params.id;
+    const comment = await commentsRepository.getComment(commentId);
+    if (!comment) {
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      return;
+    }
+    if (req.user?.id !== comment.commentatorInfo.userId) {
+      res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+      return;
+    }
     const isDeletedComment = await commentsService.deleteComment(commentId);
     if (isDeletedComment) {
-      res.send(HTTP_STATUSES.NO_CONTENT_204);
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     } else {
-      res.send(HTTP_STATUSES.NOT_FOUND_404);
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
   }
 );
@@ -54,15 +64,26 @@ commentsRouter.put(
   ) => {
     const commentId = req.params.id;
     const content = req.body.content;
+
+    const comment = await commentsRepository.getComment(commentId);
+    if (!comment) {
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      return;
+    }
+    if (req.user?.id !== comment.commentatorInfo.userId) {
+      res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+      return;
+    }
+
     const changedComment = await commentsService.changeComment(
       commentId,
       content
     );
     if (!changedComment) {
-      res.send(HTTP_STATUSES.NOT_FOUND_404);
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     } else {
-      res.send(HTTP_STATUSES.NO_CONTENT_204);
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
   }
 );

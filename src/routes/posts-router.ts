@@ -112,7 +112,6 @@ postsRouter.post(
   ) => {
     const postId = req.params.postId;
     const isExistPost = await postsService.getPost(postId);
-    console.log(isExistPost);
     if (!isExistPost) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
       return;
@@ -138,9 +137,7 @@ postsRouter.get(
     res: Response
   ) => {
     const postId = req.params.postId;
-    console.log(postId);
     const isExistPost = await postsService.getPost(postId);
-    console.log(isExistPost);
     if (!isExistPost) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
       return;
@@ -160,7 +157,7 @@ postsRouter.get(
         postId
       );
       const countedComments = await postsService.countAllComments(postId);
-      console.log(countedComments);
+
       const pagesCount = Math.ceil(countedComments / pageSize);
       const presentationComments = {
         pagesCount,
