@@ -79,7 +79,7 @@ exports.postsRouter.get("/:postId/comments", (req, res) => __awaiter(void 0, voi
     const postId = req.params.postId;
     const isExistPost = yield posts_service_1.postsService.getPost(postId);
     if (!isExistPost) {
-        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        res.status(statuses_1.HTTP_STATUSES.NOT_FOUND_404).send();
         return;
     }
     else {

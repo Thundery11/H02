@@ -139,7 +139,7 @@ postsRouter.get(
     const postId = req.params.postId;
     const isExistPost = await postsService.getPost(postId);
     if (!isExistPost) {
-      res.send(HTTP_STATUSES.NOT_FOUND_404);
+      res.status(HTTP_STATUSES.NOT_FOUND_404).send();
       return;
     } else {
       const {
