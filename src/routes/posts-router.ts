@@ -178,10 +178,10 @@ postsRouter.delete(
     const id = req.params.id;
     const isDeletedPost = await postsService.deletePost(id);
     if (!isDeletedPost) {
-      res.send(HTTP_STATUSES.NOT_FOUND_404);
+      res.status(HTTP_STATUSES.NOT_FOUND_404).send();
       return;
     } else {
-      res.send(HTTP_STATUSES.NO_CONTENT_204);
+      res.status(HTTP_STATUSES.NO_CONTENT_204).send();
     }
   }
 );

@@ -102,11 +102,11 @@ exports.postsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware
     const id = req.params.id;
     const isDeletedPost = yield posts_service_1.postsService.deletePost(id);
     if (!isDeletedPost) {
-        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+        res.status(statuses_1.HTTP_STATUSES.NOT_FOUND_404).send();
         return;
     }
     else {
-        res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+        res.status(statuses_1.HTTP_STATUSES.NO_CONTENT_204).send();
     }
 }));
 exports.postsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
