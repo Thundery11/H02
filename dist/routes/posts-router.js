@@ -25,7 +25,6 @@ exports.postsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, fun
     const query = {};
     const skip = (pageNumber - 1) * pageSize;
     const allPosts = yield posts_service_1.postsService.getAllPosts(query, sortBy, sortDirection, pageSize, skip);
-    console.log(allPosts);
     const countedDocuments = yield posts_service_1.postsService.countDocuments(query);
     const pagesCount = Math.ceil(countedDocuments / pageSize);
     const presentationAllposts = {

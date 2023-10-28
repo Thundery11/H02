@@ -34,13 +34,14 @@ commentsRouter.delete(
   "/:id",
   authMiddleware,
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
+    const userId = req.user?.id;
     const commentId = req.params.id;
     const comment = await commentsRepository.getComment(commentId);
     if (!comment) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     }
-    if (req.user?.id !== comment.commentatorInfo.userId) {
+    if (comment.commentatorInfo.userId !== userId) {
       res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
       return;
     }
@@ -64,13 +65,13 @@ commentsRouter.put(
   ) => {
     const commentId = req.params.id;
     const content = req.body.content;
-
+    const userId = req.user?.id;
     const comment = await commentsRepository.getComment(commentId);
     if (!comment) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     }
-    if (req.user?.id !== comment.commentatorInfo.userId) {
+    if (comment.commentatorInfo.userId !== userId) {
       res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
       return;
     }
