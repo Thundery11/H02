@@ -75,7 +75,7 @@ export const postsService = {
     await postsRepository.createCommet(newComment);
 
     const outPutcommet: CommentsOutputType = {
-      id: Math.floor(Math.random() * 10000).toString(),
+      id: newComment.id,
       content: content,
       commentatorInfo: {
         userId: userId,
