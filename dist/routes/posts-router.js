@@ -81,21 +81,19 @@ exports.postsRouter.get("/:postId/comments", (req, res) => __awaiter(void 0, voi
         res.status(statuses_1.HTTP_STATUSES.NOT_FOUND_404).send();
         return;
     }
-    else {
-        const { sortBy = "createdAt", sortDirection = "desc", pageSize = 10, pageNumber = 1, } = req.query;
-        const skip = (pageNumber - 1) * pageSize;
-        const recivedComments = yield posts_service_1.postsService.getComments(sortBy, sortDirection, pageSize, skip, postId);
-        const countedComments = yield posts_service_1.postsService.countAllComments(postId);
-        const pagesCount = Math.ceil(countedComments / pageSize);
-        const presentationComments = {
-            pagesCount,
-            page: Number(pageNumber),
-            pageSize: Number(pageSize),
-            totalCount: countedComments,
-            items: recivedComments,
-        };
-        res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationComments);
-    }
+    const { sortBy = "createdAt", sortDirection = "desc", pageSize = 10, pageNumber = 1, } = req.query;
+    const skip = (pageNumber - 1) * pageSize;
+    const recivedComments = yield posts_service_1.postsService.getComments(sortBy, sortDirection, pageSize, skip, postId);
+    const countedComments = yield posts_service_1.postsService.countAllComments(postId);
+    const pagesCount = Math.ceil(countedComments / pageSize);
+    const presentationComments = {
+        pagesCount,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
+        totalCount: countedComments,
+        items: recivedComments,
+    };
+    return res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationComments);
 }));
 exports.postsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;

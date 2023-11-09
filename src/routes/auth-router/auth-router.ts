@@ -8,13 +8,17 @@ import { jwtService } from "../../application/jwt-service";
 import { authMiddleware } from "../../middlewares/auth-middleware";
 import { emailAdapter } from "../../adapters/email-adapter";
 import { AuthBodyParams } from "../../models/authTypes";
+import { registrationInputValidation } from "../../middlewares/registration-input-validation-middleware";
 export const authRouter = Router({});
 
 authRouter.post(
   "/registration",
+  registrationInputValidation(),
+  errosValidation,
   async (req: RequestWithBody<AuthBodyParams>, res: Response) => {
-    const { login, password, email } = req.body;
-    await emailAdapter.sendEmail(login, password, email);
+    const { login, email, password } = req.body;
+    const user = await usersService.createUser(login, email, password);
+    await emailAdapter.sendEmail(login, email, password);
 
     res.send({ email: req.body.email });
   }
