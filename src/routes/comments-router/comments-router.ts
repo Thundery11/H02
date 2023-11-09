@@ -24,9 +24,8 @@ commentsRouter.get(
     if (!comment) {
       res.send(HTTP_STATUSES.NOT_FOUND_404);
       return;
-    } else {
-      res.status(HTTP_STATUSES.OK_200).send(comment);
     }
+    return res.status(HTTP_STATUSES.OK_200).send(comment);
   }
 );
 

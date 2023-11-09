@@ -140,33 +140,32 @@ postsRouter.get(
     if (!isExistPost) {
       res.status(HTTP_STATUSES.NOT_FOUND_404).send();
       return;
-    } else {
-      const {
-        sortBy = "createdAt",
-        sortDirection = "desc",
-        pageSize = 10,
-        pageNumber = 1,
-      } = req.query;
-      const skip = (pageNumber - 1) * pageSize;
-      const recivedComments: CommentsDbType[] = await postsService.getComments(
-        sortBy,
-        sortDirection,
-        pageSize,
-        skip,
-        postId
-      );
-      const countedComments = await postsService.countAllComments(postId);
-
-      const pagesCount = Math.ceil(countedComments / pageSize);
-      const presentationComments = {
-        pagesCount,
-        page: Number(pageNumber),
-        pageSize: Number(pageSize),
-        totalCount: countedComments,
-        items: recivedComments,
-      };
-      res.status(HTTP_STATUSES.OK_200).send(presentationComments);
     }
+    const {
+      sortBy = "createdAt",
+      sortDirection = "desc",
+      pageSize = 10,
+      pageNumber = 1,
+    } = req.query;
+    const skip = (pageNumber - 1) * pageSize;
+    const recivedComments: CommentsDbType[] = await postsService.getComments(
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip,
+      postId
+    );
+    const countedComments = await postsService.countAllComments(postId);
+
+    const pagesCount = Math.ceil(countedComments / pageSize);
+    const presentationComments = {
+      pagesCount,
+      page: Number(pageNumber),
+      pageSize: Number(pageSize),
+      totalCount: countedComments,
+      items: recivedComments,
+    };
+    return res.status(HTTP_STATUSES.OK_200).send(presentationComments);
   }
 );
 
