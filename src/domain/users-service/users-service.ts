@@ -61,7 +61,6 @@ export const usersService = {
       login: login,
       email: email,
       createdAt: createdat.toISOString(),
-      jjdjd: "sdsds",
     };
   },
   async deleteUser(id: string): Promise<boolean> {
