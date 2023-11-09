@@ -21,7 +21,7 @@ const commentsDb = client.db("comments");
 export const postsCollection = postsDb.collection<postsDbType>("posts");
 export const blogsCollection = blogsDb.collection<blogsDbType>("blogs");
 export const usersCollection = usersDb.collection<usersDbType>("users");
-export const usersWithEmail =
+export const usersWithEmailCollection =
   usersRegistratedWithEmailDb.collection<UserAcountDbType>("usersWithEmail");
 export const commentsCollection =
   commentsDb.collection<CommentsDbType>("comments");

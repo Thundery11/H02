@@ -1,15 +1,16 @@
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
-import { usersService } from "../users-service/users-service";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 import { UserAcountDbType } from "../../models/usersTypes";
+import { emailsManager } from "../../managers/emails-manager";
+import { errorMonitor } from "events";
 export const authService = {
-  async createUser(
+  async saveUser(
     login: string,
     email: string,
     password: string
-  ): Promise<UserAcountDbType> {
+  ): Promise<UserAcountDbType | null> {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(password, passwordSalt);
     const createdAt = new Date();
@@ -32,12 +33,18 @@ export const authService = {
       },
     };
     const createResult = usersRepository.saveUser(user);
-    const outputUser = {
-      id: user.id,
-      login: user.accountData.login,
-      email: user.accountData.email,
-      createdAt: user.accountData.createdAt,
-    };
+    // const outputUser = {
+    //   id: user.id,
+    //   login: user.accountData.login,
+    //   email: user.accountData.email,
+    //   createdAt: user.accountData.createdAt,
+    // };
+    try {
+      await emailsManager.sendEmailConfirmationMessage(user);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
     return createResult;
   },
 

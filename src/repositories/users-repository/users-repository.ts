@@ -3,10 +3,14 @@ import {
   UserForJwtService,
   usersDbType,
 } from "../../models/usersTypes";
-import { commentsCollection, usersCollection } from "../dataBase/blogsDb";
+import {
+  commentsCollection,
+  usersCollection,
+  usersWithEmailCollection,
+} from "../dataBase/blogsDb";
 export const usersRepository = {
   async saveUser(user: UserAcountDbType): Promise<UserAcountDbType> {
-    const result = await usersCollection.insertOne({ ...user });
+    const result = await usersWithEmailCollection.insertOne({ ...user });
     return user;
   },
   async createUser(newUser: usersDbType): Promise<usersDbType> {

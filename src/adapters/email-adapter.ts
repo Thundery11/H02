@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
+import { UserAcountDbType } from "../models/usersTypes";
 export const emailAdapter = {
-  async sendEmail(login: string, password: string, email: string) {
+  async sendEmail(email: string, message: string) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -12,7 +13,7 @@ export const emailAdapter = {
     const info = await transporter.sendMail({
       from: "Illia <nizovtsovillia@gmail.com>", // sender address
       to: email, // list of receivers // Subject line
-      html: " <h1>Thank for your registration</h1><p>To finish registration please follow the link below:<a href='https://somesite.com/confirm-email?code=your_confirmation_code'>complete registration</a> </p>",
+      html: message,
     });
     console.log(info);
     return info;

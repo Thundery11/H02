@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { RequestWithBody } from "../../models/requestsTypes";
-import { usersService } from "../../domain/users-service/users-service";
+
 import { HTTP_STATUSES } from "../../models/statuses";
 import { authInputValidation } from "../../middlewares/auth-input-validation-middleware";
 import { errosValidation } from "../../middlewares/erros-validation";
@@ -9,6 +9,8 @@ import { authMiddleware } from "../../middlewares/auth-middleware";
 import { emailAdapter } from "../../adapters/email-adapter";
 import { AuthBodyParams } from "../../models/authTypes";
 import { registrationInputValidation } from "../../middlewares/registration-input-validation-middleware";
+import { authService } from "../../domain/auth-service/auth-service";
+import { usersService } from "../../domain/users-service/users-service";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -17,10 +19,9 @@ authRouter.post(
   errosValidation,
   async (req: RequestWithBody<AuthBodyParams>, res: Response) => {
     const { login, email, password } = req.body;
-    const user = await usersService.createUser(login, email, password);
-    await emailAdapter.sendEmail(login, email, password);
+    const user = await authService.saveUser(login, email, password);
 
-    res.send({ email: req.body.email });
+    res.send(user);
   }
 );
 
