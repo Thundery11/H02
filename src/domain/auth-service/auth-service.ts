@@ -32,20 +32,20 @@ export const authService = {
         isConfirmed: false,
       },
     };
-    const createResult = usersRepository.saveUser(user);
-    // const outputUser = {
-    //   id: user.id,
-    //   login: user.accountData.login,
-    //   email: user.accountData.email,
-    //   createdAt: user.accountData.createdAt,
-    // };
+    // const isUser = await usersRepository.findUserByloginOrPassword(
+    //   user.accountData.email,
+    //   user.accountData.passwordHash
+    // );
+    // console.log(isUser);
+    // if (!isUser) {
+    //   const createResult = await usersRepository.saveUser(user);
+    // }
     try {
       await emailsManager.sendEmailConfirmationMessage(user);
     } catch (error) {
       console.error(error);
       return null;
     }
-    return createResult;
   },
 
   async _generateHash(password: string, salt: string) {
