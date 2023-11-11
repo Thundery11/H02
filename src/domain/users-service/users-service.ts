@@ -45,7 +45,11 @@ export const usersService = {
   ): Promise<number> {
     return await usersRepository.countUsers(searchLoginTerm, searchEmailTerm);
   },
-  async createUser(login: string, email: string, password: string) {
+  async createUser(
+    login: string,
+    email: string,
+    password: string
+  ): Promise<usersOutputType | string | null> {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(password, passwordSalt);
 
