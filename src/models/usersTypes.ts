@@ -1,10 +1,17 @@
 export type usersDbType = {
   id: string;
-  login: string;
-  email: string;
-  createdAt: string;
-  passwordHash: string;
-  passwordSalt: string;
+  accountData: {
+    login: string;
+    email: string;
+    passwordHash: string;
+    passwordSalt: string;
+    createdAt: string;
+  };
+  emailConfirmation: {
+    confirmationCode: string;
+    expirationDate: Date;
+    isConfirmed: boolean;
+  };
 };
 
 export type usersRequestType = {

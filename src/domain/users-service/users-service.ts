@@ -3,8 +3,12 @@ import {
   usersDbType,
   usersOutputType,
 } from "../../models/usersTypes";
+import { v4 as uuidv4 } from "uuid";
+import add from "date-fns/add";
 import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
+import { emailsManager } from "../../managers/emails-manager";
+import { id } from "date-fns/locale";
 export const usersService = {
   async findAllUsers(
     searchLoginTerm: string,
@@ -22,9 +26,15 @@ export const usersService = {
       pageSize,
       skip
     );
-    return foundUser.map(({ passwordHash, passwordSalt, ...rest }) => ({
-      ...rest,
-    }));
+    const result = foundUser.map((m) => {
+      return {
+        id: m.id,
+        login: m.accountData.login,
+        email: m.accountData.email,
+        createdAt: m.accountData.createdAt,
+      };
+    });
+    return result;
   },
   async findUserById(id: string): Promise<usersDbType | null> {
     return usersRepository.findUserById(id);
@@ -39,28 +49,44 @@ export const usersService = {
     login: string,
     email: string,
     password: string
-  ): Promise<usersOutputType> {
+  ): Promise<usersOutputType | null> {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(password, passwordSalt);
 
-    const createdat = new Date();
+    const createdAt = new Date();
 
     const newUser: usersDbType = {
       id: Math.floor(Math.random() * 10000).toString(),
-      login: login,
-      email: email,
-      createdAt: createdat.toISOString(),
-      passwordHash: passwordHash,
-      passwordSalt: passwordSalt,
+      accountData: {
+        login: login,
+        email: email,
+        passwordHash: passwordHash,
+        passwordSalt: passwordSalt,
+        createdAt: createdAt.toISOString(),
+      },
+      emailConfirmation: {
+        confirmationCode: uuidv4(),
+        expirationDate: add(new Date(), {
+          hours: 3,
+          minutes: 3,
+        }),
+        isConfirmed: false,
+      },
     };
-
+    try {
+      await emailsManager.sendEmailConfirmationMessage(newUser);
+    } catch (error) {
+      console.error(error);
+      await usersRepository.deleteUser(newUser.id);
+      return null;
+    }
     await usersRepository.createUser(newUser);
 
     return {
       id: newUser.id,
-      login: login,
-      email: email,
-      createdAt: createdat.toISOString(),
+      login: newUser.accountData.login,
+      email: newUser.accountData.email,
+      createdAt: newUser.accountData.createdAt,
     };
   },
   async deleteUser(id: string): Promise<boolean> {
@@ -70,8 +96,11 @@ export const usersService = {
   async checkCredantials(loginOrEmail: string, password: string) {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!user) return false;
-    const passwordHash = await this._generateHash(password, user.passwordSalt);
-    if (user.passwordHash !== passwordHash) {
+    const passwordHash = await this._generateHash(
+      password,
+      user.accountData.passwordSalt
+    );
+    if (user.accountData.passwordHash !== passwordHash) {
       return false;
     }
     return user;

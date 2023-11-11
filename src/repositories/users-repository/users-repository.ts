@@ -3,16 +3,8 @@ import {
   UserForJwtService,
   usersDbType,
 } from "../../models/usersTypes";
-import {
-  commentsCollection,
-  usersCollection,
-  usersWithEmailCollection,
-} from "../dataBase/blogsDb";
+import { commentsCollection, usersCollection } from "../dataBase/blogsDb";
 export const usersRepository = {
-  async saveUser(user: UserAcountDbType): Promise<UserAcountDbType> {
-    const result = await usersWithEmailCollection.insertOne({ ...user });
-    return user;
-  },
   async createUser(newUser: usersDbType): Promise<usersDbType> {
     const result = await usersCollection.insertOne({ ...newUser });
     return newUser;
@@ -37,10 +29,9 @@ export const usersRepository = {
     return await usersCollection
       .find(
         {
-          // $or: [{ login: { $regex: /^s/i } }, { email: { $regex: /^s/i } }],
           $or: [
-            { login: { $regex: searchLoginTerm, $options: "i" } },
-            { email: { $regex: searchEmailTerm, $options: "i" } },
+            { "accountData.login": { $regex: searchLoginTerm, $options: "i" } },
+            { "accountData.email": { $regex: searchEmailTerm, $options: "i" } },
           ],
         },
         { projection: { _id: 0 } }
@@ -63,15 +54,18 @@ export const usersRepository = {
   ): Promise<number> {
     return await usersCollection.countDocuments({
       $or: [
-        { login: { $regex: searchLoginTerm, $options: "i" } },
-        { email: { $regex: searchEmailTerm, $options: "i" } },
+        { "accountData.login": { $regex: searchLoginTerm, $options: "i" } },
+        { "accountData.email": { $regex: searchEmailTerm, $options: "i" } },
       ],
     });
   },
 
   async findByLoginOrEmail(loginOrEmail: string) {
     const user = await usersCollection.findOne({
-      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+      $or: [
+        { "accountData.email": loginOrEmail },
+        { "accountData.login": loginOrEmail },
+      ],
     });
     return user;
   },

@@ -6,10 +6,8 @@ import { authInputValidation } from "../../middlewares/auth-input-validation-mid
 import { errosValidation } from "../../middlewares/erros-validation";
 import { jwtService } from "../../application/jwt-service";
 import { authMiddleware } from "../../middlewares/auth-middleware";
-import { emailAdapter } from "../../adapters/email-adapter";
 import { AuthBodyParams } from "../../models/authTypes";
 import { registrationInputValidation } from "../../middlewares/registration-input-validation-middleware";
-import { authService } from "../../domain/auth-service/auth-service";
 import { usersService } from "../../domain/users-service/users-service";
 export const authRouter = Router({});
 
@@ -19,7 +17,7 @@ authRouter.post(
   errosValidation,
   async (req: RequestWithBody<AuthBodyParams>, res: Response) => {
     const { login, email, password } = req.body;
-    const user = await authService.saveUser(login, email, password);
+    const user = await usersService.createUser(login, email, password);
 
     res.send(user);
   }
@@ -54,8 +52,8 @@ authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
   } else {
     const infoAboutMe = await usersService.findUserById(userId);
     const mappedInfo = {
-      email: infoAboutMe?.email,
-      login: infoAboutMe?.login,
+      email: infoAboutMe?.accountData.email,
+      login: infoAboutMe?.accountData.login,
       userId: infoAboutMe?.id,
     };
     res.send(mappedInfo);
