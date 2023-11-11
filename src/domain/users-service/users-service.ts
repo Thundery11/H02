@@ -45,11 +45,7 @@ export const usersService = {
   ): Promise<number> {
     return await usersRepository.countUsers(searchLoginTerm, searchEmailTerm);
   },
-  async createUser(
-    login: string,
-    email: string,
-    password: string
-  ): Promise<usersOutputType | null> {
+  async createUser(login: string, email: string, password: string) {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(password, passwordSalt);
 
@@ -73,6 +69,18 @@ export const usersService = {
         isConfirmed: false,
       },
     };
+    const isLoginExists = await usersRepository.findByLoginOrEmail(
+      newUser.accountData.login
+    );
+    if (isLoginExists !== null) {
+      return "login exists";
+    }
+    const isEmailExists = await usersRepository.findByLoginOrEmail(
+      newUser.accountData.email
+    );
+    if (isEmailExists !== null) {
+      return "email exists";
+    }
     try {
       await emailsManager.sendEmailConfirmationMessage(newUser);
     } catch (error) {

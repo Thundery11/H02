@@ -18,8 +18,27 @@ authRouter.post(
   async (req: RequestWithBody<AuthBodyParams>, res: Response) => {
     const { login, email, password } = req.body;
     const user = await usersService.createUser(login, email, password);
-
-    res.send(user);
+    if (user === "login exists") {
+      return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+        errorsMessages: [
+          {
+            message: "user with current login already exists",
+            field: "login",
+          },
+        ],
+      });
+    }
+    if (user === "email exists") {
+      return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+        errorsMessages: [
+          {
+            message: "user with current email already exists",
+            field: "email",
+          },
+        ],
+      });
+    }
+    res.sendStatus(HTTP_STATUSES.CREATED_201);
   }
 );
 
