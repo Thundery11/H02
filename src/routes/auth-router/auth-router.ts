@@ -9,6 +9,7 @@ import { authMiddleware } from "../../middlewares/auth-middleware";
 import { AuthBodyParams } from "../../models/authTypes";
 import { registrationInputValidation } from "../../middlewares/registration-input-validation-middleware";
 import { usersService } from "../../domain/users-service/users-service";
+import { authService } from "../../domain/auth-service/auth-service";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -34,6 +35,43 @@ authRouter.post(
           {
             message: "user with current email already exists",
             field: "email",
+          },
+        ],
+      });
+    }
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+  }
+);
+authRouter.post(
+  "/registration-confirmation",
+  async (req: Request, res: Response) => {
+    const result = await authService.confirmEmail(req.body.code);
+    if (result === "expired code") {
+      return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+        errorsMessages: [
+          {
+            message: "expired code",
+            field: "code",
+          },
+        ],
+      });
+    }
+    if (result === "invalid code") {
+      return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+        errorsMessages: [
+          {
+            message: "invalid code",
+            field: "code",
+          },
+        ],
+      });
+    }
+    if (result === "code already been applied") {
+      return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+        errorsMessages: [
+          {
+            message: "code already been applied",
+            field: "code",
           },
         ],
       });

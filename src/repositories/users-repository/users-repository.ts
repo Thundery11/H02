@@ -41,6 +41,11 @@ export const usersRepository = {
       .limit(+pageSize)
       .toArray();
   },
+  async findUserByConfirmationCode(code: string): Promise<usersDbType | null> {
+    return await usersCollection.findOne({
+      "emailConfirmation.confirmationCode": code,
+    });
+  },
   async findUserById(id: string): Promise<usersDbType | null> {
     return await usersCollection.findOne(
       { id: id },
@@ -68,6 +73,13 @@ export const usersRepository = {
       ],
     });
     return user;
+  },
+  async updateConfirmation(id: string): Promise<boolean> {
+    const result = await usersCollection.updateOne(
+      { id },
+      { $set: { "emailConfirmation.isConfirmed": true } }
+    );
+    return result.modifiedCount === 1;
   },
   async deleteUser(id: string): Promise<boolean> {
     const result = await usersCollection.deleteOne({ id: id });

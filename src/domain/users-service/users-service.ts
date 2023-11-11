@@ -36,6 +36,9 @@ export const usersService = {
     });
     return result;
   },
+  async confirmEmail(code: string): Promise<usersDbType | null> {
+    return await usersRepository.findUserByConfirmationCode(code);
+  },
   async findUserById(id: string): Promise<usersDbType | null> {
     return usersRepository.findUserById(id);
   },
