@@ -38,7 +38,7 @@ authRouter.post(
         ],
       });
     }
-    res.sendStatus(HTTP_STATUSES.CREATED_201);
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 );
 

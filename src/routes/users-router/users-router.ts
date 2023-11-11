@@ -9,7 +9,6 @@ import { HTTP_STATUSES } from "../../models/statuses";
 import {
   UsersBodyParams,
   UsersQueryParams,
-  usersDbType,
   usersOutputType,
 } from "../../models/usersTypes";
 import { authGuardMiddleware } from "../../middlewares/authorisationMiddleware";
@@ -34,7 +33,7 @@ usersRouter.get(
 
     const skip = (pageNumber - 1) * pageSize;
 
-    const allUsers: usersDbType[] = await usersService.findAllUsers(
+    const allUsers: usersOutputType[] = await usersService.findAllUsers(
       searchLoginTerm,
       searchEmailTerm,
       sortBy,
