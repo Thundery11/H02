@@ -116,7 +116,7 @@ postsRouter.post(
       return;
     } else {
       const userId = req.user?.id;
-      const userLogin = req.user?.login;
+      const userLogin = req.user?.accountData.login;
       const content = req.body.content;
       const createdComment = await postsService.createCommet(
         postId,
