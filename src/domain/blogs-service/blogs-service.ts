@@ -100,9 +100,4 @@ export const blogsService = {
   ): Promise<boolean> {
     return await blogsRepository.changeBlog(id, name, description, websiteUrl);
   },
-
-  // async paginationForBlog(sortBy: string, sortDirection: string,
-  //     pageNumber: number, pageSize: number): Promise<string | number>{
-
-  //     }
 };

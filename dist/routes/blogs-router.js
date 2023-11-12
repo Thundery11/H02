@@ -16,7 +16,7 @@ const blogs_service_1 = require("../domain/blogs-service/blogs-service");
 const blogs_input_vadation_1 = require("../middlewares/blogs-input-vadation");
 const erros_validation_1 = require("../middlewares/erros-validation");
 const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
-const posts_for_blogs_validation_1 = require("../middlewares/posts-for-blogs-validation");
+const posts_input_validation_1 = require("../middlewares/posts-input-validation");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
@@ -24,7 +24,6 @@ exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, fun
     const skip = (pageNumber - 1) * pageSize;
     const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
     const countedDocuments = yield blogs_service_1.blogsService.countDocuments(query);
-    // const totalCount: number = allBlogs.length;
     const pagesCount = Math.ceil(countedDocuments / pageSize);
     const presentationAllblogs = {
         pagesCount,
@@ -74,7 +73,7 @@ exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0,
     const createdBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
     res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
 }));
-exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_for_blogs_validation_1.postsForBlogsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const blogId = req.params.blogId;
     const blog = yield blogs_service_1.blogsService.findBlog(blogId);
     if (!blog) {

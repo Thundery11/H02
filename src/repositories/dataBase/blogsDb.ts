@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { blogsDbType } from "../../models/blogsTypes";
 import { postsDbType } from "../../models/postsTypes";
-import { UserAcountDbType, usersDbType } from "../../models/usersTypes";
+import { usersDbType } from "../../models/usersTypes";
 import { CommentsDbType } from "../../models/comments-types";
 
 dotenv.config();

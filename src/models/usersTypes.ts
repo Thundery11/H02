@@ -49,19 +49,3 @@ export interface UsersQueryParams {
   searchLoginTerm: string;
   searchEmailTerm: string;
 }
-
-export type UserAcountDbType = {
-  id: string;
-  accountData: {
-    login: string;
-    email: string;
-    passwordHash: string;
-    passwordSalt: string;
-    createdAt: string;
-  };
-  emailConfirmation: {
-    confirmationCode: string;
-    expirationDate: Date;
-    isConfirmed: boolean;
-  };
-};

@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { RequestWithBody } from "../../models/requestsTypes";
-
 import { HTTP_STATUSES } from "../../models/statuses";
 import { authInputValidation } from "../../middlewares/auth-input-validation-middleware";
 import { errosValidation } from "../../middlewares/erros-validation";
@@ -49,36 +48,7 @@ authRouter.post(
   errosValidation,
   async (req: Request, res: Response) => {
     const result = await authService.confirmEmail(req.body.code);
-    // if (result === "expired code") {
-    //   return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
-    //     errorsMessages: [
-    //       {
-    //         message: "expired code",
-    //         field: "code",
-    //       },
-    //     ],
-    //   });
-    // }
-    // if (result === "invalid code") {
-    //   return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
-    //     errorsMessages: [
-    //       {
-    //         message: "invalid code",
-    //         field: "code",
-    //       },
-    //     ],
-    //   });
-    // }
-    // if (result === "code already been applied") {
-    //   return res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
-    //     errorsMessages: [
-    //       {
-    //         message: "code already been applied",
-    //         field: "code",
-    //       },
-    //     ],
-    //   });
-    // }
+
     if (!result) {
       return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
     }

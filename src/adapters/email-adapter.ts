@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import { UserAcountDbType } from "../models/usersTypes";
 export const emailAdapter = {
   async sendEmail(email: string, message: string) {
     const transporter = nodemailer.createTransport({

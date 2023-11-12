@@ -1,14 +1,9 @@
-import {
-  UserForJwtService,
-  usersDbType,
-  usersOutputType,
-} from "../../models/usersTypes";
+import { usersDbType, usersOutputType } from "../../models/usersTypes";
 import { v4 as uuidv4 } from "uuid";
 import add from "date-fns/add";
 import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 import { emailsManager } from "../../managers/emails-manager";
-import { id } from "date-fns/locale";
 export const usersService = {
   async findAllUsers(
     searchLoginTerm: string,
@@ -110,6 +105,7 @@ export const usersService = {
   async checkCredantials(loginOrEmail: string, password: string) {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!user) return false;
+    if (user.emailConfirmation.isConfirmed === false) return false;
     const passwordHash = await this._generateHash(
       password,
       user.accountData.passwordSalt

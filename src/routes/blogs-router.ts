@@ -17,10 +17,7 @@ import {
   blogsDbType,
 } from "../models/blogsTypes";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
-import { blogsRepository } from "../repositories/blogs-db-repository";
 import { postsDbType } from "../models/postsTypes";
-import { postsForBlogsInputValidation } from "../middlewares/posts-for-blogs-validation";
-
 export const blogsRouter = Router({});
 
 blogsRouter.get(
@@ -45,7 +42,6 @@ blogsRouter.get(
       skip
     );
     const countedDocuments = await blogsService.countDocuments(query);
-    // const totalCount: number = allBlogs.length;
     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
     const presentationAllblogs = {
       pagesCount,
@@ -143,7 +139,7 @@ blogsRouter.post(
 blogsRouter.post(
   "/:blogId/posts",
   authGuardMiddleware,
-  postsForBlogsInputValidation(),
+  postsInputValidation(),
   errosValidation,
   async (
     req: RequestWithParamsAndBody<{

@@ -1,23 +1,11 @@
-import {
-  UserAcountDbType,
-  UserForJwtService,
-  usersDbType,
-} from "../../models/usersTypes";
-import { commentsCollection, usersCollection } from "../dataBase/blogsDb";
+import { usersDbType } from "../../models/usersTypes";
+import { usersCollection } from "../dataBase/blogsDb";
 export const usersRepository = {
   async createUser(newUser: usersDbType): Promise<usersDbType> {
     const result = await usersCollection.insertOne({ ...newUser });
     return newUser;
   },
-  // async findUserByloginOrPassword(
-  //   login: string,
-  //   password: string
-  // ): Promise<UserAcountDbType | null> {
-  //   const isUser = await usersWithEmailCollection.findOne({
-  //     $or: [{ login: login }, { password: password }],
-  //   });
-  //   return isUser;
-  // },
+
   async findAllUsers(
     searchLoginTerm: string,
     searchEmailTerm: string,
