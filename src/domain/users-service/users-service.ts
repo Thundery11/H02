@@ -115,6 +115,23 @@ export const usersService = {
     }
     return user;
   },
+  async findUserByLoginOrEmail(
+    loginOrEmail: string
+  ): Promise<usersDbType | null> {
+    const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
+    if (!user) return null;
+    if (user.emailConfirmation.isConfirmed === true) return null;
+    if (user.emailConfirmation.isConfirmed === null) {
+      try {
+        await emailsManager.sendEmailConfirmationMessage(user);
+      } catch (error) {
+        console.error(error);
+        await usersRepository.deleteUser(user.id);
+        return null;
+      }
+    }
+    return user;
+  },
 
   async _generateHash(password: string, salt: string) {
     const hash = await bcrypt.hash(password, salt);

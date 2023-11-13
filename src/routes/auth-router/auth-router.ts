@@ -10,6 +10,8 @@ import { registrationInputValidation } from "../../middlewares/registration-inpu
 import { usersService } from "../../domain/users-service/users-service";
 import { authService } from "../../domain/auth-service/auth-service";
 import { emailConfirmationValidation } from "../../middlewares/email-confirmation-validation";
+import { resendingEmailInputValidation } from "../../middlewares/resending-email-input-validation";
+import { isEmailExist } from "../../middlewares/isEmailExist-validation";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -53,6 +55,20 @@ authRouter.post(
       return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
     }
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+  }
+);
+authRouter.post(
+  "/registration-email-resending",
+  resendingEmailInputValidation(),
+  isEmailExist(),
+  errosValidation,
+  async (req: Request, res: Response) => {
+    const user = await usersService.findUserByLoginOrEmail(req.body.email);
+    if (user) {
+      return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+    } else {
+      return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+    }
   }
 );
 
