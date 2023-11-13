@@ -3,7 +3,7 @@ import { usersRepository } from "../repositories/users-repository/users-reposito
 
 export const isEmailExist = () => {
   return [
-    body("loginOrEmail")
+    body("email")
       .custom(async (loginOrEmail) => {
         const result = await usersRepository.findByLoginOrEmail(loginOrEmail);
         if (!result) {
