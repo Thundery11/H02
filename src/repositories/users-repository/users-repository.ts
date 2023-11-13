@@ -69,6 +69,16 @@ export const usersRepository = {
     );
     return result.modifiedCount === 1;
   },
+  async updateConfirmationCode(
+    id: string,
+    confirmationCode: string
+  ): Promise<boolean> {
+    const result = await usersCollection.updateOne(
+      { id },
+      { $set: { "emailConfirmation.confirmationCode": confirmationCode } }
+    );
+    return result.modifiedCount === 1;
+  },
   async deleteUser(id: string): Promise<boolean> {
     const result = await usersCollection.deleteOne({ id: id });
     return result.deletedCount === 1;

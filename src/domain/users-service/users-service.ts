@@ -122,9 +122,17 @@ export const usersService = {
     if (!user) return null;
     if (user.emailConfirmation.isConfirmed === true) return null;
     if (user.emailConfirmation.isConfirmed === false) {
-      user.emailConfirmation.confirmationCode = uuidv4();
+      const newConfirmationCode = uuidv4();
+      const updateConfirmationCode =
+        await usersRepository.updateConfirmationCode(
+          user.id,
+          newConfirmationCode
+        );
+      const updatedUser = await usersRepository.findByLoginOrEmail(
+        loginOrEmail
+      );
       try {
-        await emailsManager.sendEmailConfirmationMessage(user);
+        await emailsManager.sendEmailConfirmationMessage(updatedUser);
       } catch (error) {
         console.error(error);
         return null;
