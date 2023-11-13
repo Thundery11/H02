@@ -126,7 +126,6 @@ export const usersService = {
         await emailsManager.sendEmailConfirmationMessage(user);
       } catch (error) {
         console.error(error);
-        await usersRepository.deleteUser(user.id);
         return null;
       }
     }
