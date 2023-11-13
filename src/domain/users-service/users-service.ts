@@ -128,11 +128,11 @@ export const usersService = {
           user.id,
           newConfirmationCode
         );
-      const updatedUser = await usersRepository.findByLoginOrEmail(
-        loginOrEmail
-      );
+      // const updatedUser: usersDbType = await usersRepository.findByLoginOrEmail(
+      //   loginOrEmail
+      // );
       try {
-        await emailsManager.sendEmailConfirmationMessage(updatedUser);
+        await emailsManager.sendEmailConfirmationMessage(user);
       } catch (error) {
         console.error(error);
         return null;

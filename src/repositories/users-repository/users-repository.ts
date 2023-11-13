@@ -53,7 +53,7 @@ export const usersRepository = {
     });
   },
 
-  async findByLoginOrEmail(loginOrEmail: string) {
+  async findByLoginOrEmail(loginOrEmail: string): Promise<usersDbType | null> {
     const user = await usersCollection.findOne({
       $or: [
         { "accountData.email": loginOrEmail },
