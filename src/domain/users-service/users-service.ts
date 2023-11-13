@@ -115,13 +115,14 @@ export const usersService = {
     }
     return user;
   },
-  async findUserByLoginOrEmail(
+  async resendEmailConfirmationCode(
     loginOrEmail: string
   ): Promise<usersDbType | null> {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!user) return null;
     if (user.emailConfirmation.isConfirmed === true) return null;
     if (user.emailConfirmation.isConfirmed === false) {
+      user.emailConfirmation.confirmationCode = uuidv4();
       try {
         await emailsManager.sendEmailConfirmationMessage(user);
       } catch (error) {
