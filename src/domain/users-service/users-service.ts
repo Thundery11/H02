@@ -121,7 +121,7 @@ export const usersService = {
     const user = await usersRepository.findByLoginOrEmail(loginOrEmail);
     if (!user) return null;
     if (user.emailConfirmation.isConfirmed === true) return null;
-    if (user.emailConfirmation.isConfirmed === null) {
+    if (user.emailConfirmation.isConfirmed === false) {
       try {
         await emailsManager.sendEmailConfirmationMessage(user);
       } catch (error) {
