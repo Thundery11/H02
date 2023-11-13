@@ -63,7 +63,7 @@ authRouter.post(
   isEmailExist(),
   errosValidation,
   async (req: Request, res: Response) => {
-    const user = await usersService.findUserByLoginOrEmail(req.body.email);
+    const user = await usersService.resendEmailConfirmationCode(req.body.email);
     if (user) {
       return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     } else {
