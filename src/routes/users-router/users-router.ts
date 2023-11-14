@@ -77,7 +77,11 @@ usersRouter.post(
   errosValidation,
   async (req: RequestWithBody<UsersBodyParams>, res: Response) => {
     const { login, email, password } = req.body;
-    const newUser = await usersService.createUser(login, email, password);
+    const newUser = await usersService.createSuperadminUser(
+      login,
+      email,
+      password
+    );
     res.status(HTTP_STATUSES.CREATED_201).send(newUser);
   }
 );

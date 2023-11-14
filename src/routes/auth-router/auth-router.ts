@@ -96,6 +96,7 @@ authRouter.post(
 
 authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
   const userId = req.user?.id;
+  console.log(userId);
   if (!userId) {
     res.send(HTTP_STATUSES.UNAUTHORISED_401);
   } else {

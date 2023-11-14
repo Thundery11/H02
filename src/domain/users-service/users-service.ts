@@ -128,9 +128,9 @@ export const usersService = {
           user.id,
           newConfirmationCode
         );
-      const updatedUser: usersDbType = await usersRepository.findByLoginOrEmail(
-        loginOrEmail
-      );
+      const updatedUser: usersDbType | null =
+        await usersRepository.findByLoginOrEmail(loginOrEmail);
+      if (!updatedUser) return null;
       try {
         await emailsManager.sendEmailConfirmationMessage(updatedUser);
       } catch (error) {
