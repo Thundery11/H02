@@ -41,6 +41,63 @@ export const usersService = {
   ): Promise<number> {
     return await usersRepository.countUsers(searchLoginTerm, searchEmailTerm);
   },
+  async createSuperadminUser(
+    login: string,
+    email: string,
+    password: string
+  ): Promise<usersOutputType | string | null> {
+    const passwordSalt = await bcrypt.genSalt(10);
+    const passwordHash = await this._generateHash(password, passwordSalt);
+
+    const createdAt = new Date();
+
+    const newUser: usersDbType = {
+      id: Math.floor(Math.random() * 10000).toString(),
+      accountData: {
+        login: login,
+        email: email,
+        passwordHash: passwordHash,
+        passwordSalt: passwordSalt,
+        createdAt: createdAt.toISOString(),
+      },
+      emailConfirmation: {
+        confirmationCode: uuidv4(),
+        expirationDate: add(new Date(), {
+          hours: 3,
+          minutes: 3,
+        }),
+        isConfirmed: true,
+      },
+    };
+    console.log(newUser.emailConfirmation.confirmationCode);
+    const isLoginExists = await usersRepository.findByLoginOrEmail(
+      newUser.accountData.login
+    );
+    if (isLoginExists !== null) {
+      return "login exists";
+    }
+    const isEmailExists = await usersRepository.findByLoginOrEmail(
+      newUser.accountData.email
+    );
+    if (isEmailExists !== null) {
+      return "email exists";
+    }
+    // try {
+    //   await emailsManager.sendEmailConfirmationMessage(newUser);
+    // } catch (error) {
+    //   console.error(error);
+    //   await usersRepository.deleteUser(newUser.id);
+    //   return null;
+    // }
+    await usersRepository.createUser(newUser);
+
+    return {
+      id: newUser.id,
+      login: newUser.accountData.login,
+      email: newUser.accountData.email,
+      createdAt: newUser.accountData.createdAt,
+    };
+  },
   async createUser(
     login: string,
     email: string,
