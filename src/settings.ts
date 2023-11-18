@@ -5,6 +5,7 @@ import { postsRouter } from "./routes/posts-router";
 import { usersRouter } from "./routes/users-router/users-router";
 import { authRouter } from "./routes/auth-router/auth-router";
 import { commentsRouter } from "./routes/comments-router/comments-router";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 export const settings = {
@@ -19,3 +20,4 @@ app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 app.use("/comments", commentsRouter);
+app.use(cookieParser());
