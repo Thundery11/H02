@@ -9,6 +9,7 @@ import { commentsRouter } from "./routes/comments-router/comments-router";
 export const app = express();
 export const settings = {
   JWT_SECRET: process.env.JWT_SECRET || "123",
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_SECRET || "234",
 };
 
 app.use(express.json());

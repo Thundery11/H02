@@ -14,6 +14,7 @@ const comments_router_1 = require("./routes/comments-router/comments-router");
 exports.app = (0, express_1.default)();
 exports.settings = {
     JWT_SECRET: process.env.JWT_SECRET || "123",
+    REFRESH_TOKEN_SECRET: process.env.REFRESH_SECRET || "234",
 };
 exports.app.use(express_1.default.json());
 exports.app.use("/testing/all-data", testing_all_data_1.testingAllDataRouter);
