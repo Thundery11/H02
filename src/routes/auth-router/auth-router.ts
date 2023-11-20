@@ -89,13 +89,30 @@ authRouter.post(
       const refreshToken = await jwtService.createRefreshToken(user);
       res
         .status(HTTP_STATUSES.OK_200)
-        .cookie("jwt", refreshToken, { httpOnly: true, secure: true })
+        .cookie("refresh", refreshToken, { httpOnly: true, secure: true })
         .send({ accessToken });
     } else {
       res.status(HTTP_STATUSES.UNAUTHORISED_401).send();
     }
   }
 );
+authRouter.post("/refresh-token", async (req: Request, res: Response) => {
+  if (req.cookies?.refresh) {
+    const refreshToken = req.cookies.refresh;
+    const isNormalRefrshToken = await jwtService.verifyRefreshToken(
+      refreshToken
+    );
+    if (isNormalRefrshToken) {
+      const userId = req.user?.id;
+      const accessToken = await jwtService.createJWT(userId);
+      return res.send({ accessToken });
+    } else {
+      return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+    }
+  } else {
+    return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+  }
+});
 
 authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
   const userId = req.user?.id;

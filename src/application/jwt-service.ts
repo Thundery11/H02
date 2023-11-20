@@ -17,6 +17,10 @@ export const jwtService = {
     );
     return refreshToken;
   },
+  async verifyRefreshToken(refreshToken: string) {
+    const result = jwt.verify(refreshToken, settings.REFRESH_TOKEN_SECRET);
+    return result;
+  },
   async getUserById(token: string) {
     try {
       const result: any = jwt.verify(token, settings.JWT_SECRET);
