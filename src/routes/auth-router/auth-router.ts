@@ -109,12 +109,21 @@ authRouter.post(
     const user = req.user;
     if (user) {
       const accessToken = await jwtService.createJWT(user);
-      const newRefreshToken = await jwtService.createRefreshToken(user);
+      await jwtService.createRefreshToken(user);
       res
         .status(HTTP_STATUSES.OK_200)
         .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
         .send({ accessToken });
     }
+  }
+);
+authRouter.post(
+  "/logout",
+  checkRefreshToken,
+  async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refresh;
+    await sesionService.updateBlackListTokens(refreshToken);
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 );
 
