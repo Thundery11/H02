@@ -4,6 +4,7 @@ import { blogsDbType } from "../../models/blogsTypes";
 import { postsDbType } from "../../models/postsTypes";
 import { usersDbType } from "../../models/usersTypes";
 import { CommentsDbType } from "../../models/comments-types";
+import { BlackRefreshTokensType } from "../../models/blackRefreshTokensTypes";
 
 dotenv.config();
 
@@ -16,13 +17,15 @@ export const client = new MongoClient(mongoUri);
 const blogsDb = client.db("blogsDb");
 const postsDb = client.db("postsDb");
 const usersDb = client.db("users");
-const usersRegistratedWithEmailDb = client.db("usersWithEmail");
 const commentsDb = client.db("comments");
+const blackRefreshTokensDb = client.db("blackRefreshTokensDb");
 export const postsCollection = postsDb.collection<postsDbType>("posts");
 export const blogsCollection = blogsDb.collection<blogsDbType>("blogs");
 export const usersCollection = usersDb.collection<usersDbType>("users");
 export const commentsCollection =
   commentsDb.collection<CommentsDbType>("comments");
+export const blackRefreshTokensCollection =
+  blackRefreshTokensDb.collection<BlackRefreshTokensType>("blackRefreshTokens");
 
 export async function runDb() {
   try {

@@ -12,6 +12,8 @@ import { authService } from "../../domain/auth-service/auth-service";
 import { emailConfirmationValidation } from "../../middlewares/email-confirmation-validation";
 import { resendingEmailInputValidation } from "../../middlewares/resending-email-input-validation";
 import { isEmailExist } from "../../middlewares/isEmailExist-validation";
+import { checkRefreshToken } from "../../middlewares/check-refresh-token-middleware";
+import { sesionService } from "../../domain/session-service/session-service";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -96,23 +98,25 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/refresh-token", async (req: Request, res: Response) => {
-  if (req.cookies?.refresh) {
+authRouter.post(
+  "/refresh-token",
+  checkRefreshToken,
+  async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refresh;
-    const isNormalRefrshToken = await jwtService.verifyRefreshToken(
+    const updateBLackList = await sesionService.updateBlackListTokens(
       refreshToken
     );
-    if (isNormalRefrshToken) {
-      const userId = req.user?.id;
-      const accessToken = await jwtService.createJWT(userId);
-      return res.send({ accessToken });
-    } else {
-      return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+    const user = req.user;
+    if (user) {
+      const accessToken = await jwtService.createJWT(user);
+      const newRefreshToken = await jwtService.createRefreshToken(user);
+      res
+        .status(HTTP_STATUSES.OK_200)
+        .cookie("refresh", refreshToken, { httpOnly: true, secure: true })
+        .send({ accessToken });
     }
-  } else {
-    return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
   }
-});
+);
 
 authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
   const userId = req.user?.id;
