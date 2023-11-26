@@ -91,7 +91,7 @@ authRouter.post(
       const refreshToken = await jwtService.createRefreshToken(user);
       res
         .status(HTTP_STATUSES.OK_200)
-        .cookie("refresh", refreshToken, { httpOnly: true, secure: true })
+        .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
         .send({ accessToken });
     } else {
       res.status(HTTP_STATUSES.UNAUTHORISED_401).send();
@@ -112,7 +112,7 @@ authRouter.post(
       const newRefreshToken = await jwtService.createRefreshToken(user);
       res
         .status(HTTP_STATUSES.OK_200)
-        .cookie("refresh", refreshToken, { httpOnly: true, secure: true })
+        .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
         .send({ accessToken });
     }
   }

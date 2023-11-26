@@ -12,7 +12,7 @@ export const settings = {
   JWT_SECRET: process.env.JWT_SECRET || "123",
   REFRESH_TOKEN_SECRET: process.env.REFRESH_SECRET || "234",
 };
-
+app.use(cookieParser());
 app.use(express.json());
 app.use("/testing/all-data", testingAllDataRouter);
 app.use("/blogs", blogsRouter);
@@ -20,4 +20,3 @@ app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 app.use("/comments", commentsRouter);
-app.use(cookieParser());

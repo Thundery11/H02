@@ -9,15 +9,17 @@ export const checkRefreshToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refreshToken = req.cookies.refresh;
+  console.log(req, req.body, req.cookies);
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
   }
+
   try {
     const result = await jwtService.verifyRefreshToken(refreshToken);
     console.log(result);
     if (result.userId) {
-      const user = usersService.findUserById(result.userId);
+      const user = await usersService.findUserById(result.userId);
       if (!user) {
         return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
       }
@@ -29,6 +31,7 @@ export const checkRefreshToken = async (
           .status(HTTP_STATUSES.UNAUTHORISED_401)
           .send("Isn't valid token");
       }
+
       req.user = user;
 
       next();

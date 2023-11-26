@@ -17,6 +17,7 @@ exports.settings = {
     JWT_SECRET: process.env.JWT_SECRET || "123",
     REFRESH_TOKEN_SECRET: process.env.REFRESH_SECRET || "234",
 };
+exports.app.use((0, cookie_parser_1.default)());
 exports.app.use(express_1.default.json());
 exports.app.use("/testing/all-data", testing_all_data_1.testingAllDataRouter);
 exports.app.use("/blogs", blogs_router_1.blogsRouter);
@@ -24,4 +25,3 @@ exports.app.use("/posts", posts_router_1.postsRouter);
 exports.app.use("/users", users_router_1.usersRouter);
 exports.app.use("/auth", auth_router_1.authRouter);
 exports.app.use("/comments", comments_router_1.commentsRouter);
-exports.app.use((0, cookie_parser_1.default)());
