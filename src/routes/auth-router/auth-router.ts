@@ -103,16 +103,14 @@ authRouter.post(
   checkRefreshToken,
   async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refresh;
-    const updateBLackList = await sesionService.updateBlackListTokens(
-      refreshToken
-    );
+    await sesionService.updateBlackListTokens(refreshToken);
     const user = req.user;
     if (user) {
       const accessToken = await jwtService.createJWT(user);
-      await jwtService.createRefreshToken(user);
+      const newAccesToken = await jwtService.createRefreshToken(user);
       res
         .status(HTTP_STATUSES.OK_200)
-        .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
+        .cookie("refreshToken", newAccesToken, { httpOnly: true, secure: true })
         .send({ accessToken });
     }
   }
