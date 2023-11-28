@@ -24,7 +24,7 @@ export const checkRefreshToken = async (
       const isInBlackList = await sesionService.findBlackRefreshToken(
         refreshToken
       );
-      if (refreshToken === isInBlackList) {
+      if (refreshToken === isInBlackList?.refreshToken) {
         return res
           .status(HTTP_STATUSES.UNAUTHORISED_401)
           .send("Isn't valid token");
