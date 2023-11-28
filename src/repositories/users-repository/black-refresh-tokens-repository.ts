@@ -6,12 +6,12 @@ export const blackRefreshTokensRepository = {
     refreshToken: string
   ): Promise<BlackRefreshTokensType | null> {
     return await blackRefreshTokensCollection.findOne({
-      refreshToken: refreshToken,
+      refreshToken,
     });
   },
   async updateBlackListTokens(refreshToken: string) {
     return await blackRefreshTokensCollection.insertOne({
-      refreshToken: refreshToken,
+      refreshToken,
     });
   },
 };
