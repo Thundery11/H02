@@ -10,6 +10,8 @@ export const blackRefreshTokensRepository = {
     });
   },
   async updateBlackListTokens(refreshToken: string) {
-    return await blackRefreshTokensCollection.insertOne({ refreshToken });
+    return await blackRefreshTokensCollection.insertOne({
+      refreshToken: refreshToken,
+    });
   },
 };

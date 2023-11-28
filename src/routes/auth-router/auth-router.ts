@@ -115,11 +115,15 @@ authRouter.post(
     }
   }
 );
-authRouter.post("/logout", async (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refresh;
-  await sesionService.updateBlackListTokens(refreshToken);
-  res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
-});
+authRouter.post(
+  "/logout",
+  checkRefreshToken,
+  async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refresh;
+    await sesionService.updateBlackListTokens(refreshToken);
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+  }
+);
 
 authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
   const userId = req.user?.id;
