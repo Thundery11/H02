@@ -102,7 +102,8 @@ authRouter.post(
   "/refresh-token",
   checkRefreshToken,
   async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refresh;
+    const refreshToken = req.cookies.refreshToken;
+    console.log(refreshToken);
     await sesionService.updateBlackListTokens(refreshToken);
     const user = req.user;
     if (user) {
@@ -119,7 +120,7 @@ authRouter.post(
   "/logout",
   checkRefreshToken,
   async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refresh;
+    const refreshToken = req.cookies.refreshToken;
     await sesionService.updateBlackListTokens(refreshToken);
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
