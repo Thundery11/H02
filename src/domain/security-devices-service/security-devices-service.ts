@@ -18,4 +18,7 @@ export const securityDevicesService = {
       lastActiveDate
     );
   },
+  async terminateOtherSessions(deviceId: string): Promise<boolean> {
+    return await securityDevicesRepository.terminateOtherSessions(deviceId);
+  },
 };

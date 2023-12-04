@@ -98,7 +98,7 @@ authRouter.post(
       const accessToken = await jwtService.createJWT(user);
       const refreshToken = await jwtService.createRefreshToken(user, deviceId);
       const result = await jwtService.verifyRefreshToken(refreshToken);
-      const lastActiveDate = new Date(result.iat * 1000).toISOString(); //15164886465454
+      const lastActiveDate = new Date(result.iat * 1000).toISOString();
       const device: SecurityDevicesType = {
         userId: user.id,
         ip,
@@ -106,7 +106,7 @@ authRouter.post(
         lastActiveDate,
         deviceId,
       };
-      const securityDevices = await securityDevicesService.addDevice(device);
+      await securityDevicesService.addDevice(device);
 
       res
         .status(HTTP_STATUSES.OK_200)
@@ -125,8 +125,6 @@ authRouter.post(
     await sesionService.updateBlackListTokens(oldRefreshToken);
     const user = req.user;
     if (user) {
-      //should update LastActiveDate
-      //how we must get deviceId?
       const payload = await jwtService.verifyRefreshToken(oldRefreshToken);
       const accessToken = await jwtService.createJWT(user);
       const newRefreshToken = await jwtService.createRefreshToken(

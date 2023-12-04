@@ -21,4 +21,10 @@ export const securityDevicesRepository = {
     );
     return result.matchedCount === 1;
   },
+  async terminateOtherSessions(deviceId: string): Promise<boolean> {
+    const result = await securityDevicesCollection.deleteMany({
+      deviceId: { $ne: deviceId },
+    });
+    return result.deletedCount >= 1;
+  },
 };
