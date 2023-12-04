@@ -3,3 +3,8 @@ export interface AuthBodyParams {
   email: string;
   password: string;
 }
+
+export type LoginAttempsType = {
+  ip_address: string;
+  loginDate: string;
+};

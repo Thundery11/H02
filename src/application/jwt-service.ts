@@ -9,9 +9,9 @@ export const jwtService = {
     });
     return token;
   },
-  async createRefreshToken(user: usersDbType) {
+  async createRefreshToken(user: usersDbType, deviceId: string) {
     const refreshToken = jwt.sign(
-      { userId: user.id },
+      { userId: user.id, deviceId: deviceId },
       settings.REFRESH_TOKEN_SECRET,
       { expiresIn: "20s" }
     );

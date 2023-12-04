@@ -20,4 +20,5 @@ const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.startApp = startApp;
+settings_1.app.set("trust proxy", true);
 (0, exports.startApp)();

@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import {
+  blackRefreshTokensCollection,
   blogsCollection,
   commentsCollection,
   postsCollection,
@@ -13,5 +14,6 @@ testingAllDataRouter.delete("/", async (req: Request, res: Response) => {
   await postsCollection.deleteMany({});
   await usersCollection.deleteMany({});
   await commentsCollection.deleteMany({});
+  await blackRefreshTokensCollection.deleteMany({});
   res.send(204);
 });

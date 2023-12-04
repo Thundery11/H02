@@ -16,6 +16,7 @@ export const checkRefreshToken = async (
 
   try {
     const result = await jwtService.verifyRefreshToken(refreshToken);
+    console.log(result);
     if (result.userId) {
       const user = await usersService.findUserById(result.userId);
       if (!user) {

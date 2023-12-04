@@ -14,6 +14,9 @@ import { resendingEmailInputValidation } from "../../middlewares/resending-email
 import { isEmailExist } from "../../middlewares/isEmailExist-validation";
 import { checkRefreshToken } from "../../middlewares/check-refresh-token-middleware";
 import { sesionService } from "../../domain/session-service/session-service";
+import { uuid } from "uuidv4";
+import { securityDevicesService } from "../../domain/security-devices-service/security-devices-service";
+import { SecurityDevicesType } from "../../models/SecurityDevicesType";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -86,9 +89,25 @@ authRouter.post(
       req.body.loginOrEmail,
       req.body.password
     );
+    const title = req.headers["user-agent"] || "Mozilla";
+    console.log(title);
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    const deviceId = uuid();
+
     if (user) {
       const accessToken = await jwtService.createJWT(user);
-      const refreshToken = await jwtService.createRefreshToken(user);
+      const refreshToken = await jwtService.createRefreshToken(user, deviceId);
+      const result = await jwtService.verifyRefreshToken(refreshToken);
+      const lastActiveDate = result.iat;
+      const device: SecurityDevicesType = {
+        userId: user.id,
+        ip,
+        title,
+        lastActiveDate,
+        deviceId,
+      };
+      const securityDevices = await securityDevicesService.addDevice(device);
+
       res
         .status(HTTP_STATUSES.OK_200)
         .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
@@ -103,12 +122,12 @@ authRouter.post(
   checkRefreshToken,
   async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;
-    console.log(refreshToken);
+    const deviceId = uuid();
     await sesionService.updateBlackListTokens(refreshToken);
     const user = req.user;
     if (user) {
       const accessToken = await jwtService.createJWT(user);
-      const newAccesToken = await jwtService.createRefreshToken(user);
+      const newAccesToken = await jwtService.createRefreshToken(user, deviceId);
       res
         .status(HTTP_STATUSES.OK_200)
         .cookie("refreshToken", newAccesToken, { httpOnly: true, secure: true })
@@ -128,7 +147,6 @@ authRouter.post(
 
 authRouter.get("/me", authMiddleware, async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  console.log(userId);
   if (!userId) {
     res.send(HTTP_STATUSES.UNAUTHORISED_401);
   } else {

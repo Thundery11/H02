@@ -12,6 +12,7 @@ const users_router_1 = require("./routes/users-router/users-router");
 const auth_router_1 = require("./routes/auth-router/auth-router");
 const comments_router_1 = require("./routes/comments-router/comments-router");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const security_devices_router_1 = require("./routes/security-devices-router");
 exports.app = (0, express_1.default)();
 exports.settings = {
     JWT_SECRET: process.env.JWT_SECRET || "123",
@@ -25,3 +26,4 @@ exports.app.use("/posts", posts_router_1.postsRouter);
 exports.app.use("/users", users_router_1.usersRouter);
 exports.app.use("/auth", auth_router_1.authRouter);
 exports.app.use("/comments", comments_router_1.commentsRouter);
+exports.app.use("/security/devices", security_devices_router_1.securityDevicesRouter);

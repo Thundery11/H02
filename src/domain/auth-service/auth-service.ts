@@ -1,3 +1,4 @@
+import { LoginAttempsType } from "../../models/authTypes";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 export const authService = {
   async confirmEmail(code: string): Promise<boolean> {
@@ -9,4 +10,10 @@ export const authService = {
     const result = await usersRepository.updateConfirmation(user.id);
     return result;
   },
+  // async loginInfo(ip_address: string): Promise<LoginAttempsType>{
+  //   const loginInfo = {
+  //     ip_address: ip_address,
+  //     loginDate: new Date()
+  //   }
+  // }
 };

@@ -5,6 +5,7 @@ import { postsDbType } from "../../models/postsTypes";
 import { usersDbType } from "../../models/usersTypes";
 import { CommentsDbType } from "../../models/comments-types";
 import { BlackRefreshTokensType } from "../../models/blackRefreshTokensTypes";
+import { SecurityDevicesType } from "../../models/SecurityDevicesType";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ const postsDb = client.db("postsDb");
 const usersDb = client.db("users");
 const commentsDb = client.db("comments");
 const blackRefreshTokensDb = client.db("blackRefreshTokensDb");
+const securityDevicesDb = client.db("securityDevices");
 export const postsCollection = postsDb.collection<postsDbType>("posts");
 export const blogsCollection = blogsDb.collection<blogsDbType>("blogs");
 export const usersCollection = usersDb.collection<usersDbType>("users");
@@ -26,7 +28,8 @@ export const commentsCollection =
   commentsDb.collection<CommentsDbType>("comments");
 export const blackRefreshTokensCollection =
   blackRefreshTokensDb.collection<BlackRefreshTokensType>("blackRefreshTokens");
-
+export const securityDevicesCollection =
+  securityDevicesDb.collection<SecurityDevicesType>("securityDevices");
 export async function runDb() {
   try {
     await client.connect();
