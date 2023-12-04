@@ -9,7 +9,6 @@ securityDevicesRouter.get(
   "/",
   checkRefreshToken,
   async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken;
     const userId = req.user?.id;
     if (userId) {
       const device = await securityDevicesService.getDevices(userId);

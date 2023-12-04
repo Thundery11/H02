@@ -9,4 +9,13 @@ export const securityDevicesService = {
   async getDevices(userId: string): Promise<SecurityDevicesType[]> {
     return await securityDevicesRepository.getDevices(userId);
   },
+  async updateLastActiveDate(
+    deviceId: string,
+    lastActiveDate: string
+  ): Promise<boolean> {
+    return await securityDevicesRepository.updateLastActiveDate(
+      deviceId,
+      lastActiveDate
+    );
+  },
 };

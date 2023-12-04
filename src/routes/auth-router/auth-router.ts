@@ -90,15 +90,15 @@ authRouter.post(
       req.body.password
     );
     const title = req.headers["user-agent"] || "Mozilla";
+    const deviceId = uuid();
     console.log(title);
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-    const deviceId = uuid();
 
     if (user) {
       const accessToken = await jwtService.createJWT(user);
       const refreshToken = await jwtService.createRefreshToken(user, deviceId);
       const result = await jwtService.verifyRefreshToken(refreshToken);
-      const lastActiveDate = result.iat;
+      const lastActiveDate = new Date(result.iat * 1000).toISOString(); //15164886465454
       const device: SecurityDevicesType = {
         userId: user.id,
         ip,
@@ -121,16 +121,33 @@ authRouter.post(
   "/refresh-token",
   checkRefreshToken,
   async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken;
-    const deviceId = uuid();
-    await sesionService.updateBlackListTokens(refreshToken);
+    const oldRefreshToken = req.cookies.refreshToken;
+    await sesionService.updateBlackListTokens(oldRefreshToken);
     const user = req.user;
     if (user) {
+      //should update LastActiveDate
+      //how we must get deviceId?
+      const payload = await jwtService.verifyRefreshToken(oldRefreshToken);
       const accessToken = await jwtService.createJWT(user);
-      const newAccesToken = await jwtService.createRefreshToken(user, deviceId);
+      const newRefreshToken = await jwtService.createRefreshToken(
+        user,
+        payload.deviceId
+      );
+      const result = await jwtService.verifyRefreshToken(newRefreshToken);
+      console.log(result);
+      const lastActiveDate = new Date(result.iat * 1000).toISOString();
+      const deviceId = result.deviceId;
+      await securityDevicesService.updateLastActiveDate(
+        deviceId,
+        lastActiveDate
+      );
+
       res
         .status(HTTP_STATUSES.OK_200)
-        .cookie("refreshToken", newAccesToken, { httpOnly: true, secure: true })
+        .cookie("refreshToken", newRefreshToken, {
+          httpOnly: true,
+          secure: true,
+        })
         .send({ accessToken });
     }
   }

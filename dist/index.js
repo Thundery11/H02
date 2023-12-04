@@ -13,6 +13,7 @@ exports.startApp = void 0;
 const blogsDb_1 = require("./repositories/dataBase/blogsDb");
 const settings_1 = require("./settings");
 const port = process.env.PORT || 3000;
+settings_1.app.set("trust proxy", true);
 const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, blogsDb_1.runDb)();
     settings_1.app.listen(port, () => {
@@ -20,5 +21,4 @@ const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.startApp = startApp;
-settings_1.app.set("trust proxy", true);
 (0, exports.startApp)();

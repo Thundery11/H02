@@ -14,6 +14,7 @@ export const settings = {
   JWT_SECRET: process.env.JWT_SECRET || "123",
   REFRESH_TOKEN_SECRET: process.env.REFRESH_SECRET || "234",
 };
+app.set("trust proxy", true);
 app.use(cookieParser());
 app.use(express.json());
 app.use("/testing/all-data", testingAllDataRouter);

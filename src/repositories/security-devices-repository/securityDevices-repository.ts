@@ -11,4 +11,14 @@ export const securityDevicesRepository = {
       .find({ userId: userId }, { projection: { _id: 0, userId: 0 } })
       .toArray();
   },
+  async updateLastActiveDate(
+    deviceId: string,
+    lastActiveDate: string
+  ): Promise<boolean> {
+    const result = await securityDevicesCollection.updateOne(
+      { deviceId: deviceId },
+      { $set: { lastActiveDate: lastActiveDate } }
+    );
+    return result.matchedCount === 1;
+  },
 };
