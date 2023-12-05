@@ -17,10 +17,12 @@ import { sesionService } from "../../domain/session-service/session-service";
 import { uuid } from "uuidv4";
 import { securityDevicesService } from "../../domain/security-devices-service/security-devices-service";
 import { SecurityDevicesType } from "../../models/SecurityDevicesType";
+import { requestsToApiMiddleware } from "../../middlewares/request-to-api-middleware";
 export const authRouter = Router({});
 
 authRouter.post(
   "/registration",
+  requestsToApiMiddleware,
   registrationInputValidation(),
   errosValidation,
   async (req: RequestWithBody<AuthBodyParams>, res: Response) => {
@@ -51,6 +53,7 @@ authRouter.post(
 );
 authRouter.post(
   "/registration-confirmation",
+  requestsToApiMiddleware,
   emailConfirmationValidation(),
   errosValidation,
   async (req: Request, res: Response) => {
@@ -64,6 +67,7 @@ authRouter.post(
 );
 authRouter.post(
   "/registration-email-resending",
+  requestsToApiMiddleware,
   resendingEmailInputValidation(),
   isEmailExist(),
   errosValidation,
@@ -79,6 +83,7 @@ authRouter.post(
 
 authRouter.post(
   "/login",
+  requestsToApiMiddleware,
   authInputValidation(),
   errosValidation,
   async (

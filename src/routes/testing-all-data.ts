@@ -4,6 +4,8 @@ import {
   blogsCollection,
   commentsCollection,
   postsCollection,
+  requestsToApiCollection,
+  securityDevicesCollection,
   usersCollection,
 } from "../repositories/dataBase/blogsDb";
 
@@ -15,5 +17,7 @@ testingAllDataRouter.delete("/", async (req: Request, res: Response) => {
   await usersCollection.deleteMany({});
   await commentsCollection.deleteMany({});
   await blackRefreshTokensCollection.deleteMany({});
+  await securityDevicesCollection.deleteMany({});
+  await requestsToApiCollection.deleteMany({});
   res.send(204);
 });

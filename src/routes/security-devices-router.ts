@@ -51,7 +51,6 @@ securityDevicesRouter.delete(
     if (user?.id !== deviceSession?.userId) {
       return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
     }
-    // await securityDevicesService.updateLastActiveDate(deviceId, lastActiveDate);
     await securityDevicesService.deleteCurrentSession(deviceId);
 
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);

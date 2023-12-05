@@ -19,5 +19,7 @@ exports.testingAllDataRouter.delete("/", (req, res) => __awaiter(void 0, void 0,
     yield blogsDb_1.usersCollection.deleteMany({});
     yield blogsDb_1.commentsCollection.deleteMany({});
     yield blogsDb_1.blackRefreshTokensCollection.deleteMany({});
+    yield blogsDb_1.securityDevicesCollection.deleteMany({});
+    yield blogsDb_1.requestsToApiCollection.deleteMany({});
     res.send(204);
 }));
