@@ -17,7 +17,7 @@ export const requestsToApiMiddleware = async (
     URL
   );
   const filtered = requestsToApiArray?.filter(
-    (s) => s.date <= new Date(new Date().getTime() + 10000)
+    (s) => s.date >= new Date(new Date().getTime() - 10000)
   );
   if (filtered?.length > 5) {
     res.sendStatus(HTTP_STATUSES.TOO_MANY_REQUESTS_429);
