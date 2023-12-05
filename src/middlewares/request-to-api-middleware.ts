@@ -8,19 +8,20 @@ export const requestsToApiMiddleware = async (
   next: NextFunction
 ) => {
   const IP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-  const URL = req.baseUrl;
+  const URL = req.originalUrl;
   const date = new Date();
-  const requestToApi = { IP: IP, URL: req.baseUrl, date: date };
+  const requestToApi = { IP: IP, URL: req.originalUrl, date: date };
   await requestsToApiService.addRequestToApi(requestToApi);
   const requestsToApiArray = await requestsToApiService.getRequestsToApi(
     IP,
     URL
   );
   const filtered = requestsToApiArray?.filter(
-    (s) => s.date <= new Date(date.getTime() + 10000)
+    (s) => s.date <= new Date(new Date().getTime() + 10000)
   );
   if (filtered?.length > 5) {
-    return res.sendStatus(HTTP_STATUSES.TOO_MANY_REQUESTS_429);
+    res.sendStatus(HTTP_STATUSES.TOO_MANY_REQUESTS_429);
+    return;
   }
   console.log(requestsToApiArray);
 
