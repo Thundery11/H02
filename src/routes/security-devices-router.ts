@@ -33,7 +33,7 @@ securityDevicesRouter.delete(
     }
   }
 );
-securityDevicesRouter.get(
+securityDevicesRouter.delete(
   "/:deviceId",
   checkRefreshToken,
   async (req: RequestWithParams<{ deviceId: string }>, res: Response) => {
@@ -42,12 +42,13 @@ securityDevicesRouter.get(
     const deviceSession = await securityDevicesService.getCurrentSession(
       deviceId
     );
-    if (user?.id !== deviceSession?.userId) {
-      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
-    }
     if (!deviceSession) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
+    if (user?.id !== deviceSession?.userId) {
+      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+    }
+
     await securityDevicesService.deleteCurrentSession(deviceId);
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
