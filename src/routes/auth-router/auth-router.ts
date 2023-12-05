@@ -155,6 +155,9 @@ authRouter.post(
   checkRefreshToken,
   async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;
+    const result = await jwtService.verifyRefreshToken(refreshToken);
+    const lastActiveDate = new Date(result.iat * 1000).toISOString();
+    await securityDevicesService.deleteRefreshTokenWhenLogout(lastActiveDate);
     await sesionService.updateBlackListTokens(refreshToken);
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }

@@ -41,4 +41,10 @@ export const securityDevicesRepository = {
     });
     return result.deletedCount === 1;
   },
+  async deleteRefreshTokenWhenLogout(lastActiveDate: string): Promise<boolean> {
+    const result = await securityDevicesCollection.deleteOne({
+      lastActiveDate: lastActiveDate,
+    });
+    return result.deletedCount === 1;
+  },
 };

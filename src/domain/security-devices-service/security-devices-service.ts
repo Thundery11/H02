@@ -29,4 +29,9 @@ export const securityDevicesService = {
   async deleteCurrentSession(deviceId: string): Promise<boolean> {
     return await securityDevicesRepository.deleteCurrentSession(deviceId);
   },
+  async deleteRefreshTokenWhenLogout(lastActiveDate: string): Promise<boolean> {
+    return await securityDevicesRepository.deleteRefreshTokenWhenLogout(
+      lastActiveDate
+    );
+  },
 };
