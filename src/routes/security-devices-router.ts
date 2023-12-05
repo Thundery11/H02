@@ -39,6 +39,9 @@ securityDevicesRouter.delete(
   async (req: RequestWithParams<{ deviceId: string }>, res: Response) => {
     const user = req.user;
     const deviceId = req.params.deviceId;
+    const refreshToken = req.cookies.refreshToken;
+    const result = await jwtService.verifyRefreshToken(refreshToken);
+    const lastActiveDate = new Date(result.iat * 1000).toISOString();
     const deviceSession = await securityDevicesService.getCurrentSession(
       deviceId
     );
@@ -48,8 +51,9 @@ securityDevicesRouter.delete(
     if (user?.id !== deviceSession?.userId) {
       return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
     }
-
+    await securityDevicesService.updateLastActiveDate(deviceId, lastActiveDate);
     await securityDevicesService.deleteCurrentSession(deviceId);
+
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 );
