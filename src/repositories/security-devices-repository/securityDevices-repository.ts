@@ -27,4 +27,18 @@ export const securityDevicesRepository = {
     });
     return result.deletedCount >= 1;
   },
+  async getCurrentSession(
+    deviceId: string
+  ): Promise<SecurityDevicesType | null> {
+    return await securityDevicesCollection.findOne(
+      { deviceId: deviceId },
+      { projection: { _id: 0 } }
+    );
+  },
+  async deleteCurrentSession(deviceId: string): Promise<boolean> {
+    const result = await securityDevicesCollection.deleteOne({
+      deviceId: deviceId,
+    });
+    return result.deletedCount === 1;
+  },
 };

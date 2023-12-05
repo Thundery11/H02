@@ -21,4 +21,12 @@ export const securityDevicesService = {
   async terminateOtherSessions(deviceId: string): Promise<boolean> {
     return await securityDevicesRepository.terminateOtherSessions(deviceId);
   },
+  async getCurrentSession(
+    deviceId: string
+  ): Promise<SecurityDevicesType | null> {
+    return await securityDevicesRepository.getCurrentSession(deviceId);
+  },
+  async deleteCurrentSession(deviceId: string): Promise<boolean> {
+    return await securityDevicesRepository.deleteCurrentSession(deviceId);
+  },
 };

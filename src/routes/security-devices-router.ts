@@ -3,6 +3,7 @@ import { checkRefreshToken } from "../middlewares/check-refresh-token-middleware
 import { securityDevicesService } from "../domain/security-devices-service/security-devices-service";
 import { HTTP_STATUSES } from "../models/statuses";
 import { jwtService } from "../application/jwt-service";
+import { RequestWithParams } from "../models/requestsTypes";
 
 export const securityDevicesRouter = Router({});
 
@@ -30,5 +31,24 @@ securityDevicesRouter.delete(
         await securityDevicesService.terminateOtherSessions(deviceId);
       res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
+  }
+);
+securityDevicesRouter.get(
+  "/:deviceId",
+  checkRefreshToken,
+  async (req: RequestWithParams<{ deviceId: string }>, res: Response) => {
+    const user = req.user;
+    const deviceId = req.params.deviceId;
+    const deviceSession = await securityDevicesService.getCurrentSession(
+      deviceId
+    );
+    if (user?.id !== deviceSession?.userId) {
+      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+    }
+    if (!deviceSession) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    }
+    await securityDevicesService.deleteCurrentSession(deviceId);
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 );
