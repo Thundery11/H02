@@ -96,7 +96,6 @@ authRouter.post(
     );
     const title = req.headers["user-agent"] || "Mozilla";
     const deviceId = uuid();
-    console.log(title);
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
     if (user) {
