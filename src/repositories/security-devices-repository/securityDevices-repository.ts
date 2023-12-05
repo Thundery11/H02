@@ -47,4 +47,11 @@ export const securityDevicesRepository = {
     });
     return result.deletedCount === 1;
   },
+  async isValidRefreshToken(
+    isLastActiveDate: string
+  ): Promise<SecurityDevicesType | null> {
+    return await securityDevicesCollection.findOne({
+      lastActiveDate: isLastActiveDate,
+    });
+  },
 };

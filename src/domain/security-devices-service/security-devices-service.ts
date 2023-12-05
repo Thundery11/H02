@@ -34,4 +34,11 @@ export const securityDevicesService = {
       lastActiveDate
     );
   },
+  async isValidRefreshToken(
+    isLastActiveDate: string
+  ): Promise<SecurityDevicesType | null> {
+    return await securityDevicesRepository.isValidRefreshToken(
+      isLastActiveDate
+    );
+  },
 };

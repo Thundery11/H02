@@ -126,6 +126,12 @@ authRouter.post(
     const user = req.user;
     if (user) {
       const payload = await jwtService.verifyRefreshToken(oldRefreshToken);
+      const isLastActiveDate = new Date(payload.iat * 1000).toISOString();
+      const isValidRefreshToken =
+        await securityDevicesService.isValidRefreshToken(isLastActiveDate);
+      if (!isValidRefreshToken) {
+        return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+      }
       const accessToken = await jwtService.createJWT(user);
       const newRefreshToken = await jwtService.createRefreshToken(
         user,
@@ -140,7 +146,7 @@ authRouter.post(
         lastActiveDate
       );
 
-      res
+      return res
         .status(HTTP_STATUSES.OK_200)
         .cookie("refreshToken", newRefreshToken, {
           httpOnly: true,
