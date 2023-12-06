@@ -1,5 +1,6 @@
-import { blogsDbType } from "../models/blogsTypes";
+import { BlogType } from "../models/blogsTypes";
 import { postsDbType } from "../models/postsTypes";
+import { BlogModel } from "../mongo/blog/blog-model";
 import { blogsCollection, postsCollection } from "./dataBase/blogsDb";
 
 export const blogsRepository = {
@@ -9,20 +10,19 @@ export const blogsRepository = {
     sortDirection: string,
     pageSize: number,
     skip: number
-  ): Promise<blogsDbType[]> {
-    return await blogsCollection
-      .find(query, { projection: { _id: 0 } })
+  ): Promise<BlogType[]> {
+    return await BlogModel.find(query, { _id: 0, __v: 0 })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(pageSize))
-      .toArray();
+      .lean();
   },
 
   async countDocuments(query: object): Promise<number> {
-    return await blogsCollection.countDocuments(query);
+    return await BlogModel.countDocuments(query);
   },
   async countAllDocuments(blogId: string): Promise<number> {
-    return await postsCollection.countDocuments({ blogId });
+    return await BlogModel.countDocuments({ blogId });
   },
 
   async getAllPostsForBlogs(
@@ -40,15 +40,12 @@ export const blogsRepository = {
       .toArray();
   },
 
-  async findBlog(id: string): Promise<blogsDbType | null> {
-    return await blogsCollection.findOne(
-      { id: id },
-      { projection: { _id: 0 } }
-    );
+  async findBlog(id: string): Promise<BlogType | null> {
+    return await BlogModel.findOne({ id: id }, { _id: 0, __v: 0 });
   },
 
-  async createBlog(newBlog: blogsDbType): Promise<blogsDbType> {
-    const result = await blogsCollection.insertOne({ ...newBlog });
+  async createBlog(newBlog: BlogType): Promise<BlogType> {
+    const result = await BlogModel.insertMany({ ...newBlog });
     return newBlog;
   },
   async createPostForBlog(newPostForBlog: postsDbType): Promise<postsDbType> {
@@ -59,7 +56,7 @@ export const blogsRepository = {
   },
 
   async deleteBlog(id: string): Promise<boolean> {
-    const result = await blogsCollection.deleteOne({ id: id });
+    const result = await BlogModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
   async changeBlog(
@@ -68,16 +65,10 @@ export const blogsRepository = {
     description: string,
     websiteUrl: string
   ): Promise<boolean> {
-    const result = await blogsCollection.updateOne(
+    const result = await BlogModel.updateOne(
       { id: id },
-      {
-        $set: {
-          name: name,
-          description: description,
-          websiteUrl: websiteUrl,
-        },
-      }
-    ); //  ? current date
+      { name, description, websiteUrl }
+    );
 
     return result.matchedCount === 1;
   },
