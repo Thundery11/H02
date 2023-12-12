@@ -1,7 +1,7 @@
 import { BlogType } from "../models/blogsTypes";
 import { postsDbType } from "../models/postsTypes";
-import { BlogModel } from "../mongo/blog/blog-model";
-import { blogsCollection, postsCollection } from "./dataBase/blogsDb";
+
+import { BlogModel, PostModel } from "./dataBase/blogsDb";
 
 export const blogsRepository = {
   async getAllBlogs(
@@ -32,12 +32,11 @@ export const blogsRepository = {
     skip: number,
     blogId: string
   ): Promise<postsDbType[]> {
-    return await postsCollection
-      .find({ blogId: blogId }, { projection: { _id: 0 } })
+    return await PostModel.find({ blogId: blogId }, { _id: 0, __v: 0 })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(Number(skip))
       .limit(Number(pageSize))
-      .toArray();
+      .lean();
   },
 
   async findBlog(id: string): Promise<BlogType | null> {
@@ -49,7 +48,7 @@ export const blogsRepository = {
     return newBlog;
   },
   async createPostForBlog(newPostForBlog: postsDbType): Promise<postsDbType> {
-    const result = await postsCollection.insertOne({
+    const result = await PostModel.insertMany({
       ...newPostForBlog,
     });
     return newPostForBlog;

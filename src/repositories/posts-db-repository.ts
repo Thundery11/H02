@@ -1,6 +1,6 @@
 import { CommentsDbType } from "../models/comments-types";
 import { postsDbType } from "../models/postsTypes";
-import { commentsCollection, postsCollection } from "./dataBase/blogsDb";
+import { CommentsModel, PostModel } from "./dataBase/blogsDb";
 
 export const postsRepository = {
   async getAllPosts(
@@ -10,23 +10,19 @@ export const postsRepository = {
     pageSize: number,
     skip: number
   ): Promise<postsDbType[]> {
-    return await postsCollection
-      .find({}, { projection: { _id: 0 } })
+    return await PostModel.find({}, { _id: 0, __v: 0 })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(pageSize))
-      .toArray();
+      .lean();
   },
 
   async countDocuments(query: object): Promise<number> {
-    return await postsCollection.countDocuments({});
+    return await PostModel.countDocuments({});
   },
 
   async getPost(id: string): Promise<postsDbType | null> {
-    return await postsCollection.findOne(
-      { id: id },
-      { projection: { _id: 0 } }
-    );
+    return await PostModel.findOne({ id: id }, { _id: 0, __v: 0 });
   },
   async getComments(
     sortBy: string,
@@ -35,27 +31,29 @@ export const postsRepository = {
     skip: number,
     postId: string
   ): Promise<CommentsDbType[]> {
-    return await commentsCollection
-      .find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
+    return await CommentsModel.find(
+      { postId: postId },
+      { _id: 0, postId: 0, __v: 0 }
+    )
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(pageSize))
-      .toArray();
+      .lean();
   },
   async countAllComments(postId: string): Promise<number> {
-    return await commentsCollection.countDocuments({ postId });
+    return await CommentsModel.countDocuments({ postId });
   },
   async createPost(newPost: postsDbType): Promise<postsDbType> {
-    const result = await postsCollection.insertOne({ ...newPost });
+    const result = await PostModel.insertMany({ ...newPost });
     return newPost;
   },
   async createCommet(newComment: CommentsDbType): Promise<CommentsDbType> {
-    const result = await commentsCollection.insertOne({ ...newComment });
+    const result = await CommentsModel.insertMany({ ...newComment });
     return newComment;
   },
 
   async deletePost(id: string): Promise<boolean> {
-    const result = await postsCollection.deleteOne({ id: id });
+    const result = await PostModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
 
@@ -66,15 +64,13 @@ export const postsRepository = {
     content: string,
     blogId: string
   ): Promise<boolean> {
-    const result = await postsCollection.updateOne(
+    const result = await PostModel.updateOne(
       { id: id },
       {
-        $set: {
-          title: title,
-          shortDescription: shortDescription,
-          content: content,
-          blogId: blogId,
-        },
+        title: title,
+        shortDescription: shortDescription,
+        content: content,
+        blogId: blogId,
       }
     );
     return result.matchedCount === 1;

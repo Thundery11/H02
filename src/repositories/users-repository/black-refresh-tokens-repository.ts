@@ -1,15 +1,15 @@
 import { BlackRefreshTokensType } from "../../models/blackRefreshTokensTypes";
-import { blackRefreshTokensCollection } from "../dataBase/blogsDb";
+import { BlackRefreshTokenModel } from "../dataBase/blogsDb";
 
 export const blackRefreshTokensRepository = {
   async findBlackRefreshToken(
     refreshToken: string
   ): Promise<BlackRefreshTokensType | null> {
-    return await blackRefreshTokensCollection.findOne({
+    return await BlackRefreshTokenModel.findOne({
       refreshToken: refreshToken,
     });
   },
   async updateBlackListTokens(refreshToken: string) {
-    return await blackRefreshTokensCollection.insertOne({ refreshToken });
+    return await BlackRefreshTokenModel.insertMany({ refreshToken });
   },
 };

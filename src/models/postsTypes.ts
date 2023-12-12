@@ -1,4 +1,6 @@
-export type postsDbType = {
+import { WithId } from "mongodb";
+
+export type postsDbType = WithId<{
   id: string;
   title: string;
   shortDescription: string;
@@ -6,7 +8,7 @@ export type postsDbType = {
   blogId: string;
   blogName: string;
   createdAt: string;
-};
+}>;
 
 export interface PostsQueryParams {
   searchNameTerm?: string;
