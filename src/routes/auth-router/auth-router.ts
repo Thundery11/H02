@@ -5,7 +5,7 @@ import { authInputValidation } from "../../middlewares/auth-input-validation-mid
 import { errosValidation } from "../../middlewares/erros-validation";
 import { jwtService } from "../../application/jwt-service";
 import { authMiddleware } from "../../middlewares/auth-middleware";
-import { AuthBodyParams } from "../../models/authTypes";
+import { AuthBodyParams, emailType } from "../../models/authTypes";
 import { registrationInputValidation } from "../../middlewares/registration-input-validation-middleware";
 import { usersService } from "../../domain/users-service/users-service";
 import { authService } from "../../domain/auth-service/auth-service";
@@ -18,6 +18,8 @@ import { uuid } from "uuidv4";
 import { securityDevicesService } from "../../domain/security-devices-service/security-devices-service";
 import { SecurityDevicesType } from "../../models/SecurityDevicesType";
 import { requestsToApiMiddleware } from "../../middlewares/request-to-api-middleware";
+import { passwordRecoveryInputValidation } from "../../middlewares/password-recovery-input-validation";
+import { emailsManager } from "../../managers/emails-manager";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -49,6 +51,19 @@ authRouter.post(
       });
     }
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+  }
+);
+authRouter.post(
+  "/password-recovery",
+  passwordRecoveryInputValidation(),
+  errosValidation,
+  requestsToApiMiddleware,
+  async (req: RequestWithBody<emailType>, res: Response) => {
+    console.log(req.body);
+    const email = req.body.email;
+    console.log(email);
+    await emailsManager.sendPasswordRecoveryCode(email);
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 );
 authRouter.post(
@@ -97,6 +112,9 @@ authRouter.post(
     const title = req.headers["user-agent"] || "Mozilla";
     const deviceId = uuid();
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    if (!ip) {
+      return res.status(HTTP_STATUSES.NOT_FOUND_404).send("unknown ip addres");
+    }
 
     if (user) {
       const accessToken = await jwtService.createJWT(user);
@@ -112,12 +130,12 @@ authRouter.post(
       };
       await securityDevicesService.addDevice(device);
 
-      res
+      return res
         .status(HTTP_STATUSES.OK_200)
         .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
         .send({ accessToken });
     } else {
-      res.status(HTTP_STATUSES.UNAUTHORISED_401).send();
+      return res.status(HTTP_STATUSES.UNAUTHORISED_401).send();
     }
   }
 );
