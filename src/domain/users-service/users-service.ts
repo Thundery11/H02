@@ -209,6 +209,9 @@ export const usersService = {
         minutes: 3,
       }),
     };
+    console.log(
+      `recoveryCodeForNewPassword : ${recoveryCodeForNewPassword.recoveryCode}`
+    );
     try {
       await emailsManager.sendPasswordRecoveryCode(recoveryCodeForNewPassword);
     } catch (error) {
@@ -219,7 +222,32 @@ export const usersService = {
       recoveryCodeForNewPassword
     );
   },
+  async isOkRecoveryCode(
+    recoveryCode: string
+  ): Promise<RecoveryCodeForNewPasswordType | null> {
+    const recoveryCodeForNewPassword = await usersRepository.isOkRecoveryCode(
+      recoveryCode
+    );
+    console.log(`recoveryCodeForNewPassword: ${recoveryCodeForNewPassword}`);
+    if (!recoveryCodeForNewPassword) return null;
+    if (recoveryCodeForNewPassword.expirationDate < new Date()) return null;
+    if (recoveryCodeForNewPassword.recoveryCode !== recoveryCode) return null;
+    return recoveryCodeForNewPassword;
+  },
 
+  async changePassword(userEmail: string, password: string): Promise<boolean> {
+    const passwordSalt = await bcrypt.genSalt(10);
+    const passwordHash = await this._generateHash(password, passwordSalt);
+    const result = await usersRepository.findUserAndChangePassword(
+      userEmail,
+      passwordHash,
+      passwordSalt
+    );
+    if (result) {
+      return true;
+    }
+    return false;
+  },
   async _generateHash(password: string, salt: string) {
     const hash = await bcrypt.hash(password, salt);
     return hash;

@@ -94,4 +94,31 @@ export const usersRepository = {
     });
     return recoveryCodeForNewPassword;
   },
+
+  async isOkRecoveryCode(
+    recoveryCode: string
+  ): Promise<RecoveryCodeForNewPasswordType | null> {
+    const result = RecoveryCodeForNewPasswordModel.findOne(
+      { recoveryCode },
+      { _id: 0, __v: 0 }
+    );
+    return result;
+  },
+  async findUserAndChangePassword(
+    email: string,
+    passwordHash: string,
+    passwordSalt: string
+  ): Promise<usersDbType | null> {
+    const result = await UserModel.findOneAndUpdate(
+      { "accountData.email": email },
+      {
+        "accountData.passwordHash": passwordHash,
+        "accountData.paswordSalt": passwordSalt,
+      },
+      {
+        new: true,
+      }
+    );
+    return result;
+  },
 };

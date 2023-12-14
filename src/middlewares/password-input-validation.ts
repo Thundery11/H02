@@ -2,7 +2,7 @@ import { body } from "express-validator";
 
 export const passwordInputValidation = () => {
   return [
-    body("password")
+    body("newPassword")
       .isString()
       .bail()
       .trim()
