@@ -1,6 +1,6 @@
 import { WithId } from "mongodb";
 
-export type CommentsDbType = WithId<{
+export type CommentsDbType = {
   postId: string;
   id: string;
   content: string;
@@ -9,7 +9,7 @@ export type CommentsDbType = WithId<{
     userLogin: string;
   };
   createdAt: string;
-}>;
+};
 export interface CommentsOutputType {
   id: string;
   content: string;

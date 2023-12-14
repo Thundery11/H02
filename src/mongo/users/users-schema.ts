@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { usersDbType } from "../../models/usersTypes";
 import { WithId } from "mongodb";
 
-export const UsersSchema = new mongoose.Schema<WithId<usersDbType>>({
+export const UsersSchema = new mongoose.Schema<usersDbType>({
   id: { type: String, required: true },
   accountData: {
     login: { type: String, required: true },

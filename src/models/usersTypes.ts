@@ -1,6 +1,6 @@
 import { WithId } from "mongodb";
 
-export type usersDbType = WithId<{
+export type usersDbType = {
   id: string;
   accountData: {
     login: string;
@@ -14,7 +14,7 @@ export type usersDbType = WithId<{
     expirationDate: Date;
     isConfirmed: boolean;
   };
-}>;
+};
 
 export type usersRequestType = {
   query: object;

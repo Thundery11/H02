@@ -1,5 +1,9 @@
+import { RecoveryCodeForNewPasswordType } from "../../models/passowrdRecovery-types";
 import { usersDbType } from "../../models/usersTypes";
-import { UserModel } from "../dataBase/blogsDb";
+import {
+  RecoveryCodeForNewPasswordModel,
+  UserModel,
+} from "../dataBase/blogsDb";
 export const usersRepository = {
   async createUser(newUser: usersDbType): Promise<usersDbType> {
     const result = await UserModel.insertMany({ ...newUser });
@@ -81,5 +85,13 @@ export const usersRepository = {
   async deleteUser(id: string): Promise<boolean> {
     const result = await UserModel.deleteOne({ id: id });
     return result.deletedCount === 1;
+  },
+  async sendPasswordRecoveryCode(
+    recoveryCodeForNewPassword: RecoveryCodeForNewPasswordType
+  ): Promise<RecoveryCodeForNewPasswordType> {
+    const result = await RecoveryCodeForNewPasswordModel.insertMany({
+      ...recoveryCodeForNewPassword,
+    });
+    return recoveryCodeForNewPassword;
   },
 };

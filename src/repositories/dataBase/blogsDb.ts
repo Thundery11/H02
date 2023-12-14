@@ -14,10 +14,12 @@ import { SecurityDevicesSchema } from "../../mongo/security-devices/securityDevi
 import { RequestsToApiSchema } from "../../mongo/requests-to-api/requests-to-api-schema";
 import { BlackRefreshTokensType } from "../../models/blackRefreshTokensTypes";
 import { blackRefreshTokenSchema } from "../../mongo/blackRefreshTokenSchema/blackRefreshTokenSchema";
+import { RecoveryCodeForNewPasswordType } from "../../models/passowrdRecovery-types";
+import { RecoveryCodeForNewPasswordSchema } from "../../mongo/RecoveryCodeForNewPassword/RecoveryCodeForNewPasswordType-schema";
 
 dotenv.config();
 const dbName = "homeWork10";
-// const mongoUri = `mongodb://0.0.0.0:27017/${dbName}`;
+//const mongoUri = `mongodb://0.0.0.0:27017/${dbName}`;
 const mongoUri = process.env.MONGO_URL || `mongodb://0.0.0.0:27017/${dbName}`;
 if (!mongoUri) {
   throw new Error(`! Url doesn't found`);
@@ -41,6 +43,11 @@ export const BlackRefreshTokenModel = mongoose.model<BlackRefreshTokensType>(
   "blackRefreshTokens",
   blackRefreshTokenSchema
 );
+export const RecoveryCodeForNewPasswordModel =
+  mongoose.model<RecoveryCodeForNewPasswordType>(
+    "recoveryCodeForNewPassword",
+    RecoveryCodeForNewPasswordSchema
+  );
 
 // export const client = new MongoClient(mongoUri);
 // const blogsDb = client.db("blogsDb");

@@ -5,7 +5,11 @@ import { authInputValidation } from "../../middlewares/auth-input-validation-mid
 import { errosValidation } from "../../middlewares/erros-validation";
 import { jwtService } from "../../application/jwt-service";
 import { authMiddleware } from "../../middlewares/auth-middleware";
-import { AuthBodyParams, emailType } from "../../models/authTypes";
+import {
+  AuthBodyParams,
+  PasswordAndRecoveryCode,
+  emailType,
+} from "../../models/authTypes";
 import { registrationInputValidation } from "../../middlewares/registration-input-validation-middleware";
 import { usersService } from "../../domain/users-service/users-service";
 import { authService } from "../../domain/auth-service/auth-service";
@@ -20,6 +24,7 @@ import { SecurityDevicesType } from "../../models/SecurityDevicesType";
 import { requestsToApiMiddleware } from "../../middlewares/request-to-api-middleware";
 import { passwordRecoveryInputValidation } from "../../middlewares/password-recovery-input-validation";
 import { emailsManager } from "../../managers/emails-manager";
+import { passwordInputValidation } from "../../middlewares/password-input-validation";
 export const authRouter = Router({});
 
 authRouter.post(
@@ -62,10 +67,18 @@ authRouter.post(
     console.log(req.body);
     const email = req.body.email;
     console.log(email);
-    await emailsManager.sendPasswordRecoveryCode(email);
+    await usersService.sendPasswordRecoveryCode(email);
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 );
+authRouter.post(
+  "/new-password",
+  requestsToApiMiddleware,
+  passwordInputValidation(),
+  errosValidation,
+  async (req: RequestWithBody<PasswordAndRecoveryCode>, res: Response) => {}
+);
+
 authRouter.post(
   "/registration-confirmation",
   requestsToApiMiddleware,

@@ -1,13 +1,13 @@
 import { WithId } from "mongodb";
 
-export type BlogType = WithId<{
+export type BlogType = {
   id: string;
   name: string;
   description: string;
   websiteUrl: string;
   createdAt: string;
   isMembership: boolean;
-}>;
+};
 
 export interface BlogQueryParams {
   searchNameTerm?: string;

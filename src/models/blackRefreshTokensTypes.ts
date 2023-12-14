@@ -1,5 +1,5 @@
 import { WithId } from "mongodb";
 
-export type BlackRefreshTokensType = WithId<{
+export type BlackRefreshTokensType = {
   refreshToken: string;
-}>;
+};

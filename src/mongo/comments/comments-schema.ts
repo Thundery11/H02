@@ -2,7 +2,7 @@ import { WithId } from "mongodb";
 import mongoose from "mongoose";
 import { CommentsDbType } from "../../models/comments-types";
 
-export const CommentsSchema = new mongoose.Schema<WithId<CommentsDbType>>({
+export const CommentsSchema = new mongoose.Schema<CommentsDbType>({
   postId: { type: String, required: true },
   id: { type: String, required: true },
   content: { type: String, required: true },

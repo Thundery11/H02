@@ -4,6 +4,7 @@ import add from "date-fns/add";
 import bcrypt from "bcrypt";
 import { usersRepository } from "../../repositories/users-repository/users-repository";
 import { emailsManager } from "../../managers/emails-manager";
+import { RecoveryCodeForNewPasswordType } from "../../models/passowrdRecovery-types";
 export const usersService = {
   async findAllUsers(
     searchLoginTerm: string,
@@ -196,6 +197,27 @@ export const usersService = {
       }
     }
     return user;
+  },
+  async sendPasswordRecoveryCode(
+    email: string
+  ): Promise<RecoveryCodeForNewPasswordType | null> {
+    const recoveryCodeForNewPassword = {
+      email: email,
+      recoveryCode: uuidv4(),
+      expirationDate: add(new Date(), {
+        hours: 3,
+        minutes: 3,
+      }),
+    };
+    try {
+      await emailsManager.sendPasswordRecoveryCode(recoveryCodeForNewPassword);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+    return await usersRepository.sendPasswordRecoveryCode(
+      recoveryCodeForNewPassword
+    );
   },
 
   async _generateHash(password: string, salt: string) {
