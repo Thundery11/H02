@@ -7,6 +7,10 @@ export const authInputValidation = () => {
       .bail()
       .withMessage("loginOrEmail is not a string"),
 
-    body("password").isString().bail().withMessage("password is not a string"),
+    body("password")
+      .isString()
+      .bail()
+      .isUUID()
+      .withMessage("password is not a string"),
   ];
 };
