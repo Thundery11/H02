@@ -113,13 +113,9 @@ export const usersRepository = {
     const result = await UserModel.updateOne(
       { "accountData.email": email },
       {
+        "accountData.passwordSalt": passwordSalt,
         "accountData.passwordHash": passwordHash,
-        "accountData.paswordSalt": passwordSalt,
       }
-
-      // {
-      //   new: true,
-      // }
     );
     return result.modifiedCount === 1;
   },
