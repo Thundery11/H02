@@ -3,6 +3,7 @@ import {
   BlogModel,
   CommentsModel,
   PostModel,
+  RecoveryCodeForNewPasswordModel,
   RequestsToApiModel,
   SecurityDevicesModel,
   UserModel,
@@ -17,5 +18,6 @@ testingAllDataRouter.delete("/", async (req: Request, res: Response) => {
   await CommentsModel.deleteMany({});
   await SecurityDevicesModel.deleteMany({});
   await RequestsToApiModel.deleteMany({});
+  await RecoveryCodeForNewPasswordModel.deleteMany({});
   res.send(204);
 });

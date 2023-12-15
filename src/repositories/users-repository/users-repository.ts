@@ -117,9 +117,13 @@ export const usersRepository = {
       },
       {
         new: true,
-        upsert: true,
       }
     );
     return result;
   },
 };
+
+// passwordHash
+// "$2b$10$PuavJFSupd2nfqRsdonqUeiofeWJfEEieuvOuVZViCVPguPaNZFq6"
+// passwordSalt
+// "$2b$10$UIdqZNdUUQjzBvNVzgRC2O"

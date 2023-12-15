@@ -20,5 +20,6 @@ exports.testingAllDataRouter.delete("/", (req, res) => __awaiter(void 0, void 0,
     yield blogsDb_1.CommentsModel.deleteMany({});
     yield blogsDb_1.SecurityDevicesModel.deleteMany({});
     yield blogsDb_1.RequestsToApiModel.deleteMany({});
+    yield blogsDb_1.RecoveryCodeForNewPasswordModel.deleteMany({});
     res.send(204);
 }));

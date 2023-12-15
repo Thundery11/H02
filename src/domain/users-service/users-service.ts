@@ -242,7 +242,7 @@ export const usersService = {
     const passwordSalt = await bcrypt.genSalt(10);
     const passwordHash = await this._generateHash(newPassword, passwordSalt);
     console.log(
-      `password hash, password salt: ${passwordSalt}, ${passwordHash}`
+      `password salt, password hash: ${passwordSalt}, ${passwordHash}`
     );
     const result = await usersRepository.findUserAndChangePassword(
       userEmail,
