@@ -8,9 +8,9 @@ export const authInputValidation = () => {
       .withMessage("loginOrEmail is not a string"),
 
     body("password")
+      .isUUID()
       .isString()
       .bail()
-      .isUUID()
       .withMessage("password is not a string"),
   ];
 };

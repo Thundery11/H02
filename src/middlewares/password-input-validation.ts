@@ -11,6 +11,10 @@ export const passwordInputValidation = () => {
       .isLength({ min: 6, max: 20 })
       .bail()
       .withMessage("incorrect password"),
-    body("recoveryCode").isString().withMessage("incorrect recovery code"),
+    body("recoveryCode")
+      .isUUID()
+      .bail()
+      .isString()
+      .withMessage("incorrect recovery code"),
   ];
 };
