@@ -104,26 +104,33 @@ export const usersRepository = {
     );
     return result;
   },
+
   async findUserAndChangePassword(
     email: string,
     passwordHash: string,
     passwordSalt: string
-  ): Promise<usersDbType | null> {
-    const result = await UserModel.findOneAndUpdate(
+  ): Promise<boolean> {
+    const result = await UserModel.updateOne(
       { "accountData.email": email },
       {
-        "accountData.passwordHash": passwordHash,
+        //  "accountData.passwordHash": passwordHash,
         "accountData.paswordSalt": passwordSalt,
-      },
-      {
-        new: true,
       }
+
+      // {
+      //   new: true,
+      // }
     );
-    return result;
+    return result.modifiedCount === 1;
   },
 };
 
 // passwordHash
-// "$2b$10$PuavJFSupd2nfqRsdonqUeiofeWJfEEieuvOuVZViCVPguPaNZFq6"
+// "$2b$10$nVtakwMozoo8FO6j8ASDYORmn0Ee.vhmQ1fQz00mZDKyR78rDAx/a"
 // passwordSalt
-// "$2b$10$UIdqZNdUUQjzBvNVzgRC2O"
+// "$2b$10$nVtakwMozoo8FO6j8ASDYO"
+
+passwordHash;
+("$2b$10$nVtakwMozoo8FO6j8ASDYORmn0Ee.vhmQ1fQz00mZDKyR78rDAx/a");
+passwordSalt;
+("$2b$10$nVtakwMozoo8FO6j8ASDYO");
