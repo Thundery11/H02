@@ -64,9 +64,7 @@ authRouter.post(
   errosValidation,
   requestsToApiMiddleware,
   async (req: RequestWithBody<emailType>, res: Response) => {
-    console.log(req.body);
     const email = req.body.email;
-    console.log(email);
     await usersService.sendPasswordRecoveryCode(email);
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
@@ -77,7 +75,9 @@ authRouter.post(
   passwordInputValidation(),
   errosValidation,
   async (req: RequestWithBody<PasswordAndRecoveryCode>, res: Response) => {
-    const { password, recoveryCode } = req.body;
+    const newPassword = req.body.newPassword;
+    const recoveryCode = req.body.recoveryCode;
+    console.log(`password: ${newPassword}`);
     const result = await usersService.isOkRecoveryCode(recoveryCode);
     if (!result) {
       return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -85,7 +85,7 @@ authRouter.post(
     const userEmail = result.email;
     const changePassword = await usersService.changePassword(
       userEmail,
-      password
+      newPassword
     );
     if (!changePassword) return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);

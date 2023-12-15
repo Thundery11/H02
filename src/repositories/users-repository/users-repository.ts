@@ -117,6 +117,7 @@ export const usersRepository = {
       },
       {
         new: true,
+        upsert: true,
       }
     );
     return result;

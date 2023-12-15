@@ -235,9 +235,15 @@ export const usersService = {
     return recoveryCodeForNewPassword;
   },
 
-  async changePassword(userEmail: string, password: string): Promise<boolean> {
+  async changePassword(
+    userEmail: string,
+    newPassword: string
+  ): Promise<boolean> {
     const passwordSalt = await bcrypt.genSalt(10);
-    const passwordHash = await this._generateHash(password, passwordSalt);
+    const passwordHash = await this._generateHash(newPassword, passwordSalt);
+    console.log(
+      `password hash, password salt: ${passwordSalt}, ${passwordHash}`
+    );
     const result = await usersRepository.findUserAndChangePassword(
       userEmail,
       passwordHash,

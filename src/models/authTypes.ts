@@ -14,6 +14,6 @@ export type LoginAttempsType = {
 };
 
 export type PasswordAndRecoveryCode = {
-  password: string;
+  newPassword: string;
   recoveryCode: string;
 };
