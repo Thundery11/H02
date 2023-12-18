@@ -173,6 +173,7 @@ export const usersService = {
     }
     return user;
   },
+
   async resendEmailConfirmationCode(
     loginOrEmail: string
   ): Promise<usersDbType | null> {
@@ -198,6 +199,7 @@ export const usersService = {
     }
     return user;
   },
+
   async sendPasswordRecoveryCode(
     email: string
   ): Promise<RecoveryCodeForNewPasswordType | null> {
@@ -222,6 +224,7 @@ export const usersService = {
       recoveryCodeForNewPassword
     );
   },
+
   async isOkRecoveryCode(
     recoveryCode: string
   ): Promise<RecoveryCodeForNewPasswordType | null> {

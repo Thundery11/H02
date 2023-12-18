@@ -14,15 +14,29 @@ import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import {
   BlogQueryParams,
   PostsForBlogsQueryParams,
-  blogsDbType,
+  BlogType,
 } from "../models/blogsTypes";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { postsDbType } from "../models/postsTypes";
 export const blogsRouter = Router({});
-
-blogsRouter.get(
-  "/",
-  async (req: RequestWithQuery<BlogQueryParams>, res: Response) => {
+class BLogsController {
+  async createBlog(
+    req: RequestWithBody<{
+      name: string;
+      description: string;
+      websiteUrl: string;
+    }>,
+    res: Response
+  ) {
+    const { name, description, websiteUrl } = req.body;
+    const createdBlog = await blogsService.createBlog(
+      name,
+      description,
+      websiteUrl
+    );
+    res.status(HTTP_STATUSES.CREATED_201).send(createdBlog);
+  }
+  async findAllBlogs(req: RequestWithQuery<BlogQueryParams>, res: Response) {
     const {
       searchNameTerm = "",
       sortBy = "createdAt",
@@ -34,7 +48,7 @@ blogsRouter.get(
     const query = { name: new RegExp(searchNameTerm, "i") };
     const skip = (pageNumber - 1) * pageSize;
 
-    const allBlogs: blogsDbType[] = await blogsService.getAllBlogs(
+    const allBlogs: BlogType[] = await blogsService.getAllBlogs(
       query,
       sortBy,
       sortDirection,
@@ -52,11 +66,7 @@ blogsRouter.get(
     };
     res.status(HTTP_STATUSES.OK_200).send(presentationAllblogs);
   }
-);
-
-blogsRouter.get(
-  "/:id",
-  async (req: RequestWithParams<{ id: string }>, res: Response) => {
+  async findBlog(req: RequestWithParams<{ id: string }>, res: Response) {
     const blog = await blogsService.findBlog(req.params.id);
 
     if (!blog) {
@@ -66,13 +76,10 @@ blogsRouter.get(
       res.status(HTTP_STATUSES.OK_200).send(blog);
     }
   }
-);
-blogsRouter.get(
-  "/:blogId/posts",
-  async (
+  async findPostsFromCurrentBLog(
     req: RequestWithParamsAndQuery<PostsForBlogsQueryParams>,
     res: Response
-  ) => {
+  ) {
     const {
       sortBy = "createdAt",
       sortDirection = "desc",
@@ -84,7 +91,7 @@ blogsRouter.get(
 
     const skip = (pageNumber - 1) * pageSize;
     // const sorting = sortDirection === "ask" ? 1 : -1;
-    const blog: blogsDbType | null = await blogsService.findBlog(blogId);
+    const blog: BlogType | null = await blogsService.findBlog(blogId);
     if (!blog) {
       res.sendStatus(404);
       return;
@@ -111,37 +118,7 @@ blogsRouter.get(
       res.status(HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
     }
   }
-);
-
-blogsRouter.post(
-  "/",
-  authGuardMiddleware,
-  blogsInputValidation(),
-  errosValidation,
-  async (
-    req: RequestWithBody<{
-      name: string;
-      description: string;
-      websiteUrl: string;
-    }>,
-    res: Response
-  ) => {
-    const { name, description, websiteUrl } = req.body;
-    const createdBlog = await blogsService.createBlog(
-      name,
-      description,
-      websiteUrl
-    );
-    res.status(HTTP_STATUSES.CREATED_201).send(createdBlog);
-  }
-);
-
-blogsRouter.post(
-  "/:blogId/posts",
-  authGuardMiddleware,
-  postsInputValidation(),
-  errosValidation,
-  async (
+  async createPost(
     req: RequestWithParamsAndBody<{
       blogId: string;
       title: string;
@@ -149,7 +126,7 @@ blogsRouter.post(
       content: string;
     }>,
     res: Response
-  ) => {
+  ) {
     const blogId = req.params.blogId;
     const blog = await blogsService.findBlog(blogId);
     if (!blog) {
@@ -169,12 +146,7 @@ blogsRouter.post(
       res.status(HTTP_STATUSES.CREATED_201).send(createdPostForBlogs);
     }
   }
-);
-
-blogsRouter.delete(
-  "/:id",
-  authGuardMiddleware,
-  async (req: RequestWithParams<{ id: string }>, res: Response) => {
+  async deleteBlog(req: RequestWithParams<{ id: string }>, res: Response) {
     const id = req.params.id;
     const isDeletedBlog = await blogsService.deleteBlog(id);
     if (!isDeletedBlog) {
@@ -184,14 +156,7 @@ blogsRouter.delete(
       res.send(HTTP_STATUSES.NO_CONTENT_204);
     }
   }
-);
-
-blogsRouter.put(
-  "/:id",
-  authGuardMiddleware,
-  blogsInputValidation(),
-  errosValidation,
-  async (
+  async updateBlog(
     req: RequestWithParamsAndBody<{
       id: string;
       name: string;
@@ -199,7 +164,7 @@ blogsRouter.put(
       websiteUrl: string;
     }>,
     res: Response
-  ) => {
+  ) {
     const id = req.params.id;
     const { name, description, websiteUrl } = req.body;
     const changedBlog = await blogsService.changeBlog(
@@ -215,4 +180,32 @@ blogsRouter.put(
       res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
   }
+}
+
+const blogsController = new BLogsController();
+
+blogsRouter.get("/", blogsController.findAllBlogs);
+blogsRouter.get("/:id", blogsController.findBlog);
+blogsRouter.get("/:blogId/posts", blogsController.findPostsFromCurrentBLog);
+blogsRouter.post(
+  "/",
+  authGuardMiddleware,
+  blogsInputValidation(),
+  errosValidation,
+  blogsController.createBlog
+);
+blogsRouter.post(
+  "/:blogId/posts",
+  authGuardMiddleware,
+  postsInputValidation(),
+  errosValidation,
+  blogsController.createPost
+);
+blogsRouter.delete("/:id", authGuardMiddleware, blogsController.deleteBlog);
+blogsRouter.put(
+  "/:id",
+  authGuardMiddleware,
+  blogsInputValidation(),
+  errosValidation,
+  blogsController.updateBlog
 );

@@ -23,7 +23,6 @@ import { securityDevicesService } from "../../domain/security-devices-service/se
 import { SecurityDevicesType } from "../../models/SecurityDevicesType";
 import { requestsToApiMiddleware } from "../../middlewares/request-to-api-middleware";
 import { passwordRecoveryInputValidation } from "../../middlewares/password-recovery-input-validation";
-import { emailsManager } from "../../managers/emails-manager";
 import { passwordInputValidation } from "../../middlewares/password-input-validation";
 export const authRouter = Router({});
 
@@ -172,36 +171,34 @@ authRouter.post(
     const oldRefreshToken = req.cookies.refreshToken;
     await sesionService.updateBlackListTokens(oldRefreshToken);
     const user = req.user;
-    if (user) {
-      const payload = await jwtService.verifyRefreshToken(oldRefreshToken);
-      const isLastActiveDate = new Date(payload.iat * 1000).toISOString();
-      const isValidRefreshToken =
-        await securityDevicesService.isValidRefreshToken(isLastActiveDate);
-      if (!isValidRefreshToken) {
-        return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
-      }
-      const accessToken = await jwtService.createJWT(user);
-      const newRefreshToken = await jwtService.createRefreshToken(
-        user,
-        payload.deviceId
-      );
-      const result = await jwtService.verifyRefreshToken(newRefreshToken);
-      console.log(result);
-      const lastActiveDate = new Date(result.iat * 1000).toISOString();
-      const deviceId = result.deviceId;
-      await securityDevicesService.updateLastActiveDate(
-        deviceId,
-        lastActiveDate
-      );
-
-      return res
-        .status(HTTP_STATUSES.OK_200)
-        .cookie("refreshToken", newRefreshToken, {
-          httpOnly: true,
-          secure: true,
-        })
-        .send({ accessToken });
+    if (!user) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
+    const payload = await jwtService.verifyRefreshToken(oldRefreshToken);
+    const isLastActiveDate = new Date(payload.iat * 1000).toISOString();
+    const isValidRefreshToken =
+      await securityDevicesService.isValidRefreshToken(isLastActiveDate);
+    if (!isValidRefreshToken) {
+      return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+    }
+    const accessToken = await jwtService.createJWT(user);
+    const newRefreshToken = await jwtService.createRefreshToken(
+      user,
+      payload.deviceId
+    );
+    const result = await jwtService.verifyRefreshToken(newRefreshToken);
+    console.log(result);
+    const lastActiveDate = new Date(result.iat * 1000).toISOString();
+    const deviceId = result.deviceId;
+    await securityDevicesService.updateLastActiveDate(deviceId, lastActiveDate);
+
+    return res
+      .status(HTTP_STATUSES.OK_200)
+      .cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+      })
+      .send({ accessToken });
   }
 );
 authRouter.post(

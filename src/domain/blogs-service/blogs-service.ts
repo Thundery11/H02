@@ -1,15 +1,14 @@
-import { blogsDbType } from "../../models/blogsTypes";
+import { BlogType } from "../../models/blogsTypes";
 import { blogsRepository } from "../../repositories/blogs-db-repository";
 import { postsDbType } from "../../models/postsTypes";
-
-export const blogsService = {
+class BlogService {
   async getAllBlogs(
     query: object,
     sortBy: string,
     sortDirection: string,
     pageSize: number,
     skip: number
-  ): Promise<blogsDbType[]> {
+  ): Promise<BlogType[]> {
     return await blogsRepository.getAllBlogs(
       query,
       sortBy,
@@ -17,14 +16,15 @@ export const blogsService = {
       pageSize,
       skip
     );
-  },
+  }
 
   async countDocuments(query: object): Promise<number> {
     return await blogsRepository.countDocuments(query);
-  },
+  }
+
   async countAllDocuments(blogId: string): Promise<number> {
     return await blogsRepository.countAllDocuments(blogId);
-  },
+  }
 
   async getAllPostsForBlogs(
     blogId: string,
@@ -40,31 +40,32 @@ export const blogsService = {
       skip,
       blogId
     );
-  },
+  }
 
-  async findBlog(id: string): Promise<blogsDbType | null> {
+  async findBlog(id: string): Promise<BlogType | null> {
     return await blogsRepository.findBlog(id);
-  },
+  }
 
   async createBlog(
     name: string,
     description: string,
     websiteUrl: string
-  ): Promise<blogsDbType> {
+  ): Promise<BlogType> {
     const createdat = new Date();
 
-    const newBlog: blogsDbType = {
-      id: Math.floor(Math.random() * 10000).toString(),
+    const newBlog = new BlogType(
+      Math.floor(Math.random() * 10000).toString(),
       name,
       description,
       websiteUrl,
-      createdAt: createdat.toISOString(),
-      isMembership: false,
-    };
+      createdat.toISOString(),
+      false
+    );
 
     const createdBlog = blogsRepository.createBlog(newBlog);
     return createdBlog;
-  },
+  }
+
   async createPostForBlog(
     blogId: string,
     title: string,
@@ -86,11 +87,11 @@ export const blogsService = {
     const createdPostForBlog =
       blogsRepository.createPostForBlog(newPostForBlog);
     return createdPostForBlog;
-  },
+  }
 
   async deleteBlog(id: string): Promise<boolean> {
     return await blogsRepository.deleteBlog(id);
-  },
+  }
 
   async changeBlog(
     id: string,
@@ -99,5 +100,6 @@ export const blogsService = {
     websiteUrl: string
   ): Promise<boolean> {
     return await blogsRepository.changeBlog(id, name, description, websiteUrl);
-  },
-};
+  }
+}
+export const blogsService = new BlogService();

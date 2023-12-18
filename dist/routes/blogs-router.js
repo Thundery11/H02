@@ -18,95 +18,119 @@ const erros_validation_1 = require("../middlewares/erros-validation");
 const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
 const posts_input_validation_1 = require("../middlewares/posts-input-validation");
 exports.blogsRouter = (0, express_1.Router)({});
-exports.blogsRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
-    const query = { name: new RegExp(searchNameTerm, "i") };
-    const skip = (pageNumber - 1) * pageSize;
-    const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
-    const countedDocuments = yield blogs_service_1.blogsService.countDocuments(query);
-    const pagesCount = Math.ceil(countedDocuments / pageSize);
-    const presentationAllblogs = {
-        pagesCount,
-        page: Number(pageNumber),
-        pageSize: Number(pageSize),
-        totalCount: countedDocuments,
-        items: allBlogs,
-    };
-    res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationAllblogs);
-}));
-exports.blogsRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const blog = yield blogs_service_1.blogsService.findBlog(req.params.id);
-    if (!blog) {
-        res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-        return;
+class BLogsController {
+    createBlog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { name, description, websiteUrl } = req.body;
+            const createdBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
+            res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
+        });
     }
-    else {
-        res.status(statuses_1.HTTP_STATUSES.OK_200).send(blog);
+    findAllBlogs(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
+            const query = { name: new RegExp(searchNameTerm, "i") };
+            const skip = (pageNumber - 1) * pageSize;
+            const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
+            const countedDocuments = yield blogs_service_1.blogsService.countDocuments(query);
+            const pagesCount = Math.ceil(countedDocuments / pageSize);
+            const presentationAllblogs = {
+                pagesCount,
+                page: Number(pageNumber),
+                pageSize: Number(pageSize),
+                totalCount: countedDocuments,
+                items: allBlogs,
+            };
+            res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationAllblogs);
+        });
     }
-}));
-exports.blogsRouter.get("/:blogId/posts", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
-    const blogId = req.params.blogId;
-    const skip = (pageNumber - 1) * pageSize;
-    // const sorting = sortDirection === "ask" ? 1 : -1;
-    const blog = yield blogs_service_1.blogsService.findBlog(blogId);
-    if (!blog) {
-        res.sendStatus(404);
-        return;
+    findBlog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const blog = yield blogs_service_1.blogsService.findBlog(req.params.id);
+            if (!blog) {
+                res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+                return;
+            }
+            else {
+                res.status(statuses_1.HTTP_STATUSES.OK_200).send(blog);
+            }
+        });
     }
-    else {
-        const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId, sortBy, sortDirection, pageSize, skip);
-        const countedDocuments = yield blogs_service_1.blogsService.countAllDocuments(blogId);
-        const pagesCount = Math.ceil(countedDocuments / pageSize);
-        const presentationPostsForBlogs = {
-            pagesCount,
-            page: Number(pageNumber),
-            pageSize: Number(pageSize),
-            totalCount: countedDocuments,
-            items: allPostsForBlog,
-        };
-        res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
+    findPostsFromCurrentBLog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
+            const blogId = req.params.blogId;
+            const skip = (pageNumber - 1) * pageSize;
+            // const sorting = sortDirection === "ask" ? 1 : -1;
+            const blog = yield blogs_service_1.blogsService.findBlog(blogId);
+            if (!blog) {
+                res.sendStatus(404);
+                return;
+            }
+            else {
+                const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId, sortBy, sortDirection, pageSize, skip);
+                const countedDocuments = yield blogs_service_1.blogsService.countAllDocuments(blogId);
+                const pagesCount = Math.ceil(countedDocuments / pageSize);
+                const presentationPostsForBlogs = {
+                    pagesCount,
+                    page: Number(pageNumber),
+                    pageSize: Number(pageSize),
+                    totalCount: countedDocuments,
+                    items: allPostsForBlog,
+                };
+                res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
+            }
+        });
     }
-}));
-exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, description, websiteUrl } = req.body;
-    const createdBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
-    res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
-}));
-exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const blogId = req.params.blogId;
-    const blog = yield blogs_service_1.blogsService.findBlog(blogId);
-    if (!blog) {
-        res.sendStatus(404);
-        return;
+    createPost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const blogId = req.params.blogId;
+            const blog = yield blogs_service_1.blogsService.findBlog(blogId);
+            if (!blog) {
+                res.sendStatus(404);
+                return;
+            }
+            else {
+                const { title, shortDescription, content } = req.body;
+                const blogName = blog.name;
+                const createdPostForBlogs = yield blogs_service_1.blogsService.createPostForBlog(blogId, title, shortDescription, content, blogName);
+                res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPostForBlogs);
+            }
+        });
     }
-    else {
-        const { title, shortDescription, content } = req.body;
-        const blogName = blog.name;
-        const createdPostForBlogs = yield blogs_service_1.blogsService.createPostForBlog(blogId, title, shortDescription, content, blogName);
-        res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPostForBlogs);
+    deleteBlog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const isDeletedBlog = yield blogs_service_1.blogsService.deleteBlog(id);
+            if (!isDeletedBlog) {
+                res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+                return;
+            }
+            else {
+                res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+            }
+        });
     }
-}));
-exports.blogsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
-    const isDeletedBlog = yield blogs_service_1.blogsService.deleteBlog(id);
-    if (!isDeletedBlog) {
-        res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-        return;
+    updateBlog(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { name, description, websiteUrl } = req.body;
+            const changedBlog = yield blogs_service_1.blogsService.changeBlog(id, name, description, websiteUrl);
+            if (!changedBlog) {
+                res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
+                return;
+            }
+            else {
+                res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
+            }
+        });
     }
-    else {
-        res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-    }
-}));
-exports.blogsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
-    const { name, description, websiteUrl } = req.body;
-    const changedBlog = yield blogs_service_1.blogsService.changeBlog(id, name, description, websiteUrl);
-    if (!changedBlog) {
-        res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    }
-    else {
-        res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-    }
-}));
+}
+const blogsController = new BLogsController();
+exports.blogsRouter.get("/", blogsController.findAllBlogs);
+exports.blogsRouter.get("/:id", blogsController.findBlog);
+exports.blogsRouter.get("/:blogId/posts", blogsController.findPostsFromCurrentBLog);
+exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, blogsController.createBlog);
+exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, blogsController.createPost);
+exports.blogsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, blogsController.deleteBlog);
+exports.blogsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, blogsController.updateBlog);
