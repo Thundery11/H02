@@ -1,136 +1,174 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRouter = void 0;
 const express_1 = require("express");
-const statuses_1 = require("../models/statuses");
-const blogs_service_1 = require("../domain/blogs-service/blogs-service");
 const blogs_input_vadation_1 = require("../middlewares/blogs-input-vadation");
 const erros_validation_1 = require("../middlewares/erros-validation");
 const authorisationMiddleware_1 = require("../middlewares/authorisationMiddleware");
 const posts_input_validation_1 = require("../middlewares/posts-input-validation");
+const composition_root_1 = require("../composition-root");
 exports.blogsRouter = (0, express_1.Router)({});
-class BLogsController {
-    createBlog(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { name, description, websiteUrl } = req.body;
-            const createdBlog = yield blogs_service_1.blogsService.createBlog(name, description, websiteUrl);
-            res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdBlog);
-        });
-    }
-    findAllBlogs(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { searchNameTerm = "", sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
-            const query = { name: new RegExp(searchNameTerm, "i") };
-            const skip = (pageNumber - 1) * pageSize;
-            const allBlogs = yield blogs_service_1.blogsService.getAllBlogs(query, sortBy, sortDirection, pageSize, skip);
-            const countedDocuments = yield blogs_service_1.blogsService.countDocuments(query);
-            const pagesCount = Math.ceil(countedDocuments / pageSize);
-            const presentationAllblogs = {
-                pagesCount,
-                page: Number(pageNumber),
-                pageSize: Number(pageSize),
-                totalCount: countedDocuments,
-                items: allBlogs,
-            };
-            res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationAllblogs);
-        });
-    }
-    findBlog(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const blog = yield blogs_service_1.blogsService.findBlog(req.params.id);
-            if (!blog) {
-                res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-                return;
-            }
-            else {
-                res.status(statuses_1.HTTP_STATUSES.OK_200).send(blog);
-            }
-        });
-    }
-    findPostsFromCurrentBLog(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { sortBy = "createdAt", sortDirection = "desc", pageNumber = 1, pageSize = 10, } = req.query;
-            const blogId = req.params.blogId;
-            const skip = (pageNumber - 1) * pageSize;
-            // const sorting = sortDirection === "ask" ? 1 : -1;
-            const blog = yield blogs_service_1.blogsService.findBlog(blogId);
-            if (!blog) {
-                res.sendStatus(404);
-                return;
-            }
-            else {
-                const allPostsForBlog = yield blogs_service_1.blogsService.getAllPostsForBlogs(blogId, sortBy, sortDirection, pageSize, skip);
-                const countedDocuments = yield blogs_service_1.blogsService.countAllDocuments(blogId);
-                const pagesCount = Math.ceil(countedDocuments / pageSize);
-                const presentationPostsForBlogs = {
-                    pagesCount,
-                    page: Number(pageNumber),
-                    pageSize: Number(pageSize),
-                    totalCount: countedDocuments,
-                    items: allPostsForBlog,
-                };
-                res.status(statuses_1.HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
-            }
-        });
-    }
-    createPost(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const blogId = req.params.blogId;
-            const blog = yield blogs_service_1.blogsService.findBlog(blogId);
-            if (!blog) {
-                res.sendStatus(404);
-                return;
-            }
-            else {
-                const { title, shortDescription, content } = req.body;
-                const blogName = blog.name;
-                const createdPostForBlogs = yield blogs_service_1.blogsService.createPostForBlog(blogId, title, shortDescription, content, blogName);
-                res.status(statuses_1.HTTP_STATUSES.CREATED_201).send(createdPostForBlogs);
-            }
-        });
-    }
-    deleteBlog(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            const isDeletedBlog = yield blogs_service_1.blogsService.deleteBlog(id);
-            if (!isDeletedBlog) {
-                res.sendStatus(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-                return;
-            }
-            else {
-                res.send(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-            }
-        });
-    }
-    updateBlog(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            const { name, description, websiteUrl } = req.body;
-            const changedBlog = yield blogs_service_1.blogsService.changeBlog(id, name, description, websiteUrl);
-            if (!changedBlog) {
-                res.send(statuses_1.HTTP_STATUSES.NOT_FOUND_404);
-                return;
-            }
-            else {
-                res.sendStatus(statuses_1.HTTP_STATUSES.NO_CONTENT_204);
-            }
-        });
-    }
-}
-const blogsController = new BLogsController();
-exports.blogsRouter.get("/", blogsController.findAllBlogs);
-exports.blogsRouter.get("/:id", blogsController.findBlog);
-exports.blogsRouter.get("/:blogId/posts", blogsController.findPostsFromCurrentBLog);
-exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, blogsController.createBlog);
-exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, blogsController.createPost);
-exports.blogsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, blogsController.deleteBlog);
-exports.blogsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, blogsController.updateBlog);
+// export class BLogsController {
+//   constructor(protected blogsService: BlogService) {}
+//   async createBlog(
+//     req: RequestWithBody<{
+//       name: string;
+//       description: string;
+//       websiteUrl: string;
+//     }>,
+//     res: Response
+//   ) {
+//     const { name, description, websiteUrl } = req.body;
+//     const createdBlog = await this.blogsService.createBlog(
+//       name,
+//       description,
+//       websiteUrl
+//     );
+//     res.status(HTTP_STATUSES.CREATED_201).send(createdBlog);
+//   }
+//   async findAllBlogs(req: RequestWithQuery<BlogQueryParams>, res: Response) {
+//     const {
+//       searchNameTerm = "",
+//       sortBy = "createdAt",
+//       sortDirection = "desc",
+//       pageNumber = 1,
+//       pageSize = 10,
+//     } = req.query;
+//     const query = { name: new RegExp(searchNameTerm, "i") };
+//     const skip = (pageNumber - 1) * pageSize;
+//     const allBlogs: BlogType[] = await this.blogsService.getAllBlogs(
+//       query,
+//       sortBy,
+//       sortDirection,
+//       pageSize,
+//       skip
+//     );
+//     const countedDocuments = await this.blogsService.countDocuments(query);
+//     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
+//     const presentationAllblogs = {
+//       pagesCount,
+//       page: Number(pageNumber),
+//       pageSize: Number(pageSize),
+//       totalCount: countedDocuments,
+//       items: allBlogs,
+//     };
+//     res.status(HTTP_STATUSES.OK_200).send(presentationAllblogs);
+//   }
+//   async findBlog(req: RequestWithParams<{ id: string }>, res: Response) {
+//     const blog = await this.blogsService.findBlog(req.params.id);
+//     if (!blog) {
+//       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+//       return;
+//     } else {
+//       res.status(HTTP_STATUSES.OK_200).send(blog);
+//     }
+//   }
+//   async findPostsFromCurrentBLog(
+//     req: RequestWithParamsAndQuery<PostsForBlogsQueryParams>,
+//     res: Response
+//   ) {
+//     const {
+//       sortBy = "createdAt",
+//       sortDirection = "desc",
+//       pageNumber = 1,
+//       pageSize = 10,
+//     } = req.query;
+//     const blogId = req.params.blogId;
+//     const skip = (pageNumber - 1) * pageSize;
+//     // const sorting = sortDirection === "ask" ? 1 : -1;
+//     const blog: BlogType | null = await this.blogsService.findBlog(blogId);
+//     if (!blog) {
+//       res.sendStatus(404);
+//       return;
+//     } else {
+//       const allPostsForBlog: postsDbType[] =
+//         await this.blogsService.getAllPostsForBlogs(
+//           blogId,
+//           sortBy,
+//           sortDirection,
+//           pageSize,
+//           skip
+//         );
+//       const countedDocuments = await this.blogsService.countAllDocuments(
+//         blogId
+//       );
+//       const pagesCount: number = Math.ceil(countedDocuments / pageSize);
+//       const presentationPostsForBlogs = {
+//         pagesCount,
+//         page: Number(pageNumber),
+//         pageSize: Number(pageSize),
+//         totalCount: countedDocuments,
+//         items: allPostsForBlog,
+//       };
+//       res.status(HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
+//     }
+//   }
+//   async createPost(
+//     req: RequestWithParamsAndBody<{
+//       blogId: string;
+//       title: string;
+//       shortDescription: string;
+//       content: string;
+//     }>,
+//     res: Response
+//   ) {
+//     const blogId = req.params.blogId;
+//     const blog = await this.blogsService.findBlog(blogId);
+//     if (!blog) {
+//       res.sendStatus(404);
+//       return;
+//     } else {
+//       const { title, shortDescription, content } = req.body;
+//       const blogName = blog.name;
+//       const createdPostForBlogs = await this.blogsService.createPostForBlog(
+//         blogId,
+//         title,
+//         shortDescription,
+//         content,
+//         blogName
+//       );
+//       res.status(HTTP_STATUSES.CREATED_201).send(createdPostForBlogs);
+//     }
+//   }
+//   async deleteBlog(req: RequestWithParams<{ id: string }>, res: Response) {
+//     const id = req.params.id;
+//     const isDeletedBlog = await this.blogsService.deleteBlog(id);
+//     if (!isDeletedBlog) {
+//       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+//       return;
+//     } else {
+//       res.send(HTTP_STATUSES.NO_CONTENT_204);
+//     }
+//   }
+//   async updateBlog(
+//     req: RequestWithParamsAndBody<{
+//       id: string;
+//       name: string;
+//       description: string;
+//       websiteUrl: string;
+//     }>,
+//     res: Response
+//   ) {
+//     const id = req.params.id;
+//     const { name, description, websiteUrl } = req.body;
+//     const changedBlog = await this.blogsService.changeBlog(
+//       id,
+//       name,
+//       description,
+//       websiteUrl
+//     );
+//     if (!changedBlog) {
+//       res.send(HTTP_STATUSES.NOT_FOUND_404);
+//       return;
+//     } else {
+//       res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+//     }
+//   }
+// }
+exports.blogsRouter.get("/", composition_root_1.blogsController.findAllBlogs.bind(composition_root_1.blogsController));
+exports.blogsRouter.get("/:id", composition_root_1.blogsController.findBlog.bind(composition_root_1.blogsController));
+exports.blogsRouter.get("/:blogId/posts", composition_root_1.blogsController.findPostsFromCurrentBLog.bind(composition_root_1.blogsController));
+exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, composition_root_1.blogsController.createBlog.bind(composition_root_1.blogsController));
+exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, composition_root_1.blogsController.createPost.bind(composition_root_1.blogsController));
+exports.blogsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, composition_root_1.blogsController.deleteBlog.bind(composition_root_1.blogsController));
+exports.blogsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, composition_root_1.blogsController.updateBlog.bind(composition_root_1.blogsController));

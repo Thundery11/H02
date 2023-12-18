@@ -1,7 +1,8 @@
 import { BlogType } from "../../models/blogsTypes";
-import { blogsRepository } from "../../repositories/blogs-db-repository";
+import { BlogsRepository } from "../../repositories/blogs-db-repository";
 import { postsDbType } from "../../models/postsTypes";
-class BlogService {
+export class BlogService {
+  constructor(protected blogsRepository: BlogsRepository) {}
   async getAllBlogs(
     query: object,
     sortBy: string,
@@ -9,7 +10,7 @@ class BlogService {
     pageSize: number,
     skip: number
   ): Promise<BlogType[]> {
-    return await blogsRepository.getAllBlogs(
+    return await this.blogsRepository.getAllBlogs(
       query,
       sortBy,
       sortDirection,
@@ -19,11 +20,11 @@ class BlogService {
   }
 
   async countDocuments(query: object): Promise<number> {
-    return await blogsRepository.countDocuments(query);
+    return await this.blogsRepository.countDocuments(query);
   }
 
   async countAllDocuments(blogId: string): Promise<number> {
-    return await blogsRepository.countAllDocuments(blogId);
+    return await this.blogsRepository.countAllDocuments(blogId);
   }
 
   async getAllPostsForBlogs(
@@ -33,7 +34,7 @@ class BlogService {
     pageSize: number,
     skip: number
   ): Promise<postsDbType[]> {
-    return await blogsRepository.getAllPostsForBlogs(
+    return await this.blogsRepository.getAllPostsForBlogs(
       sortBy,
       sortDirection,
       pageSize,
@@ -43,7 +44,7 @@ class BlogService {
   }
 
   async findBlog(id: string): Promise<BlogType | null> {
-    return await blogsRepository.findBlog(id);
+    return await this.blogsRepository.findBlog(id);
   }
 
   async createBlog(
@@ -62,7 +63,7 @@ class BlogService {
       false
     );
 
-    const createdBlog = blogsRepository.createBlog(newBlog);
+    const createdBlog = this.blogsRepository.createBlog(newBlog);
     return createdBlog;
   }
 
@@ -85,12 +86,12 @@ class BlogService {
       blogName,
     };
     const createdPostForBlog =
-      blogsRepository.createPostForBlog(newPostForBlog);
+      this.blogsRepository.createPostForBlog(newPostForBlog);
     return createdPostForBlog;
   }
 
   async deleteBlog(id: string): Promise<boolean> {
-    return await blogsRepository.deleteBlog(id);
+    return await this.blogsRepository.deleteBlog(id);
   }
 
   async changeBlog(
@@ -99,7 +100,11 @@ class BlogService {
     description: string,
     websiteUrl: string
   ): Promise<boolean> {
-    return await blogsRepository.changeBlog(id, name, description, websiteUrl);
+    return await this.blogsRepository.changeBlog(
+      id,
+      name,
+      description,
+      websiteUrl
+    );
   }
 }
-export const blogsService = new BlogService();
