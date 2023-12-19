@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { blogsRepository } from "../repositories/blogs-db-repository";
+import { blogsController } from "../composition-root";
 
 export const postsInputValidation = () => {
   return [
@@ -40,7 +40,7 @@ export const postsInputValidation = () => {
       .isString()
       .bail()
       .custom(async (blogId) => {
-        const blogIsExist = await blogsRepository.findBlog(blogId);
+        const blogIsExist = blogsController.findBlog.bind(blogsController);
 
         if (!blogIsExist) {
           throw new Error("Blog doesnt exist");

@@ -1,7 +1,4 @@
-import {
-  CommentsDbType,
-  CommentsOutputType,
-} from "../../models/comments-types";
+import { CommentsOutputType, CommentsType } from "../../models/comments-types";
 import { PostsType } from "../../models/postsTypes";
 import { PostsRepository } from "../../repositories/posts-db-repository";
 export class PostsService {
@@ -58,31 +55,31 @@ export class PostsService {
     content: string,
     userId: string,
     userLogin: string
-  ): Promise<CommentsOutputType> {
+  ): Promise<CommentsType> {
     const createdAt = new Date();
 
-    const newComment: CommentsDbType = {
+    const newComment = new CommentsType(
       postId,
-      id: Math.floor(Math.random() * 10000).toString(),
-      content: content,
-      commentatorInfo: {
+      Math.floor(Math.random() * 10000).toString(),
+      content,
+      {
         userId: userId,
         userLogin: userLogin,
       },
-      createdAt: createdAt.toISOString(),
-    };
+      createdAt.toISOString()
+    );
 
     await this.postsRepository.createCommet(newComment);
 
-    const outPutcommet: CommentsOutputType = {
-      id: newComment.id,
-      content: content,
-      commentatorInfo: {
+    const outPutcommet = new CommentsOutputType(
+      newComment.id,
+      content,
+      {
         userId: userId,
         userLogin: userLogin,
       },
-      createdAt: createdAt.toISOString(),
-    };
+      createdAt.toISOString()
+    );
     return outPutcommet;
   }
 
@@ -92,7 +89,7 @@ export class PostsService {
     pageSize: number,
     skip: number,
     postId: string
-  ): Promise<CommentsDbType[]> {
+  ): Promise<CommentsType[]> {
     return await this.postsRepository.getComments(
       sortBy,
       sortDirection,

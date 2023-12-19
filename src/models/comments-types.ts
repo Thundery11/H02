@@ -11,26 +11,35 @@ export class CommentsType {
     public createdAt: string
   ) {}
 }
-
-export type CommentsDbType = {
-  postId: string;
-  id: string;
-  content: string;
-  commentatorInfo: {
-    userId: string | undefined;
-    userLogin: string;
-  };
-  createdAt: string;
-};
-export interface CommentsOutputType {
-  id: string;
-  content: string;
-  commentatorInfo: {
-    userId: string | undefined;
-    userLogin: string;
-  };
-  createdAt: string;
+export class CommentsOutputType {
+  constructor(
+    public id: string,
+    public content: string,
+    public commentatorInfo: CommentatorInfo,
+    public createdAt: string
+  ) {}
 }
+
+// export type CommentsDbType = {
+//   postId: string;
+//   id: string;
+//   content: string;
+//   commentatorInfo: {
+//     userId: string | undefined;
+//     userLogin: string;
+//   };
+//   createdAt: string;
+// };
+// };
+// export interface CommentsOutputType {
+//   id: string;
+//   content: string;
+//   commentatorInfo: {
+//     userId: string | undefined;
+//     userLogin: string;
+//   };
+//   createdAt: string;
+// }
 export interface CommentsQueryParams {
   sortBy: string;
   sortDirection: string;

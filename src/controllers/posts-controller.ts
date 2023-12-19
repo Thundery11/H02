@@ -10,9 +10,7 @@ import {
 import { PostsService } from "../domain/posts-service/posts-service";
 import { PostsQueryParams, postsDbType } from "../models/postsTypes";
 import { BlogsRepository } from "../repositories/blogs-db-repository";
-import { CommentsDbType, CommentsQueryParams } from "../models/comments-types";
-
-export const postsRouter = Router({});
+import { CommentsQueryParams, CommentsType } from "../models/comments-types";
 
 export class PostsController {
   constructor(
@@ -76,6 +74,7 @@ export class PostsController {
     const { title, shortDescription, content, blogId } = req.body;
 
     const blog = await this.blogsRepository.findBlog(blogId);
+    console.log(blog);
     if (!blog) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     } else {
@@ -130,14 +129,13 @@ export class PostsController {
       pageNumber = 1,
     } = req.query;
     const skip = (pageNumber - 1) * pageSize;
-    const recivedComments: CommentsDbType[] =
-      await this.postsService.getComments(
-        sortBy,
-        sortDirection,
-        pageSize,
-        skip,
-        postId
-      );
+    const recivedComments: CommentsType[] = await this.postsService.getComments(
+      sortBy,
+      sortDirection,
+      pageSize,
+      skip,
+      postId
+    );
     const countedComments = await this.postsService.countAllComments(postId);
 
     const pagesCount = Math.ceil(countedComments / pageSize);

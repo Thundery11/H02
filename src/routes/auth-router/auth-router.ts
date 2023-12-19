@@ -171,6 +171,7 @@ authRouter.post(
     const oldRefreshToken = req.cookies.refreshToken;
     await sesionService.updateBlackListTokens(oldRefreshToken);
     const user = req.user;
+    console.log(`user in refresh token: ${user}`);
     if (!user) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }

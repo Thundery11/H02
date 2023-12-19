@@ -1,4 +1,4 @@
-import { CommentsDbType } from "../models/comments-types";
+import { CommentsType } from "../models/comments-types";
 import { PostsType } from "../models/postsTypes";
 import { CommentsModel, PostModel } from "./dataBase/blogsDb";
 
@@ -30,7 +30,7 @@ export class PostsRepository {
     pageSize: number,
     skip: number,
     postId: string
-  ): Promise<CommentsDbType[]> {
+  ): Promise<CommentsType[]> {
     return await CommentsModel.find(
       { postId: postId },
       { _id: 0, postId: 0, __v: 0 }
@@ -50,7 +50,7 @@ export class PostsRepository {
     return newPost;
   }
 
-  async createCommet(newComment: CommentsDbType): Promise<CommentsDbType> {
+  async createCommet(newComment: CommentsType): Promise<CommentsType> {
     const result = await CommentsModel.insertMany({ ...newComment });
     return newComment;
   }
