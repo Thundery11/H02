@@ -1,5 +1,5 @@
 import { BlogType } from "../models/blogsTypes";
-import { postsDbType } from "../models/postsTypes";
+import { PostsType } from "../models/postsTypes";
 
 import { BlogModel, PostModel } from "./dataBase/blogsDb";
 export class BlogsRepository {
@@ -30,7 +30,7 @@ export class BlogsRepository {
     pageSize: number,
     skip: number,
     blogId: string
-  ): Promise<postsDbType[]> {
+  ): Promise<PostsType[]> {
     return await PostModel.find({ blogId: blogId }, { _id: 0, __v: 0 })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(Number(skip))
@@ -46,7 +46,7 @@ export class BlogsRepository {
     const result = await BlogModel.insertMany({ ...newBlog });
     return newBlog;
   }
-  async createPostForBlog(newPostForBlog: postsDbType): Promise<postsDbType> {
+  async createPostForBlog(newPostForBlog: PostsType): Promise<PostsType> {
     const result = await PostModel.insertMany({
       ...newPostForBlog,
     });

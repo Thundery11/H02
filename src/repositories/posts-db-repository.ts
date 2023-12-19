@@ -1,29 +1,29 @@
 import { CommentsDbType } from "../models/comments-types";
-import { postsDbType } from "../models/postsTypes";
+import { PostsType } from "../models/postsTypes";
 import { CommentsModel, PostModel } from "./dataBase/blogsDb";
 
-export const postsRepository = {
+export class PostsRepository {
   async getAllPosts(
     query: object,
     sortBy: string,
     sortDirection: string,
     pageSize: number,
     skip: number
-  ): Promise<postsDbType[]> {
+  ): Promise<PostsType[]> {
     return await PostModel.find({}, { _id: 0, __v: 0 })
       .sort({ [sortBy]: sortDirection === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(pageSize))
       .lean();
-  },
+  }
 
   async countDocuments(query: object): Promise<number> {
     return await PostModel.countDocuments({});
-  },
+  }
 
-  async getPost(id: string): Promise<postsDbType | null> {
+  async getPost(id: string): Promise<PostsType | null> {
     return await PostModel.findOne({ id: id }, { _id: 0, __v: 0 });
-  },
+  }
   async getComments(
     sortBy: string,
     sortDirection: string,
@@ -39,23 +39,26 @@ export const postsRepository = {
       .skip(skip)
       .limit(Number(pageSize))
       .lean();
-  },
+  }
+
   async countAllComments(postId: string): Promise<number> {
     return await CommentsModel.countDocuments({ postId });
-  },
-  async createPost(newPost: postsDbType): Promise<postsDbType> {
+  }
+
+  async createPost(newPost: PostsType): Promise<PostsType> {
     const result = await PostModel.insertMany({ ...newPost });
     return newPost;
-  },
+  }
+
   async createCommet(newComment: CommentsDbType): Promise<CommentsDbType> {
     const result = await CommentsModel.insertMany({ ...newComment });
     return newComment;
-  },
+  }
 
   async deletePost(id: string): Promise<boolean> {
     const result = await PostModel.deleteOne({ id: id });
     return result.deletedCount === 1;
-  },
+  }
 
   async updatePost(
     id: string,
@@ -74,5 +77,5 @@ export const postsRepository = {
       }
     );
     return result.matchedCount === 1;
-  },
-};
+  }
+}

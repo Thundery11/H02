@@ -1,6 +1,6 @@
 import { BlogType } from "../../models/blogsTypes";
 import { BlogsRepository } from "../../repositories/blogs-db-repository";
-import { postsDbType } from "../../models/postsTypes";
+import { PostsType } from "../../models/postsTypes";
 export class BlogService {
   constructor(protected blogsRepository: BlogsRepository) {}
   async getAllBlogs(
@@ -33,7 +33,7 @@ export class BlogService {
     sortDirection: string,
     pageSize: number,
     skip: number
-  ): Promise<postsDbType[]> {
+  ): Promise<PostsType[]> {
     return await this.blogsRepository.getAllPostsForBlogs(
       sortBy,
       sortDirection,
@@ -73,18 +73,18 @@ export class BlogService {
     shortDescription: string,
     content: string,
     blogName: string
-  ): Promise<postsDbType> {
+  ): Promise<PostsType> {
     const createdat = new Date();
 
-    const newPostForBlog: postsDbType = {
-      id: Math.floor(Math.random() * 10000).toString(),
+    const newPostForBlog = new PostsType(
+      Math.floor(Math.random() * 10000).toString(),
       blogId,
       title,
       shortDescription,
       content,
-      createdAt: createdat.toISOString(),
-      blogName,
-    };
+      createdat.toISOString(),
+      blogName
+    );
     const createdPostForBlog =
       this.blogsRepository.createPostForBlog(newPostForBlog);
     return createdPostForBlog;

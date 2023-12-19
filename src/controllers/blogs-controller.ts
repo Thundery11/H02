@@ -13,7 +13,7 @@ import {
   PostsForBlogsQueryParams,
   BlogType,
 } from "../models/blogsTypes";
-import { postsDbType } from "../models/postsTypes";
+import { PostsType } from "../models/postsTypes";
 export class BLogsController {
   constructor(protected blogsService: BlogService) {}
   async createBlog(
@@ -92,7 +92,7 @@ export class BLogsController {
       res.sendStatus(404);
       return;
     } else {
-      const allPostsForBlog: postsDbType[] =
+      const allPostsForBlog: PostsType[] =
         await this.blogsService.getAllPostsForBlogs(
           blogId,
           sortBy,
