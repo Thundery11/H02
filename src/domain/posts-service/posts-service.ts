@@ -55,7 +55,7 @@ export class PostsService {
     content: string,
     userId: string,
     userLogin: string
-  ): Promise<CommentsType> {
+  ): Promise<CommentsOutputType> {
     const createdAt = new Date();
 
     const newComment = new CommentsType(

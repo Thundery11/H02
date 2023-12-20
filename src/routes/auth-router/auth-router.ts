@@ -142,6 +142,7 @@ authRouter.post(
     }
 
     if (user) {
+      console.log(user);
       const accessToken = await jwtService.createJWT(user);
       const refreshToken = await jwtService.createRefreshToken(user, deviceId);
       const result = await jwtService.verifyRefreshToken(refreshToken);

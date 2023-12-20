@@ -6,7 +6,7 @@ import { uuid } from "uuidv4";
 export const jwtService = {
   async createJWT(user: usersDbType) {
     const token = jwt.sign({ userId: user.id }, settings.JWT_SECRET, {
-      expiresIn: "1000000s",
+      expiresIn: "10m",
     });
     return token;
   },
@@ -14,7 +14,7 @@ export const jwtService = {
     const refreshToken = jwt.sign(
       { userId: user.id, deviceId: deviceId },
       settings.REFRESH_TOKEN_SECRET,
-      { expiresIn: "200000000000s" }
+      { expiresIn: "360h" }
     );
     return refreshToken;
   },
@@ -29,6 +29,7 @@ export const jwtService = {
       console.log(`result for userId : ${result}`);
       return result.userId;
     } catch (error) {
+      console.error(error);
       return null;
     }
   },
