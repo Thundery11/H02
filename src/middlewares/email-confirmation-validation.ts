@@ -1,10 +1,10 @@
 import { body } from "express-validator";
-import { usersCollection } from "../repositories/dataBase/blogsDb";
+import { UserModel } from "../repositories/dataBase/blogsDb";
 export const emailConfirmationValidation = () => {
   return [
     body("code")
       .custom(async (code) => {
-        const user = await usersCollection.findOne({
+        const user = await UserModel.findOne({
           "emailConfirmation.confirmationCode": code,
         });
         if (!code) {

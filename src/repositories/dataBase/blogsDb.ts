@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { BlogType } from "../../models/blogsTypes";
-import { postsDbType } from "../../models/postsTypes";
+import { PostsType } from "../../models/postsTypes";
 import { usersDbType } from "../../models/usersTypes";
-import { CommentsDbType } from "../../models/comments-types";
+import { CommentsType } from "../../models/comments-types";
 import { SecurityDevicesType } from "../../models/SecurityDevicesType";
 import { RequestsToApiType } from "../../models/requests-to-api-types";
 import { BlogSchema } from "../../mongo/blog/blog-schema";
@@ -16,6 +16,8 @@ import { BlackRefreshTokensType } from "../../models/blackRefreshTokensTypes";
 import { blackRefreshTokenSchema } from "../../mongo/blackRefreshTokenSchema/blackRefreshTokenSchema";
 import { RecoveryCodeForNewPasswordType } from "../../models/passowrdRecovery-types";
 import { RecoveryCodeForNewPasswordSchema } from "../../mongo/RecoveryCodeForNewPassword/RecoveryCodeForNewPasswordType-schema";
+import { LikesType } from "../../models/likesTypes";
+import { LikesSchema } from "../../mongo/likes-schema/likes-schema";
 
 dotenv.config();
 const dbName = "homeWork10";
@@ -25,9 +27,9 @@ if (!mongoUri) {
   throw new Error(`! Url doesn't found`);
 }
 export const BlogModel = mongoose.model<BlogType>("blogs", BlogSchema);
-export const PostModel = mongoose.model<postsDbType>("posts", PostSchema);
+export const PostModel = mongoose.model<PostsType>("posts", PostSchema);
 export const UserModel = mongoose.model<usersDbType>("users", UsersSchema);
-export const CommentsModel = mongoose.model<CommentsDbType>(
+export const CommentsModel = mongoose.model<CommentsType>(
   "comments",
   CommentsSchema
 );
@@ -48,7 +50,7 @@ export const RecoveryCodeForNewPasswordModel =
     "recoveryCodeForNewPassword",
     RecoveryCodeForNewPasswordSchema
   );
-
+export const LikesModel = mongoose.model<LikesType>("likes", LikesSchema);
 // export const client = new MongoClient(mongoUri);
 // const blogsDb = client.db("blogsDb");
 // const postsDb = client.db("postsDb");

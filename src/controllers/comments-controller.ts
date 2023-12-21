@@ -7,11 +7,15 @@ import { CommentsOutputType } from "../models/comments-types";
 import { CommentsService } from "../domain/comments-service/commentsService";
 import { HTTP_STATUSES } from "../models/statuses";
 import { CommentsRepository } from "../repositories/comments-repository/comments-repository";
+import { usersRepository } from "../repositories/users-repository/users-repository";
+import { LikesRepository } from "../repositories/likes-repository/likesRepository";
+import { LikesService } from "../domain/likes-service/likesService";
 
 export class CommentsController {
   constructor(
     protected commentsService: CommentsService,
-    protected commentsRepository: CommentsRepository
+    protected commentsRepository: CommentsRepository,
+    protected likesServise: LikesService
   ) {}
 
   async findComments(req: RequestWithParams<{ id: string }>, res: Response) {
@@ -75,5 +79,23 @@ export class CommentsController {
     } else {
       res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
+  }
+  async updateLikeStatus(
+    req: RequestWithParamsAndBody<{ commentId: string; likeStatus: string }>,
+    res: Response
+  ) {
+    const commentId = req.params.commentId;
+    const likeStatus = req.body.likeStatus;
+    const userId = req.user?.id;
+    const comment = await this.commentsRepository.getComment(commentId);
+    if (!comment) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    }
+    if (comment.commentatorInfo.userId !== userId) {
+      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+    }
+
+    await this.likesServise.addLike(userId, commentId, likeStatus);
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 }

@@ -1,8 +1,8 @@
 import { WithId } from "mongodb";
 import mongoose from "mongoose";
-import { CommentsDbType } from "../../models/comments-types";
+import { CommentsType } from "../../models/comments-types";
 
-export const CommentsSchema = new mongoose.Schema<CommentsDbType>({
+export const CommentsSchema = new mongoose.Schema<CommentsType>({
   postId: { type: String, required: true },
   id: { type: String, required: true },
   content: { type: String, required: true },
@@ -11,4 +11,9 @@ export const CommentsSchema = new mongoose.Schema<CommentsDbType>({
     userLogin: { type: String, required: true },
   },
   createdAt: { type: String, required: true },
+  // likesInfo: {
+  //   likesCount: { type: Number, required: true },
+  //   dislikesCount: { type: Number, required: true },
+  //   myStatus: { type: String, required: true },
+  // },
 });

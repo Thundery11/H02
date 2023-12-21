@@ -3,6 +3,7 @@ import { authMiddleware } from "../../middlewares/auth-middleware";
 import { commentsInputValidation } from "../../middlewares/comments-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
 import { commentsController } from "../../composition-root";
+import { likesInputValidation } from "../../middlewares/likes-input-validation";
 
 export const commentsRouter = Router({});
 
@@ -23,4 +24,12 @@ commentsRouter.put(
   commentsInputValidation(),
   errosValidation,
   commentsController.updateComment.bind(commentsController)
+);
+
+commentsRouter.put(
+  "/:commentId/like-status",
+  authMiddleware,
+  likesInputValidation(),
+  errosValidation,
+  commentsController.updateLikeStatus.bind(commentsController)
 );
