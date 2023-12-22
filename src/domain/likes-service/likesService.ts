@@ -6,7 +6,6 @@ export class LikesService {
 
   async isLikeExist(userId: string, _parentId: string): Promise<boolean> {
     const result = await this.likesRepository.isLikeExist(userId, _parentId);
-    console.log(`result : ${result}`);
     if (!result) return false;
 
     return true;
@@ -31,6 +30,16 @@ export class LikesService {
     _parentId: string,
     _myStatus: string
   ): Promise<boolean> {
+    const like = await this.likesRepository.isLikeExist(userId, _parentId);
+    if (like!.myStatus !== _myStatus) {
+      return await this.likesRepository.updateLike(
+        userId,
+        _parentId,
+        _myStatus
+      );
+    }
+    _myStatus = "None";
+    console.log(await this.likesRepository.countLikes(_parentId));
     return await this.likesRepository.updateLike(userId, _parentId, _myStatus);
   }
 }

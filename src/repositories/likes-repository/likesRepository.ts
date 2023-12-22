@@ -34,4 +34,19 @@ export class LikesRepository {
     );
     return result.modifiedCount === 1;
   }
+  async countLikes(_parentId: string): Promise<number> {
+    return await LikesModel.countDocuments({
+      parentId: _parentId,
+      myStatus: "Like",
+    });
+  }
+  async countDislikes(_parentId: string): Promise<number> {
+    return await LikesModel.countDocuments({
+      parentId: _parentId,
+      myStatus: "Dislike",
+    });
+  }
+  async whatIsMyStatus(userId: string): Promise<LikesType | null> {
+    return await LikesModel.findOne({ userId });
+  }
 }

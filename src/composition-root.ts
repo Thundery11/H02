@@ -25,7 +25,10 @@ const likesRepository = new LikesRepository();
 const likesService = new LikesService(likesRepository);
 
 const commentsRepository = new CommentsRepository();
-const commentsService = new CommentsService(commentsRepository);
+const commentsService = new CommentsService(
+  commentsRepository,
+  likesRepository
+);
 export const commentsController = new CommentsController(
   commentsService,
   commentsRepository,

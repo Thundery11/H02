@@ -7,9 +7,8 @@ import { CommentsOutputType } from "../models/comments-types";
 import { CommentsService } from "../domain/comments-service/commentsService";
 import { HTTP_STATUSES } from "../models/statuses";
 import { CommentsRepository } from "../repositories/comments-repository/comments-repository";
-import { usersRepository } from "../repositories/users-repository/users-repository";
-import { LikesRepository } from "../repositories/likes-repository/likesRepository";
 import { LikesService } from "../domain/likes-service/likesService";
+import { jwtService } from "../application/jwt-service";
 
 export class CommentsController {
   constructor(
@@ -20,12 +19,21 @@ export class CommentsController {
 
   async findComments(req: RequestWithParams<{ id: string }>, res: Response) {
     const commentId = req.params.id;
-
-    const comment: CommentsOutputType | null =
-      await this.commentsService.getComment(commentId);
-    if (!comment) {
-      res.send(HTTP_STATUSES.NOT_FOUND_404);
+    console.log(commentId);
+    if (!req.headers.authorization) {
+      res.send(HTTP_STATUSES.UNAUTHORISED_401);
       return;
+    }
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = await jwtService.getUserByToken(token);
+    console.log(userId);
+    if (!userId) {
+      return res.send("U are not login");
+    }
+    const comment: CommentsOutputType | null =
+      await this.commentsService.getComment(commentId, userId);
+    if (!comment) {
+      return res.send(HTTP_STATUSES.NOT_FOUND_404);
     }
     return res.status(HTTP_STATUSES.OK_200).send(comment);
   }
@@ -35,20 +43,18 @@ export class CommentsController {
     const commentId = req.params.id;
     const comment = await this.commentsRepository.getComment(commentId);
     if (!comment) {
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-      return;
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
     if (comment.commentatorInfo.userId !== userId) {
-      res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
-      return;
+      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
     }
     const isDeletedComment = await this.commentsService.deleteComment(
       commentId
     );
     if (isDeletedComment) {
-      res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+      return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     } else {
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
   }
 
@@ -61,12 +67,10 @@ export class CommentsController {
     const userId = req.user?.id;
     const comment = await this.commentsRepository.getComment(commentId);
     if (!comment) {
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-      return;
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
     if (comment.commentatorInfo.userId !== userId) {
-      res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
-      return;
+      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
     }
 
     const changedComment = await this.commentsService.changeComment(
@@ -74,10 +78,9 @@ export class CommentsController {
       content
     );
     if (!changedComment) {
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-      return;
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     } else {
-      res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+      return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
   }
   async updateLikeStatus(
@@ -94,7 +97,6 @@ export class CommentsController {
     if (!userId) return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
 
     const isLikeExist = await this.likesServise.isLikeExist(userId, commentId);
-    console.log(isLikeExist);
     if (!isLikeExist) {
       await this.likesServise.addLike(userId, commentId, likeStatus);
       return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
