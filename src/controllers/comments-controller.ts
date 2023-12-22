@@ -91,11 +91,23 @@ export class CommentsController {
     if (!comment) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
-    if (comment.commentatorInfo.userId !== userId) {
-      return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+    if (!userId) return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+
+    const isLikeExist = await this.likesServise.isLikeExist(userId, commentId);
+    console.log(isLikeExist);
+    if (!isLikeExist) {
+      await this.likesServise.addLike(userId, commentId, likeStatus);
+      return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+    }
+    const result = await this.likesServise.updateLike(
+      userId,
+      commentId,
+      likeStatus
+    );
+    if (!result) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
 
-    await this.likesServise.addLike(userId, commentId, likeStatus);
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 }

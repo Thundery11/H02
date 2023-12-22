@@ -1,7 +1,7 @@
 export enum MyStatus {
-  None = "None",
-  Like = "Like",
-  Dislike = "Dislike",
+  "None",
+  "Like",
+  "Dislike",
 }
 
 export class LikesType {
