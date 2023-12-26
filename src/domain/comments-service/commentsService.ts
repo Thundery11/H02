@@ -16,6 +16,8 @@ export class CommentsService {
     const likesCount = await this.likesRepository.countLikes(_parentId);
     const comment = await this.commentsRepository.getComment(_parentId);
     const myStatus = await this.likesRepository.whatIsMyStatus(userId);
+    console.log(`myStatus ${myStatus}`);
+    console.log(`userId : ${userId}`);
     if (!comment) return null;
 
     comment.likesInfo.dislikesCount = dislikesCount;
@@ -25,6 +27,7 @@ export class CommentsService {
     } else {
       comment.likesInfo.myStatus = myStatus?.myStatus;
     }
+    console.log(comment);
     return comment;
   }
 

@@ -50,7 +50,7 @@ export class PostsService {
     return createdPost;
   }
 
-  async createCommet(
+  async createComment(
     postId: string,
     content: string,
     userId: string,
@@ -92,7 +92,6 @@ export class PostsService {
     );
     return outPutcommet;
   }
-  s;
 
   async getComments(
     sortBy: string,

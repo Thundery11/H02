@@ -47,6 +47,6 @@ export class LikesRepository {
     });
   }
   async whatIsMyStatus(userId: string): Promise<LikesType | null> {
-    return await LikesModel.findOne({ userId });
+    return await LikesModel.findOne({ userId: userId });
   }
 }

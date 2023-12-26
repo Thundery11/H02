@@ -6,6 +6,7 @@ export class LikesService {
 
   async isLikeExist(userId: string, _parentId: string): Promise<boolean> {
     const result = await this.likesRepository.isLikeExist(userId, _parentId);
+    console.log(result);
     if (!result) return false;
 
     return true;

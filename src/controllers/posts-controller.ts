@@ -102,7 +102,7 @@ export class PostsController {
       const userId = req.user?.id;
       const userLogin = req.user?.accountData.login;
       const content = req.body.content;
-      const createdComment = await this.postsService.createCommet(
+      const createdComment = await this.postsService.createComment(
         postId,
         content,
         userId!,
@@ -119,7 +119,7 @@ export class PostsController {
     const postId = req.params.postId;
     const isExistPost = await this.postsService.getPost(postId);
     if (!isExistPost) {
-      res.status(HTTP_STATUSES.NOT_FOUND_404).send();
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     }
     const {
