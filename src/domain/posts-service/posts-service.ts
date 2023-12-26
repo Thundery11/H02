@@ -66,7 +66,12 @@ export class PostsService {
         userId: userId,
         userLogin: userLogin,
       },
-      createdAt.toISOString()
+      createdAt.toISOString(),
+      {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: "None",
+      }
     );
 
     await this.postsRepository.createCommet(newComment);
@@ -78,7 +83,12 @@ export class PostsService {
         userId: userId,
         userLogin: userLogin,
       },
-      createdAt.toISOString()
+      createdAt.toISOString(),
+      {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: "None",
+      }
     );
     return outPutcommet;
   }

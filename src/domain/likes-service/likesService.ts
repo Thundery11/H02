@@ -31,15 +31,15 @@ export class LikesService {
     _myStatus: string
   ): Promise<boolean> {
     const like = await this.likesRepository.isLikeExist(userId, _parentId);
-    if (like!.myStatus !== _myStatus) {
-      return await this.likesRepository.updateLike(
-        userId,
-        _parentId,
-        _myStatus
-      );
-    }
-    _myStatus = "None";
-    console.log(await this.likesRepository.countLikes(_parentId));
+    // if (like!.myStatus !== _myStatus) {
+    //   return await this.likesRepository.updateLike(
+    //     userId,
+    //     _parentId,
+    //     _myStatus
+    //   );
+    // }
+    // _myStatus = "None";
+    // console.log(await this.likesRepository.countLikes(_parentId));
     return await this.likesRepository.updateLike(userId, _parentId, _myStatus);
   }
 }
