@@ -39,6 +39,7 @@ export class LikesService {
       );
     }
     return true;
+    //fix
     // _myStatus = "None";
     // console.log(await this.likesRepository.countLikes(_parentId));
     // return await this.likesRepository.updateLike(userId, _parentId, _myStatus);
