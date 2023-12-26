@@ -92,6 +92,7 @@ export class PostsService {
     );
     return outPutcommet;
   }
+  s;
 
   async getComments(
     sortBy: string,
