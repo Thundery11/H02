@@ -12,8 +12,8 @@ export const CommentsSchema = new mongoose.Schema<CommentsType>({
   },
   createdAt: { type: String, required: true },
   likesInfo: {
-    likesCount: { type: Number, required: true },
-    dislikesCount: { type: Number, required: true },
-    myStatus: { type: String, required: true },
+    likesCount: { type: Number },
+    dislikesCount: { type: Number },
+    myStatus: { type: String },
   },
 });

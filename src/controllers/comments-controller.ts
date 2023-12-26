@@ -32,9 +32,7 @@ export class CommentsController {
     const token = req.headers.authorization.split(" ")[1];
     const userId = await jwtService.getUserByToken(token);
     console.log(userId);
-    // if (!userId) {
-    //   return res.send("U are not login");
-    // }
+
     const comment: CommentsOutputType | null =
       await this.commentsService.getComment(commentId, userId);
     if (!comment) {
