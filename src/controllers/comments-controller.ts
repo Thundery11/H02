@@ -19,17 +19,22 @@ export class CommentsController {
 
   async findComments(req: RequestWithParams<{ id: string }>, res: Response) {
     const commentId = req.params.id;
-    console.log(commentId);
+
     if (!req.headers.authorization) {
-      res.send(HTTP_STATUSES.UNAUTHORISED_401);
-      return;
+      const userId = null;
+      const comment: CommentsOutputType | null =
+        await this.commentsService.getComment(commentId, userId);
+      if (!comment) {
+        return res.send(HTTP_STATUSES.NOT_FOUND_404);
+      }
+      return res.status(HTTP_STATUSES.OK_200).send(comment);
     }
     const token = req.headers.authorization.split(" ")[1];
     const userId = await jwtService.getUserByToken(token);
     console.log(userId);
-    if (!userId) {
-      return res.send("U are not login");
-    }
+    // if (!userId) {
+    //   return res.send("U are not login");
+    // }
     const comment: CommentsOutputType | null =
       await this.commentsService.getComment(commentId, userId);
     if (!comment) {

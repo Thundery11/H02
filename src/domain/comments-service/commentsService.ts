@@ -17,9 +17,14 @@ export class CommentsService {
     const comment = await this.commentsRepository.getComment(_parentId);
     const myStatus = await this.likesRepository.whatIsMyStatus(userId);
     if (!comment) return null;
+
     comment.likesInfo.dislikesCount = dislikesCount;
     comment.likesInfo.likesCount = likesCount;
-    comment.likesInfo.myStatus = myStatus?.myStatus;
+    if (myStatus === null) {
+      comment.likesInfo.myStatus = "None";
+    } else {
+      comment.likesInfo.myStatus = myStatus?.myStatus;
+    }
     return comment;
   }
 
