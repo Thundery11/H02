@@ -24,3 +24,4 @@ exports.testingAllDataRouter.delete("/", (req, res) => __awaiter(void 0, void 0,
     yield blogsDb_1.LikesModel.deleteMany({});
     res.send(204);
 }));
+//sss
