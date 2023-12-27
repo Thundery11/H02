@@ -13,14 +13,17 @@ import {
 export const testingAllDataRouter = Router({});
 
 testingAllDataRouter.delete("/", async (req: Request, res: Response) => {
-  await BlogModel.deleteMany({});
-  await PostModel.deleteMany({});
-  await UserModel.deleteMany({});
-  await CommentsModel.deleteMany({});
-  await SecurityDevicesModel.deleteMany({});
-  await RequestsToApiModel.deleteMany({});
-  await RecoveryCodeForNewPasswordModel.deleteMany({});
-  await LikesModel.deleteMany({});
+  await Promise.all([
+    BlogModel.deleteMany({}),
+    PostModel.deleteMany({}),
+    UserModel.deleteMany({}),
+    CommentsModel.deleteMany({}),
+    SecurityDevicesModel.deleteMany({}),
+    RequestsToApiModel.deleteMany({}),
+    RecoveryCodeForNewPasswordModel.deleteMany({}),
+    LikesModel.deleteMany({}),
+  ]);
+
   res.send(204);
 });
 //sss
