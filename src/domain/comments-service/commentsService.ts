@@ -24,24 +24,24 @@ export class CommentsService {
     console.log(`userId : ${userId}`);
     if (!comment) return null;
 
-    const result = {
-      ...comment,
-      likesInfo: {
-        dislikesCount,
-        likesCount,
-        myStatus: reaction ? reaction.myStatus : "None",
-      },
-    };
+    // const result = {
+    //   ...comment,
+    //   likesInfo: {
+    //     dislikesCount,
+    //     likesCount,
+    //     myStatus: reaction ? reaction.myStatus : "None",
+    //   },
+    // };
 
-    // comment.likesInfo.dislikesCount = dislikesCount;
-    // comment.likesInfo.likesCount = likesCount;
-    // if (myStatus === null) {
-    //   comment.likesInfo.myStatus = "None";
-    // } else {
-    //   comment.likesInfo.myStatus = myStatus?.myStatus;
-    // }
-    console.log(result);
-    return result;
+    comment.likesInfo.dislikesCount = dislikesCount;
+    comment.likesInfo.likesCount = likesCount;
+    if (reaction === null) {
+      comment.likesInfo.myStatus = "None";
+    } else {
+      comment.likesInfo.myStatus = reaction?.myStatus;
+    }
+    console.log(reaction);
+    return comment;
   }
 
   async deleteComment(commentId: string): Promise<boolean> {
