@@ -15,20 +15,29 @@ export class CommentsService {
     const dislikesCount = await this.likesRepository.countDislikes(_parentId);
     const likesCount = await this.likesRepository.countLikes(_parentId);
     const comment = await this.commentsRepository.getComment(_parentId);
-    const myStatus = await this.likesRepository.whatIsMyStatus(userId);
-    console.log(`myStatus ${myStatus}`);
+    const reaction = await this.likesRepository.whatIsMyStatus(userId); //dobavit comment ID
+    console.log(`myStatus ${reaction}`);
     console.log(`userId : ${userId}`);
     if (!comment) return null;
 
-    comment.likesInfo.dislikesCount = dislikesCount;
-    comment.likesInfo.likesCount = likesCount;
-    if (myStatus === null) {
-      comment.likesInfo.myStatus = "None";
-    } else {
-      comment.likesInfo.myStatus = myStatus?.myStatus;
-    }
-    console.log(comment);
-    return comment;
+    const result = {
+      ...comment,
+      likesInfo: {
+        dislikesCount,
+        likesCount,
+        myStatus: reaction ? reaction.myStatus : "None",
+      },
+    };
+
+    // comment.likesInfo.dislikesCount = dislikesCount;
+    // comment.likesInfo.likesCount = likesCount;
+    // if (myStatus === null) {
+    //   comment.likesInfo.myStatus = "None";
+    // } else {
+    //   comment.likesInfo.myStatus = myStatus?.myStatus;
+    // }
+    console.log(result);
+    return result;
   }
 
   async deleteComment(commentId: string): Promise<boolean> {
