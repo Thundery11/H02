@@ -2,6 +2,7 @@ import { id } from "date-fns/locale";
 import { CommentsOutputType } from "../../models/comments-types";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
+import { MyStatus } from "../../models/likesTypes";
 
 export class CommentsService {
   constructor(
@@ -10,12 +11,15 @@ export class CommentsService {
   ) {}
   async getComment(
     _parentId: string,
-    userId: string
+    userId: string | null
   ): Promise<CommentsOutputType | null> {
     const dislikesCount = await this.likesRepository.countDislikes(_parentId);
     const likesCount = await this.likesRepository.countLikes(_parentId);
     const comment = await this.commentsRepository.getComment(_parentId);
-    const reaction = await this.likesRepository.whatIsMyStatus(userId); //dobavit comment ID
+    const reaction = userId
+      ? await this.likesRepository.whatIsMyStatus(userId, _parentId)
+      : null;
+    //dobavit comment ID
     console.log(`myStatus ${reaction}`);
     console.log(`userId : ${userId}`);
     if (!comment) return null;

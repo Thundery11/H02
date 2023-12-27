@@ -46,7 +46,10 @@ export class LikesRepository {
       myStatus: "Dislike",
     });
   }
-  async whatIsMyStatus(userId: string): Promise<LikesType | null> {
-    return await LikesModel.findOne({ userId: userId });
+  async whatIsMyStatus(
+    userId: string,
+    _parentId: string
+  ): Promise<LikesType | null> {
+    return await LikesModel.findOne({ userId: userId, parentId: _parentId });
   }
 }
