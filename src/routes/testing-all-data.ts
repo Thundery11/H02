@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import {
   BlogModel,
   CommentsModel,
+  LikesModel,
   PostModel,
   RecoveryCodeForNewPasswordModel,
   RequestsToApiModel,
@@ -19,5 +20,6 @@ testingAllDataRouter.delete("/", async (req: Request, res: Response) => {
   await SecurityDevicesModel.deleteMany({});
   await RequestsToApiModel.deleteMany({});
   await RecoveryCodeForNewPasswordModel.deleteMany({});
+  await LikesModel.deleteMany({});
   res.send(204);
 });

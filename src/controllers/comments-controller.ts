@@ -31,7 +31,6 @@ export class CommentsController {
     }
     const token = req.headers.authorization.split(" ")[1];
     const userId = await jwtService.getUserByToken(token);
-    console.log(`userId v findComments ${userId}`);
 
     const comment: CommentsOutputType | null =
       await this.commentsService.getComment(commentId, userId);
@@ -93,7 +92,6 @@ export class CommentsController {
     const commentId = req.params.commentId;
     const likeStatus = req.body.likeStatus;
     const userId = req.user?.id;
-    console.log(`userId v updateLikeStatus ${userId}`);
     const comment = await this.commentsRepository.getComment(commentId);
     if (!comment) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
@@ -101,7 +99,6 @@ export class CommentsController {
     if (!userId) return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
 
     const isLikeExist = await this.likesServise.isLikeExist(userId, commentId);
-    console.log(isLikeExist);
     if (!isLikeExist) {
       await this.likesServise.addLike(userId, commentId, likeStatus);
       return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);

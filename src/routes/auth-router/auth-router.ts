@@ -76,7 +76,6 @@ authRouter.post(
   async (req: RequestWithBody<PasswordAndRecoveryCode>, res: Response) => {
     const newPassword = req.body.newPassword;
     const recoveryCode = req.body.recoveryCode;
-    console.log(`password: ${newPassword}`);
     const result = await usersService.isOkRecoveryCode(recoveryCode);
     if (!result) {
       return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -172,7 +171,6 @@ authRouter.post(
     const oldRefreshToken = req.cookies.refreshToken;
     await sesionService.updateBlackListTokens(oldRefreshToken);
     const user = req.user;
-    console.log(`user in refresh token: ${user}`);
     if (!user) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
