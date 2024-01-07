@@ -15,11 +15,6 @@ const blogsService = new BlogService(blogsRepository);
 export const blogsController = new BLogsController(blogsService);
 
 const postsRepository = new PostsRepository();
-const postsService = new PostsService(postsRepository);
-export const postsController = new PostsController(
-  postsService,
-  blogsRepository
-);
 
 const likesRepository = new LikesRepository();
 const likesService = new LikesService(likesRepository);
@@ -28,6 +23,16 @@ const commentsRepository = new CommentsRepository();
 const commentsService = new CommentsService(
   commentsRepository,
   likesRepository
+);
+const postsService = new PostsService(
+  postsRepository,
+  commentsRepository,
+  likesRepository
+);
+export const postsController = new PostsController(
+  postsService,
+  blogsRepository,
+  commentsService
 );
 export const commentsController = new CommentsController(
   commentsService,

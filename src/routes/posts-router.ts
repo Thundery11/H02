@@ -30,7 +30,7 @@ postsRouter.post(
 
 postsRouter.get(
   "/:postId/comments",
-  postsController.findComment.bind(postsController)
+  postsController.findComments.bind(postsController)
 );
 
 postsRouter.delete(

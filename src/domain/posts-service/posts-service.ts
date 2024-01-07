@@ -1,8 +1,14 @@
 import { CommentsOutputType, CommentsType } from "../../models/comments-types";
 import { PostsType } from "../../models/postsTypes";
+import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
+import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 import { PostsRepository } from "../../repositories/posts-db-repository";
 export class PostsService {
-  constructor(protected postsRepository: PostsRepository) {}
+  constructor(
+    protected postsRepository: PostsRepository,
+    protected commentsRepository: CommentsRepository,
+    protected likesRepository: LikesRepository
+  ) {}
   async getAllPosts(
     query: object,
     sortBy: string,
@@ -98,15 +104,47 @@ export class PostsService {
     sortDirection: string,
     pageSize: number,
     skip: number,
-    postId: string
+    postId: string,
+    userId: string | null
   ): Promise<CommentsType[]> {
-    return await this.postsRepository.getComments(
+    const allComments = await this.postsRepository.getComments(
       sortBy,
       sortDirection,
       pageSize,
       skip,
       postId
     );
+    // sdelat` map otdellno dlya kajdogo slychaya
+    const result = await Promise.all(
+      allComments.map(
+        async (comment) => (
+          (comment.likesInfo.likesCount = await this.likesRepository.countLikes(
+            comment.id
+          )),
+          (comment.likesInfo.dislikesCount =
+            await this.likesRepository.countDislikes(comment.id)),
+          (comment.likesInfo.myStatus =
+            await this.likesRepository.whatIsMyStatus(userId, comment.id))
+            ?.myStatus
+        )
+      )
+    );
+    console.log(result);
+
+    allComments.map((comment) =>
+      comment.likesInfo.myStatus === null
+        ? (comment.likesInfo.myStatus = "None")
+        : (comment.likesInfo.myStatus = comment.likesInfo.myStatus.myStatus)
+    );
+
+    // console.log(
+    //   allComments.map((comment) =>
+    //     comment.likesInfo.myStatus === null
+    //       ? (comment.likesInfo.myStatus = "None")
+    //       : comment.likesInfo.myStatus
+    //   )
+    // );
+    return allComments;
   }
 
   async countAllComments(postId: string): Promise<number> {

@@ -26,4 +26,3 @@ exports.testingAllDataRouter.delete("/", (req, res) => __awaiter(void 0, void 0,
     ]);
     res.send(204);
 }));
-//sss

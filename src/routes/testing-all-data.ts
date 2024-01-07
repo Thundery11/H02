@@ -26,4 +26,3 @@ testingAllDataRouter.delete("/", async (req: Request, res: Response) => {
 
   res.send(204);
 });
-//sss

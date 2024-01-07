@@ -11,11 +11,14 @@ import { PostsService } from "../domain/posts-service/posts-service";
 import { PostsQueryParams, postsDbType } from "../models/postsTypes";
 import { BlogsRepository } from "../repositories/blogs-db-repository";
 import { CommentsQueryParams, CommentsType } from "../models/comments-types";
+import { CommentsService } from "../domain/comments-service/commentsService";
+import { jwtService } from "../application/jwt-service";
 
 export class PostsController {
   constructor(
     protected postsService: PostsService,
-    protected blogsRepository: BlogsRepository
+    protected blogsRepository: BlogsRepository,
+    protected commentsService: CommentsService
   ) {}
 
   async findAllPosts(req: RequestWithQuery<PostsQueryParams>, res: Response) {
@@ -112,7 +115,7 @@ export class PostsController {
     }
   }
 
-  async findComment(
+  async findComments(
     req: RequestWithParamsAndQuery<CommentsQueryParams>,
     res: Response
   ) {
@@ -129,13 +132,41 @@ export class PostsController {
       pageNumber = 1,
     } = req.query;
     const skip = (pageNumber - 1) * pageSize;
+
+    if (!req.headers.authorization) {
+      const userId = null;
+      const recivedComments: CommentsType[] =
+        await this.postsService.getComments(
+          sortBy,
+          sortDirection,
+          pageSize,
+          skip,
+          postId,
+          userId
+        );
+      const countedComments = await this.postsService.countAllComments(postId);
+
+      const pagesCount = Math.ceil(countedComments / pageSize);
+      const presentationComments = {
+        pagesCount,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
+        totalCount: countedComments,
+        items: recivedComments,
+      };
+      return res.status(HTTP_STATUSES.OK_200).send(presentationComments);
+    }
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = await jwtService.getUserByToken(token);
     const recivedComments: CommentsType[] = await this.postsService.getComments(
       sortBy,
       sortDirection,
       pageSize,
       skip,
-      postId
+      postId,
+      userId
     );
+
     const countedComments = await this.postsService.countAllComments(postId);
 
     const pagesCount = Math.ceil(countedComments / pageSize);

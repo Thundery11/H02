@@ -15,7 +15,7 @@ export class CommentsType {
     public likesInfo: {
       likesCount: number;
       dislikesCount: number;
-      myStatus: string;
+      myStatus: any;
     }
   ) {}
 }
