@@ -131,20 +131,24 @@ export class PostsService {
     );
     console.log(result);
 
-    allComments.map((comment) =>
+    // allComments.map((comment) =>
+    //   comment.likesInfo.myStatus === null
+    //     ? (comment.likesInfo.myStatus = "None")
+    //     : (comment.likesInfo.myStatus = comment.likesInfo.myStatus.myStatus)
+    // );
+    const outputAllComments = allComments.map((comment) =>
       comment.likesInfo.myStatus === null
-        ? (comment.likesInfo.myStatus = "None")
-        : (comment.likesInfo.myStatus = comment.likesInfo.myStatus.myStatus)
+        ? { ...comment, likesInfo: { ...comment.likesInfo, myStatus: "None" } }
+        : {
+            ...comment,
+            likesInfo: {
+              ...comment.likesInfo,
+              myStatus: comment.likesInfo.myStatus.myStatus,
+            },
+          }
     );
 
-    // console.log(
-    //   allComments.map((comment) =>
-    //     comment.likesInfo.myStatus === null
-    //       ? (comment.likesInfo.myStatus = "None")
-    //       : comment.likesInfo.myStatus
-    //   )
-    // );
-    return allComments;
+    return outputAllComments;
   }
 
   async countAllComments(postId: string): Promise<number> {
