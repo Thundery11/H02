@@ -1,7 +1,9 @@
+import { injectable } from "inversify";
 import { BlogType } from "../models/blogsTypes";
 import { PostsType } from "../models/postsTypes";
 
 import { BlogModel, PostModel } from "./dataBase/blogsDb";
+@injectable()
 export class BlogsRepository {
   async getAllBlogs(
     query: object,

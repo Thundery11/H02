@@ -14,6 +14,8 @@ import {
   BlogType,
 } from "../models/blogsTypes";
 import { PostsType } from "../models/postsTypes";
+import { injectable } from "inversify";
+@injectable()
 export class BLogsController {
   constructor(protected blogsService: BlogService) {}
   async createBlog(

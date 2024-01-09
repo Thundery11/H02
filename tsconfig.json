@@ -2,6 +2,7 @@
   // "files": ["src/types/index.d.ts"] ,
   "compilerOptions": {
     "target": "es2016",
+    "lib": ["es6"],
     "module": "commonjs",
     "outDir": "./dist",
     "strict": true,
@@ -9,7 +10,9 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   
   "include": ["src/**/*"],

@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { BLogsController } from "./controllers/blogs-controller";
 import { CommentsController } from "./controllers/comments-controller";
 import { PostsController } from "./controllers/posts-controller";
@@ -9,13 +10,13 @@ import { BlogsRepository } from "./repositories/blogs-db-repository";
 import { CommentsRepository } from "./repositories/comments-repository/comments-repository";
 import { LikesRepository } from "./repositories/likes-repository/likesRepository";
 import { PostsRepository } from "./repositories/posts-db-repository";
+import { Container } from "inversify";
 
 const blogsRepository = new BlogsRepository();
 const blogsService = new BlogService(blogsRepository);
 export const blogsController = new BLogsController(blogsService);
 
 const postsRepository = new PostsRepository();
-
 const likesRepository = new LikesRepository();
 const likesService = new LikesService(likesRepository);
 
@@ -39,3 +40,8 @@ export const commentsController = new CommentsController(
   commentsRepository,
   likesService
 );
+
+export const blogsContainer = new Container();
+blogsContainer.bind(BLogsController).to(BLogsController);
+blogsContainer.bind(BlogService).to(BlogService);
+blogsContainer.bind(BlogsRepository).to(BlogsRepository);

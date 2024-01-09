@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { LikesType, MyStatus } from "../../models/likesTypes";
 interface LikesSchema extends Document {
   myStatus: MyStatus;
