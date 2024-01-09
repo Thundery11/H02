@@ -9,7 +9,8 @@ import { HTTP_STATUSES } from "../models/statuses";
 import { CommentsRepository } from "../repositories/comments-repository/comments-repository";
 import { LikesService } from "../domain/likes-service/likesService";
 import { jwtService } from "../application/jwt-service";
-
+import { injectable } from "inversify";
+@injectable()
 export class CommentsController {
   constructor(
     protected commentsService: CommentsService,

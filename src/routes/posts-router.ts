@@ -4,7 +4,10 @@ import { errosValidation } from "../middlewares/erros-validation";
 import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { commentsInputValidation } from "../middlewares/comments-input-validation";
-import { postsController } from "../composition-root";
+import { container } from "../composition-root";
+import { PostsController } from "../controllers/posts-controller";
+
+const postsController = container.resolve(PostsController);
 
 export const postsRouter = Router({});
 

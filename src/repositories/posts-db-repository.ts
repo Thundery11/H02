@@ -1,7 +1,8 @@
+import { injectable } from "inversify";
 import { CommentsType } from "../models/comments-types";
 import { PostsType } from "../models/postsTypes";
 import { CommentsModel, PostModel } from "./dataBase/blogsDb";
-
+@injectable()
 export class PostsRepository {
   async getAllPosts(
     query: object,

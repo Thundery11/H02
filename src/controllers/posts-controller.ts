@@ -13,7 +13,8 @@ import { BlogsRepository } from "../repositories/blogs-db-repository";
 import { CommentsQueryParams, CommentsType } from "../models/comments-types";
 import { CommentsService } from "../domain/comments-service/commentsService";
 import { jwtService } from "../application/jwt-service";
-
+import { injectable } from "inversify";
+@injectable()
 export class PostsController {
   constructor(
     protected postsService: PostsService,

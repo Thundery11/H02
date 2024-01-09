@@ -1,6 +1,7 @@
+import { injectable } from "inversify";
 import { LikesType, MyStatus } from "../../models/likesTypes";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
-
+@injectable()
 export class LikesService {
   constructor(protected likesRepository: LikesRepository) {}
 

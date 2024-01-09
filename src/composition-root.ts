@@ -41,7 +41,17 @@ export const commentsController = new CommentsController(
   likesService
 );
 
-export const blogsContainer = new Container();
-blogsContainer.bind(BLogsController).to(BLogsController);
-blogsContainer.bind(BlogService).to(BlogService);
-blogsContainer.bind(BlogsRepository).to(BlogsRepository);
+export const container = new Container();
+container.bind(BLogsController).to(BLogsController);
+container.bind(BlogService).to(BlogService);
+container.bind(BlogsRepository).to(BlogsRepository);
+container.bind(PostsController).to(PostsController);
+container.bind(PostsService).to(PostsService);
+container.bind(PostsRepository).to(PostsRepository);
+container.bind(CommentsController).to(CommentsController);
+container.bind(CommentsService).to(CommentsService);
+container.bind(CommentsRepository).to(CommentsRepository);
+container.bind(LikesService).to(LikesService);
+container.bind(LikesRepository).to(LikesRepository);
+
+export const postsContainer = new Container();

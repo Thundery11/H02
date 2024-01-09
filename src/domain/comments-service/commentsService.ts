@@ -3,7 +3,8 @@ import { CommentsOutputType } from "../../models/comments-types";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 import { MyStatus } from "../../models/likesTypes";
-
+import { injectable } from "inversify";
+@injectable()
 export class CommentsService {
   constructor(
     protected commentsRepository: CommentsRepository,

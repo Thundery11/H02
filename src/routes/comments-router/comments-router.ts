@@ -2,9 +2,10 @@ import { Router, Request, Response } from "express";
 import { authMiddleware } from "../../middlewares/auth-middleware";
 import { commentsInputValidation } from "../../middlewares/comments-input-validation";
 import { errosValidation } from "../../middlewares/erros-validation";
-import { commentsController } from "../../composition-root";
+import { container } from "../../composition-root";
 import { likesInputValidation } from "../../middlewares/likes-input-validation";
-
+import { CommentsController } from "../../controllers/comments-controller";
+const commentsController = container.resolve(CommentsController);
 export const commentsRouter = Router({});
 
 commentsRouter.get(

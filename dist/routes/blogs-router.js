@@ -8,7 +8,7 @@ const authorisationMiddleware_1 = require("../middlewares/authorisationMiddlewar
 const posts_input_validation_1 = require("../middlewares/posts-input-validation");
 const composition_root_1 = require("../composition-root");
 const blogs_controller_1 = require("../controllers/blogs-controller");
-const blogsController = composition_root_1.blogsContainer.resolve(blogs_controller_1.BLogsController);
+const blogsController = composition_root_1.container.resolve(blogs_controller_1.BLogsController);
 exports.blogsRouter = (0, express_1.Router)({});
 // export class BLogsController {
 //   constructor(protected blogsService: BlogService) {}

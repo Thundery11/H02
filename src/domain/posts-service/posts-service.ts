@@ -1,8 +1,10 @@
+import { injectable } from "inversify";
 import { CommentsOutputType, CommentsType } from "../../models/comments-types";
 import { PostsType } from "../../models/postsTypes";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 import { PostsRepository } from "../../repositories/posts-db-repository";
+@injectable()
 export class PostsService {
   constructor(
     protected postsRepository: PostsRepository,
