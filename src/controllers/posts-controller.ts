@@ -13,13 +13,16 @@ import { BlogsRepository } from "../repositories/blogs-db-repository";
 import { CommentsQueryParams, CommentsType } from "../models/comments-types";
 import { CommentsService } from "../domain/comments-service/commentsService";
 import { jwtService } from "../application/jwt-service";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { MyStatus } from "../models/likesTypes";
+import { LikesService } from "../domain/likes-service/likesService";
 @injectable()
 export class PostsController {
   constructor(
     protected postsService: PostsService,
     protected blogsRepository: BlogsRepository,
-    protected commentsService: CommentsService
+    protected commentsService: CommentsService,
+    protected likesService: LikesService
   ) {}
 
   async findAllPosts(req: RequestWithQuery<PostsQueryParams>, res: Response) {
@@ -217,5 +220,45 @@ export class PostsController {
     } else {
       res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
+  }
+  async updateLikeStatus(
+    req: RequestWithParamsAndBody<{ postId: string; likeStatus: MyStatus }>,
+    res: Response
+  ) {
+    const postId = req.params.postId;
+    const likeStatus = req.body.likeStatus;
+    const userId = req.user?.id;
+    const userLogin = req.user?.accountData.login;
+    const post = await this.postsService.getPost(postId);
+    console.log(post);
+
+    if (!post) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    }
+    if (!userId) {
+      return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+    }
+    if (!userLogin) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    }
+    const isLikeExist = await this.likesService.isLikeExist(userId, postId);
+    if (!isLikeExist) {
+      await this.likesService.addLike(userId, postId, likeStatus);
+      return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+    }
+    const result = await this.likesService.updateLike(
+      userId,
+      postId,
+      likeStatus
+    );
+
+    if (!result) {
+      return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    }
+
+    if (likeStatus === MyStatus.Like) {
+      await this.likesService.lastLiked(userId, userLogin, postId);
+    }
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 }

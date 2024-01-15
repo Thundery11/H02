@@ -9,6 +9,7 @@ const auth_middleware_1 = require("../middlewares/auth-middleware");
 const comments_input_validation_1 = require("../middlewares/comments-input-validation");
 const composition_root_1 = require("../composition-root");
 const posts_controller_1 = require("../controllers/posts-controller");
+const likes_input_validation_1 = require("../middlewares/likes-input-validation");
 const postsController = composition_root_1.container.resolve(posts_controller_1.PostsController);
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get("/", postsController.findAllPosts.bind(postsController));
@@ -18,3 +19,4 @@ exports.postsRouter.post("/:postId/comments", auth_middleware_1.authMiddleware, 
 exports.postsRouter.get("/:postId/comments", postsController.findComments.bind(postsController));
 exports.postsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, postsController.deletePost.bind(postsController));
 exports.postsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, postsController.updatePost.bind(postsController));
+exports.postsRouter.put("/:postId/like-status", auth_middleware_1.authMiddleware, (0, likes_input_validation_1.likesInputValidation)(), erros_validation_1.errosValidation, postsController.updateLikeStatus.bind(postsController));

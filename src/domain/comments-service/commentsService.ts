@@ -1,4 +1,3 @@
-import { id } from "date-fns/locale";
 import { CommentsOutputType } from "../../models/comments-types";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
@@ -20,9 +19,7 @@ export class CommentsService {
     const reaction = userId
       ? await this.likesRepository.whatIsMyStatus(userId, _parentId)
       : null;
-    //dobavit comment ID
-    console.log(`myStatus ${reaction}`);
-    console.log(`userId : ${userId}`);
+
     if (!comment) return null;
 
     // const result = {
@@ -41,7 +38,6 @@ export class CommentsService {
     } else {
       comment.likesInfo.myStatus = reaction?.myStatus;
     }
-    console.log(reaction);
     return comment;
   }
 

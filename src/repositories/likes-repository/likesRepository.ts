@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
-import { LikesType, MyStatus } from "../../models/likesTypes";
-import { LikesModel } from "../dataBase/blogsDb";
+import { LastLikedType, LikesType, MyStatus } from "../../models/likesTypes";
+import { LastLikedModel, LikesModel } from "../dataBase/blogsDb";
+import { promises } from "dns";
 @injectable()
 export class LikesRepository {
   constructor() {}
@@ -52,5 +53,21 @@ export class LikesRepository {
     _parentId: string
   ): Promise<LikesType | null> {
     return await LikesModel.findOne({ userId: userId, parentId: _parentId });
+  }
+
+  async lastLiked(lastLiked: object): Promise<boolean> {
+    try {
+      const result = await LastLikedModel.insertMany({ ...lastLiked });
+      return true;
+    } catch (error) {
+      console.error();
+      return false;
+    }
+  }
+  async isItFirstLike(
+    userId: string,
+    postId: string
+  ): Promise<LastLikedType | null> {
+    return await LastLikedModel.findOne({ userId, postId });
   }
 }

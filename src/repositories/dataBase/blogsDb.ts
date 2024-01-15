@@ -16,8 +16,11 @@ import { BlackRefreshTokensType } from "../../models/blackRefreshTokensTypes";
 import { blackRefreshTokenSchema } from "../../mongo/blackRefreshTokenSchema/blackRefreshTokenSchema";
 import { RecoveryCodeForNewPasswordType } from "../../models/passowrdRecovery-types";
 import { RecoveryCodeForNewPasswordSchema } from "../../mongo/RecoveryCodeForNewPassword/RecoveryCodeForNewPasswordType-schema";
-import { LikesType } from "../../models/likesTypes";
-import { LikesSchema } from "../../mongo/likes-schema/likes-schema";
+import { LastLikedType, LikesType } from "../../models/likesTypes";
+import {
+  LastLikedSchema,
+  LikesSchema,
+} from "../../mongo/likes-schema/likes-schema";
 
 dotenv.config();
 const dbName = "homeWork10";
@@ -51,6 +54,10 @@ export const RecoveryCodeForNewPasswordModel =
     RecoveryCodeForNewPasswordSchema
   );
 export const LikesModel = mongoose.model<LikesType>("likes", LikesSchema);
+export const LastLikedModel = mongoose.model<LastLikedType>(
+  "lastLiked",
+  LastLikedSchema
+);
 // export const client = new MongoClient(mongoUri);
 // const blogsDb = client.db("blogsDb");
 // const postsDb = client.db("postsDb");

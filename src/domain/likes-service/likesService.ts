@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { LikesType, MyStatus } from "../../models/likesTypes";
+import { LastLikedType, LikesType, MyStatus } from "../../models/likesTypes";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 @injectable()
 export class LikesService {
@@ -44,5 +44,14 @@ export class LikesService {
     // _myStatus = "None";
     // console.log(await this.likesRepository.countLikes(_parentId));
     // return await this.likesRepository.updateLike(userId, _parentId, _myStatus);
+  }
+  async lastLiked(userId: string, userLogin: string, postId: string) {
+    const createdAt = new Date();
+    const lastLiked = new LastLikedType(userId, userLogin, postId, createdAt);
+    const reaciton = await this.likesRepository.isItFirstLike(userId, postId);
+    console.log(reaciton);
+    if (!reaciton) {
+      await this.likesRepository.lastLiked(lastLiked);
+    }
   }
 }

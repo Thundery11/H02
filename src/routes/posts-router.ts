@@ -6,6 +6,7 @@ import { authMiddleware } from "../middlewares/auth-middleware";
 import { commentsInputValidation } from "../middlewares/comments-input-validation";
 import { container } from "../composition-root";
 import { PostsController } from "../controllers/posts-controller";
+import { likesInputValidation } from "../middlewares/likes-input-validation";
 
 const postsController = container.resolve(PostsController);
 
@@ -48,4 +49,12 @@ postsRouter.put(
   postsInputValidation(),
   errosValidation,
   postsController.updatePost.bind(postsController)
+);
+
+postsRouter.put(
+  "/:postId/like-status",
+  authMiddleware,
+  likesInputValidation(),
+  errosValidation,
+  postsController.updateLikeStatus.bind(postsController)
 );

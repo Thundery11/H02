@@ -12,3 +12,12 @@ export class LikesType {
     public myStatus: MyStatus
   ) {}
 }
+
+export class LastLikedType {
+  constructor(
+    public userId: string,
+    public userLogin: string,
+    public postId: string,
+    public createdAt: Date
+  ) {}
+}

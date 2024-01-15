@@ -10,7 +10,7 @@ export const commentsRouter = Router({});
 
 commentsRouter.get(
   "/:id",
-  commentsController.findComments.bind(commentsController)
+  commentsController.findComment.bind(commentsController)
 );
 
 commentsRouter.delete(

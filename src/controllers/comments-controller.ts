@@ -19,7 +19,7 @@ export class CommentsController {
     protected likesServise: LikesService
   ) {}
 
-  async findComments(req: RequestWithParams<{ id: string }>, res: Response) {
+  async findComment(req: RequestWithParams<{ id: string }>, res: Response) {
     const commentId = req.params.id;
 
     if (!req.headers.authorization) {
@@ -98,7 +98,7 @@ export class CommentsController {
     if (!comment) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
-    if (!userId) return res.sendStatus(HTTP_STATUSES.FORBIDDEN_403);
+    if (!userId) return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
 
     const isLikeExist = await this.likesServise.isLikeExist(userId, commentId);
     if (!isLikeExist) {

@@ -12,34 +12,34 @@ import { LikesRepository } from "./repositories/likes-repository/likesRepository
 import { PostsRepository } from "./repositories/posts-db-repository";
 import { Container } from "inversify";
 
-const blogsRepository = new BlogsRepository();
-const blogsService = new BlogService(blogsRepository);
-export const blogsController = new BLogsController(blogsService);
+// const blogsRepository = new BlogsRepository();
+// const blogsService = new BlogService(blogsRepository);
+// export const blogsController = new BLogsController(blogsService);
 
-const postsRepository = new PostsRepository();
-const likesRepository = new LikesRepository();
-const likesService = new LikesService(likesRepository);
+// const postsRepository = new PostsRepository();
+// const likesRepository = new LikesRepository();
+// const likesService = new LikesService(likesRepository);
 
-const commentsRepository = new CommentsRepository();
-const commentsService = new CommentsService(
-  commentsRepository,
-  likesRepository
-);
-const postsService = new PostsService(
-  postsRepository,
-  commentsRepository,
-  likesRepository
-);
-export const postsController = new PostsController(
-  postsService,
-  blogsRepository,
-  commentsService
-);
-export const commentsController = new CommentsController(
-  commentsService,
-  commentsRepository,
-  likesService
-);
+// const commentsRepository = new CommentsRepository();
+// const commentsService = new CommentsService(
+//   commentsRepository,
+//   likesRepository
+// );
+// const postsService = new PostsService(
+//   postsRepository,
+//   commentsRepository,
+//   likesRepository
+// );
+// export const postsController = new PostsController(
+//   postsService,
+//   blogsRepository,
+//   commentsService
+// );
+// export const commentsController = new CommentsController(
+//   commentsService,
+//   commentsRepository,
+//   likesService
+// );
 
 export const container = new Container();
 container.bind(BLogsController).to(BLogsController);
