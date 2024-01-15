@@ -15,7 +15,7 @@ export class CommentsType {
     public likesInfo: {
       likesCount: number;
       dislikesCount: number;
-      myStatus: any;
+      myStatus: MyStatus;
     }
   ) {}
 }
@@ -28,7 +28,7 @@ export class CommentsOutputType {
     public likesInfo: {
       likesCount: number;
       dislikesCount: number;
-      myStatus: string;
+      myStatus: MyStatus;
     }
   ) {}
 }

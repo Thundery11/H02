@@ -9,7 +9,8 @@ import { HTTP_STATUSES } from "../models/statuses";
 import { CommentsRepository } from "../repositories/comments-repository/comments-repository";
 import { LikesService } from "../domain/likes-service/likesService";
 import { jwtService } from "../application/jwt-service";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { MyStatus } from "../models/likesTypes";
 @injectable()
 export class CommentsController {
   constructor(
@@ -87,7 +88,7 @@ export class CommentsController {
     }
   }
   async updateLikeStatus(
-    req: RequestWithParamsAndBody<{ commentId: string; likeStatus: string }>,
+    req: RequestWithParamsAndBody<{ commentId: string; likeStatus: MyStatus }>,
     res: Response
   ) {
     const commentId = req.params.commentId;

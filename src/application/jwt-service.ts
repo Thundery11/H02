@@ -1,7 +1,6 @@
 import { usersDbType } from "../models/usersTypes";
 import jwt from "jsonwebtoken";
 import { settings } from "../settings";
-import { uuid } from "uuidv4";
 
 export const jwtService = {
   async createJWT(user: usersDbType) {
@@ -14,7 +13,7 @@ export const jwtService = {
     const refreshToken = jwt.sign(
       { userId: user.id, deviceId: deviceId },
       settings.REFRESH_TOKEN_SECRET,
-      { expiresIn: "360h" }
+      { expiresIn: "100h" }
     );
     return refreshToken;
   },

@@ -27,7 +27,7 @@ export class LikesRepository {
   async updateLike(
     userId: string,
     _parentId: string,
-    _myStatus: string
+    _myStatus: MyStatus
   ): Promise<boolean> {
     const result = await LikesModel.updateOne(
       { userId: userId, parentId: _parentId },
@@ -38,13 +38,13 @@ export class LikesRepository {
   async countLikes(_parentId: string): Promise<number> {
     return await LikesModel.countDocuments({
       parentId: _parentId,
-      myStatus: "Like",
+      myStatus: MyStatus.Like,
     });
   }
   async countDislikes(_parentId: string): Promise<number> {
     return await LikesModel.countDocuments({
       parentId: _parentId,
-      myStatus: "Dislike",
+      myStatus: MyStatus.Dislike,
     });
   }
   async whatIsMyStatus(

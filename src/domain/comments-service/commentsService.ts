@@ -37,7 +37,7 @@ export class CommentsService {
     comment.likesInfo.dislikesCount = dislikesCount;
     comment.likesInfo.likesCount = likesCount;
     if (reaction === null) {
-      comment.likesInfo.myStatus = "None";
+      comment.likesInfo.myStatus = MyStatus.None;
     } else {
       comment.likesInfo.myStatus = reaction?.myStatus;
     }

@@ -4,6 +4,7 @@ import { PostsType } from "../../models/postsTypes";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 import { PostsRepository } from "../../repositories/posts-db-repository";
+import { MyStatus } from "../../models/likesTypes";
 @injectable()
 export class PostsService {
   constructor(
@@ -78,7 +79,7 @@ export class PostsService {
       {
         likesCount: 0,
         dislikesCount: 0,
-        myStatus: "None",
+        myStatus: MyStatus.None,
       }
     );
 
@@ -95,7 +96,7 @@ export class PostsService {
       {
         likesCount: 0,
         dislikesCount: 0,
-        myStatus: "None",
+        myStatus: MyStatus.None,
       }
     );
     return outPutcommet;
@@ -140,7 +141,10 @@ export class PostsService {
     // );
     const outputAllComments = allComments.map((comment) =>
       comment.likesInfo.myStatus === null
-        ? { ...comment, likesInfo: { ...comment.likesInfo, myStatus: "None" } }
+        ? {
+            ...comment,
+            likesInfo: { ...comment.likesInfo, myStatus: MyStatus.None },
+          }
         : {
             ...comment,
             likesInfo: {

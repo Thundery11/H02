@@ -15,7 +15,7 @@ export class LikesService {
   async addLike(
     userId: string,
     _parentId: string,
-    _myStatus: string
+    _myStatus: MyStatus
   ): Promise<boolean> {
     const likeDbModel = new LikesType(
       userId,
@@ -29,7 +29,7 @@ export class LikesService {
   async updateLike(
     userId: string,
     _parentId: string,
-    _myStatus: string
+    _myStatus: MyStatus
   ): Promise<boolean> {
     const like = await this.likesRepository.isLikeExist(userId, _parentId);
     if (like!.myStatus !== _myStatus) {
