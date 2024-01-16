@@ -132,7 +132,6 @@ export class PostsService {
         )
       )
     );
-    console.log(result);
 
     // allComments.map((comment) =>
     //   comment.likesInfo.myStatus === null

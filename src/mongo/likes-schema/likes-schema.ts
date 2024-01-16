@@ -16,8 +16,8 @@ export const LikesSchema = new mongoose.Schema<LikesType>({
 });
 
 export const LastLikedSchema = new mongoose.Schema<LastLikedType>({
+  addedAt: { type: Date, required: true },
   userId: { type: String, required: true },
-  userLogin: { type: String, required: true },
+  login: { type: String, required: true },
   postId: { type: String, required: true },
-  createdAt: { type: Date, required: true },
 });

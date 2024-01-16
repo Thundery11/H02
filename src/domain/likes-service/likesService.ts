@@ -45,13 +45,22 @@ export class LikesService {
     // console.log(await this.likesRepository.countLikes(_parentId));
     // return await this.likesRepository.updateLike(userId, _parentId, _myStatus);
   }
-  async lastLiked(userId: string, userLogin: string, postId: string) {
-    const createdAt = new Date();
-    const lastLiked = new LastLikedType(userId, userLogin, postId, createdAt);
+
+  async lastLiked(userId: string, login: string, postId: string) {
+    const addetdAt = new Date();
+    const lastLiked = new LastLikedType(addetdAt, userId, login, postId);
     const reaciton = await this.likesRepository.isItFirstLike(userId, postId);
     console.log(reaciton);
     if (!reaciton) {
       await this.likesRepository.lastLiked(lastLiked);
     }
+    const res = await this.getLastLikes(postId);
+
+    const fu = res.map((m) => m.login);
+    console.log(fu);
+    return res;
+  }
+  async getLastLikes(postId: string) {
+    return await this.likesRepository.getLastLikes(postId);
   }
 }

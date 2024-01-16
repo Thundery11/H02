@@ -70,4 +70,10 @@ export class LikesRepository {
   ): Promise<LastLikedType | null> {
     return await LastLikedModel.findOne({ userId, postId });
   }
+  async getLastLikes(postId: string): Promise<LastLikedType[]> {
+    return await LastLikedModel.find({ postId }, { _id: 0, __v: 0, postId: 0 })
+      .sort({ addedAt: -1 })
+      .limit(3)
+      .lean();
+  }
 }

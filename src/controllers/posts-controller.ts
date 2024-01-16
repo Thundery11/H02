@@ -257,7 +257,11 @@ export class PostsController {
     }
 
     if (likeStatus === MyStatus.Like) {
-      await this.likesService.lastLiked(userId, userLogin, postId);
+      const result = await this.likesService.lastLiked(
+        userId,
+        userLogin,
+        postId
+      );
     }
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }

@@ -15,9 +15,9 @@ export class LikesType {
 
 export class LastLikedType {
   constructor(
+    public addedAt: Date,
     public userId: string,
-    public userLogin: string,
-    public postId: string,
-    public createdAt: Date
+    public login: string,
+    public postId: string
   ) {}
 }
