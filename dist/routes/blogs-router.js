@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsRouter = void 0;
+exports.blogsRouter = exports.blogsController = void 0;
 const express_1 = require("express");
 const blogs_input_vadation_1 = require("../middlewares/blogs-input-vadation");
 const erros_validation_1 = require("../middlewares/erros-validation");
@@ -8,7 +8,7 @@ const authorisationMiddleware_1 = require("../middlewares/authorisationMiddlewar
 const posts_input_validation_1 = require("../middlewares/posts-input-validation");
 const composition_root_1 = require("../composition-root");
 const blogs_controller_1 = require("../controllers/blogs-controller");
-const blogsController = composition_root_1.container.resolve(blogs_controller_1.BLogsController);
+exports.blogsController = composition_root_1.container.resolve(blogs_controller_1.BLogsController);
 exports.blogsRouter = (0, express_1.Router)({});
 // export class BLogsController {
 //   constructor(protected blogsService: BlogService) {}
@@ -167,10 +167,10 @@ exports.blogsRouter = (0, express_1.Router)({});
 //     }
 //   }
 // }
-exports.blogsRouter.get("/", blogsController.findAllBlogs.bind(blogsController));
-exports.blogsRouter.get("/:id", blogsController.findBlog.bind(blogsController));
-exports.blogsRouter.get("/:blogId/posts", blogsController.findPostsFromCurrentBLog.bind(blogsController));
-exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, blogsController.createBlog.bind(blogsController));
-exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, blogsController.createPost.bind(blogsController));
-exports.blogsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, blogsController.deleteBlog.bind(blogsController));
-exports.blogsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, blogsController.updateBlog.bind(blogsController));
+exports.blogsRouter.get("/", exports.blogsController.findAllBlogs.bind(exports.blogsController));
+exports.blogsRouter.get("/:id", exports.blogsController.findBlog.bind(exports.blogsController));
+exports.blogsRouter.get("/:blogId/posts", exports.blogsController.findPostsFromCurrentBLog.bind(exports.blogsController));
+exports.blogsRouter.post("/", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, exports.blogsController.createBlog.bind(exports.blogsController));
+exports.blogsRouter.post("/:blogId/posts", authorisationMiddleware_1.authGuardMiddleware, (0, posts_input_validation_1.postsInputValidation)(), erros_validation_1.errosValidation, exports.blogsController.createPost.bind(exports.blogsController));
+exports.blogsRouter.delete("/:id", authorisationMiddleware_1.authGuardMiddleware, exports.blogsController.deleteBlog.bind(exports.blogsController));
+exports.blogsRouter.put("/:id", authorisationMiddleware_1.authGuardMiddleware, (0, blogs_input_vadation_1.blogsInputValidation)(), erros_validation_1.errosValidation, exports.blogsController.updateBlog.bind(exports.blogsController));

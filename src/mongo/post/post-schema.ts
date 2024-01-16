@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import { PostsType } from "../../models/postsTypes";
-import { WithId } from "mongodb";
+
+const lasLikes = {
+  addedAt: { type: String },
+  userId: { type: String },
+  login: { type: String },
+};
 
 export const PostSchema = new mongoose.Schema<PostsType>({
   id: { type: String, required: true },
@@ -10,4 +15,15 @@ export const PostSchema = new mongoose.Schema<PostsType>({
   blogId: { type: String, required: true },
   blogName: { type: String, required: true },
   createdAt: { type: String, required: true },
+  extendedLikesInfo: {
+    likesCount: { type: Number, required: true },
+    dislikesCount: { type: Number, required: true },
+    myStatus: { type: String },
+    newestLikes: [
+      {
+        type: lasLikes,
+        default: null,
+      },
+    ],
+  },
 });

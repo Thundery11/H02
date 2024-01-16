@@ -7,7 +7,7 @@ import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { container } from "../composition-root";
 import { BLogsController } from "../controllers/blogs-controller";
-const blogsController = container.resolve(BLogsController);
+export const blogsController = container.resolve(BLogsController);
 export const blogsRouter = Router({});
 // export class BLogsController {
 //   constructor(protected blogsService: BlogService) {}

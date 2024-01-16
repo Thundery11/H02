@@ -52,7 +52,13 @@ export class PostsService {
       content,
       blogId,
       blogName,
-      createdAt.toISOString()
+      createdAt.toISOString(),
+      {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: MyStatus.None,
+        newestLikes: [{}],
+      }
     );
 
     const createdPost = await this.postsRepository.createPost(newPost);

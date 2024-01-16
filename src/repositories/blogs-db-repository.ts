@@ -48,12 +48,12 @@ export class BlogsRepository {
     const result = await BlogModel.insertMany({ ...newBlog });
     return newBlog;
   }
-  async createPostForBlog(newPostForBlog: PostsType): Promise<PostsType> {
-    const result = await PostModel.insertMany({
-      ...newPostForBlog,
-    });
-    return newPostForBlog;
-  }
+  // async createPostForBlog(newPostForBlog: PostsType): Promise<PostsType> {
+  //   const result = await PostModel.insertMany({
+  //     ...newPostForBlog,
+  //   });
+  //   return newPostForBlog;
+  // }
 
   async deleteBlog(id: string): Promise<boolean> {
     const result = await BlogModel.deleteOne({ id: id });

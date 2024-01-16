@@ -47,7 +47,7 @@ export class LikesService {
   }
 
   async lastLiked(userId: string, login: string, postId: string) {
-    const addetdAt = new Date();
+    const addetdAt = new Date().toISOString();
     const lastLiked = new LastLikedType(addetdAt, userId, login, postId);
     const reaciton = await this.likesRepository.isItFirstLike(userId, postId);
     console.log(reaciton);
@@ -57,6 +57,7 @@ export class LikesService {
     const res = await this.getLastLikes(postId);
 
     const fu = res.map((m) => m.login);
+    console.log(res);
     console.log(fu);
     return res;
   }

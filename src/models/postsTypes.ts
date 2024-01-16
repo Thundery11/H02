@@ -1,4 +1,5 @@
 import { WithId } from "mongodb";
+import { MyStatus } from "./likesTypes";
 
 export class PostsType {
   constructor(
@@ -8,7 +9,19 @@ export class PostsType {
     public content: string,
     public blogId: string,
     public blogName: string,
-    public createdAt: string
+    public createdAt: string,
+    public extendedLikesInfo: {
+      likesCount: number;
+      dislikesCount: number;
+      myStatus: MyStatus;
+      newestLikes: [
+        {
+          addetAt: string;
+          userId: string;
+          login: string;
+        }
+      ];
+    }
   ) {}
 }
 

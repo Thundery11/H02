@@ -69,28 +69,28 @@ export class BlogService {
     return createdBlog;
   }
 
-  async createPostForBlog(
-    blogId: string,
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogName: string
-  ): Promise<PostsType> {
-    const createdat = new Date();
+  // async createPostForBlog(
+  //   blogId: string,
+  //   title: string,
+  //   shortDescription: string,
+  //   content: string,
+  //   blogName: string
+  // ): Promise<PostsType> {
+  //   const createdat = new Date();
 
-    const newPostForBlog = new PostsType(
-      Math.floor(Math.random() * 10000).toString(),
-      blogId,
-      title,
-      shortDescription,
-      content,
-      createdat.toISOString(),
-      blogName
-    );
-    const createdPostForBlog =
-      this.blogsRepository.createPostForBlog(newPostForBlog);
-    return createdPostForBlog;
-  }
+  //   const newPostForBlog = new PostsType(
+  //     Math.floor(Math.random() * 10000).toString(),
+  //     blogId,
+  //     title,
+  //     shortDescription,
+  //     content,
+  //     createdat.toISOString(),
+  //     blogName
+  //   );
+  //   const createdPostForBlog =
+  //     this.blogsRepository.createPostForBlog(newPostForBlog);
+  //   return createdPostForBlog;
+  // }
 
   async deleteBlog(id: string): Promise<boolean> {
     return await this.blogsRepository.deleteBlog(id);

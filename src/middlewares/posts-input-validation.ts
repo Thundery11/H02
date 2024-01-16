@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { blogsController } from "../composition-root";
+import { blogsController } from "../routes/blogs-router";
 
 export const postsInputValidation = () => {
   return [
