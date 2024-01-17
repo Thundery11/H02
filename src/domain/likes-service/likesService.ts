@@ -54,12 +54,13 @@ export class LikesService {
     if (!reaciton) {
       await this.likesRepository.lastLiked(lastLiked);
     }
-    const res = await this.getLastLikes(postId);
 
-    const fu = res.map((m) => m.login);
-    console.log(res);
-    console.log(fu);
-    return res;
+    // const res = await this.getLastLikes(postId);
+
+    // const fu = res.map((m) => m.login);
+    // console.log(res);
+    // console.log(fu);
+    // return res;
   }
   async getLastLikes(postId: string) {
     return await this.likesRepository.getLastLikes(postId);

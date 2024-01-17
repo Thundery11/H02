@@ -23,7 +23,7 @@ export class PostsRepository {
   }
 
   async getPost(id: string): Promise<PostsType | null> {
-    return await PostModel.findOne({ id: id }, { _id: 0, __v: 0 });
+    return await PostModel.findOne({ id: id }, { _id: 0, __v: 0 }).lean();
   }
   async getComments(
     sortBy: string,

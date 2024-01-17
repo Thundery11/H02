@@ -52,7 +52,10 @@ export class LikesRepository {
     userId: string,
     _parentId: string
   ): Promise<LikesType | null> {
-    return await LikesModel.findOne({ userId: userId, parentId: _parentId });
+    return await LikesModel.findOne(
+      { userId: userId, parentId: _parentId },
+      { _id: 0, userId: 0, parentId: 0, createdAt: 0, __v: 0 }
+    );
   }
 
   async lastLiked(lastLiked: object): Promise<boolean> {

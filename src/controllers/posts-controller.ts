@@ -8,7 +8,7 @@ import {
   RequestWithParamsAndQuery,
 } from "../models/requestsTypes";
 import { PostsService } from "../domain/posts-service/posts-service";
-import { PostsQueryParams, postsDbType } from "../models/postsTypes";
+import { PostsQueryParams, PostsType, postsDbType } from "../models/postsTypes";
 import { BlogsRepository } from "../repositories/blogs-db-repository";
 import { CommentsQueryParams, CommentsType } from "../models/comments-types";
 import { CommentsService } from "../domain/comments-service/commentsService";
@@ -59,13 +59,35 @@ export class PostsController {
 
   async findPost(req: RequestWithParams<{ id: string }>, res: Response) {
     const id = req.params.id;
-    const post = await this.postsService.getPost(id);
 
-    if (!post) {
-      res.send(HTTP_STATUSES.NOT_FOUND_404);
-      return;
+    if (!req.headers.authorization) {
+      const userId = null;
+      const post: PostsType | null = await this.postsService.getPost(
+        id,
+        userId
+      );
+
+      if (!post) {
+        res.send(HTTP_STATUSES.NOT_FOUND_404);
+        return;
+      } else {
+        res.status(HTTP_STATUSES.OK_200).send(post);
+      }
     } else {
-      res.status(HTTP_STATUSES.OK_200).send(post);
+      const token = req.headers.authorization.split(" ")[1];
+      const userId = await jwtService.getUserByToken(token);
+
+      const post: PostsType | null = await this.postsService.getPost(
+        id,
+        userId
+      );
+
+      if (!post) {
+        res.send(HTTP_STATUSES.NOT_FOUND_404);
+        return;
+      } else {
+        res.status(HTTP_STATUSES.OK_200).send(post);
+      }
     }
   }
 

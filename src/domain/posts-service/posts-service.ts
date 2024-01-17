@@ -4,13 +4,15 @@ import { PostsType } from "../../models/postsTypes";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 import { PostsRepository } from "../../repositories/posts-db-repository";
-import { MyStatus } from "../../models/likesTypes";
+import { LastLikedType, MyStatus } from "../../models/likesTypes";
+import { LikesService } from "../likes-service/likesService";
 @injectable()
 export class PostsService {
   constructor(
     protected postsRepository: PostsRepository,
     protected commentsRepository: CommentsRepository,
-    protected likesRepository: LikesRepository
+    protected likesRepository: LikesRepository,
+    protected likesService: LikesService
   ) {}
   async getAllPosts(
     query: object,
@@ -32,8 +34,34 @@ export class PostsService {
     return await this.postsRepository.countDocuments(query);
   }
 
-  async getPost(id: string): Promise<PostsType | null> {
-    return await this.postsRepository.getPost(id);
+  async getPost(_parentId: string, userId: string): Promise<PostsType | null> {
+    const post = await this.postsRepository.getPost(_parentId);
+    const dislikesCount = await this.likesRepository.countDislikes(_parentId);
+    const likesCount = await this.likesRepository.countLikes(_parentId);
+    const reaction = userId
+      ? await this.likesRepository.whatIsMyStatus(userId, _parentId)
+      : null;
+
+    if (!post) {
+      return null;
+    }
+    const lastLiked = await this.likesService.getLastLikes(_parentId);
+    const outputPost: PostsType = {
+      ...post,
+      extendedLikesInfo: {
+        ...post.extendedLikesInfo,
+        likesCount: likesCount,
+        dislikesCount: dislikesCount,
+        myStatus: reaction,
+        newestLikes: lastLiked,
+      },
+    };
+    if (reaction === null) {
+      outputPost.extendedLikesInfo.myStatus = MyStatus.None;
+    } else {
+      outputPost.extendedLikesInfo.myStatus = reaction?.myStatus;
+    }
+    return outputPost;
   }
 
   async createPost(
