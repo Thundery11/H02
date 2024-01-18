@@ -4,7 +4,11 @@ import { PostsType } from "../../models/postsTypes";
 import { CommentsRepository } from "../../repositories/comments-repository/comments-repository";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 import { PostsRepository } from "../../repositories/posts-db-repository";
-import { LastLikedType, MyStatus } from "../../models/likesTypes";
+import {
+  LastLikedOutputType,
+  LastLikedType,
+  MyStatus,
+} from "../../models/likesTypes";
 import { LikesService } from "../likes-service/likesService";
 @injectable()
 export class PostsService {
@@ -34,7 +38,10 @@ export class PostsService {
     return await this.postsRepository.countDocuments(query);
   }
 
-  async getPost(_parentId: string, userId: string): Promise<PostsType | null> {
+  async getPost(
+    _parentId: string,
+    userId: string | null
+  ): Promise<PostsType | null> {
     const post = await this.postsRepository.getPost(_parentId);
     const dislikesCount = await this.likesRepository.countDislikes(_parentId);
     const likesCount = await this.likesRepository.countLikes(_parentId);
@@ -45,7 +52,8 @@ export class PostsService {
     if (!post) {
       return null;
     }
-    const lastLiked = await this.likesService.getLastLikes(_parentId);
+    const lastLiked: LastLikedOutputType[] =
+      await this.likesService.getLastLikes(_parentId);
     const outputPost: PostsType = {
       ...post,
       extendedLikesInfo: {

@@ -21,8 +21,9 @@ export const PostSchema = new mongoose.Schema<PostsType>({
     myStatus: { type: String },
     newestLikes: [
       {
-        type: lasLikes,
-        default: null,
+        addedAt: { type: String },
+        userId: { type: String },
+        login: { type: String },
       },
     ],
   },

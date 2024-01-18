@@ -21,3 +21,8 @@ export class LastLikedType {
     public postId: string
   ) {}
 }
+export type LastLikedOutputType = {
+  addedAt: string;
+  userId: string;
+  login: string;
+};

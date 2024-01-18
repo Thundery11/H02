@@ -251,15 +251,16 @@ export class PostsController {
     const likeStatus = req.body.likeStatus;
     const userId = req.user?.id;
     const userLogin = req.user?.accountData.login;
-    const post = await this.postsService.getPost(postId);
+    if (!userId) {
+      return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
+    }
+    const post = await this.postsService.getPost(postId, userId);
     console.log(post);
 
     if (!post) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
-    if (!userId) {
-      return res.sendStatus(HTTP_STATUSES.UNAUTHORISED_401);
-    }
+
     if (!userLogin) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
@@ -279,11 +280,7 @@ export class PostsController {
     }
 
     if (likeStatus === MyStatus.Like) {
-      const result = await this.likesService.lastLiked(
-        userId,
-        userLogin,
-        postId
-      );
+      await this.likesService.lastLiked(userId, userLogin, postId);
     }
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }

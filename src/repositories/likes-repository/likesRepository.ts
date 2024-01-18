@@ -1,5 +1,10 @@
 import { injectable } from "inversify";
-import { LastLikedType, LikesType, MyStatus } from "../../models/likesTypes";
+import {
+  LastLikedOutputType,
+  LastLikedType,
+  LikesType,
+  MyStatus,
+} from "../../models/likesTypes";
 import { LastLikedModel, LikesModel } from "../dataBase/blogsDb";
 import { promises } from "dns";
 @injectable()
@@ -73,7 +78,7 @@ export class LikesRepository {
   ): Promise<LastLikedType | null> {
     return await LastLikedModel.findOne({ userId, postId });
   }
-  async getLastLikes(postId: string): Promise<LastLikedType[]> {
+  async getLastLikes(postId: string): Promise<LastLikedOutputType[]> {
     return await LastLikedModel.find({ postId }, { _id: 0, __v: 0, postId: 0 })
       .sort({ addedAt: -1 })
       .limit(3)

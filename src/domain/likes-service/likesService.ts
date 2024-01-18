@@ -1,5 +1,10 @@
 import { injectable } from "inversify";
-import { LastLikedType, LikesType, MyStatus } from "../../models/likesTypes";
+import {
+  LastLikedOutputType,
+  LastLikedType,
+  LikesType,
+  MyStatus,
+} from "../../models/likesTypes";
 import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
 @injectable()
 export class LikesService {
@@ -62,7 +67,7 @@ export class LikesService {
     // console.log(fu);
     // return res;
   }
-  async getLastLikes(postId: string) {
+  async getLastLikes(postId: string): Promise<LastLikedOutputType[]> {
     return await this.likesRepository.getLastLikes(postId);
   }
 }
