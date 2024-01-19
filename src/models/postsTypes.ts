@@ -14,13 +14,11 @@ export class PostsType {
       likesCount: number;
       dislikesCount: number;
       myStatus: MyStatus;
-      newestLikes: [
-        {
-          addetAt: string;
-          userId: string;
-          login: string;
-        }
-      ];
+      newestLikes: {
+        addedAt: string;
+        userId: string;
+        login: string;
+      }[];
     }
   ) {}
 }

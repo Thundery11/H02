@@ -46,8 +46,9 @@ export class PostsService {
     const dislikesCount = await this.likesRepository.countDislikes(_parentId);
     const likesCount = await this.likesRepository.countLikes(_parentId);
     const reaction = userId
-      ? await this.likesRepository.whatIsMyStatus(userId, _parentId)
-      : null;
+      ? (await this.likesRepository.whatIsMyStatus(userId, _parentId))
+          ?.myStatus ?? MyStatus.None
+      : MyStatus.None;
 
     if (!post) {
       return null;
@@ -64,11 +65,11 @@ export class PostsService {
         newestLikes: lastLiked,
       },
     };
-    if (reaction === null) {
-      outputPost.extendedLikesInfo.myStatus = MyStatus.None;
-    } else {
-      outputPost.extendedLikesInfo.myStatus = reaction?.myStatus;
-    }
+    // if (reaction === null) {
+    //   outputPost.extendedLikesInfo.myStatus = MyStatus.None;
+    // } else {
+    //   outputPost.extendedLikesInfo.myStatus = reaction?.myStatus;
+    // }
     return outputPost;
   }
 
@@ -93,7 +94,7 @@ export class PostsService {
         likesCount: 0,
         dislikesCount: 0,
         myStatus: MyStatus.None,
-        newestLikes: [{}],
+        newestLikes: [],
       }
     );
 

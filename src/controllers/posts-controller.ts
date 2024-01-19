@@ -122,6 +122,7 @@ export class PostsController {
     req: RequestWithParamsAndBody<{ postId: string; content: string }>,
     res: Response
   ) {
+    const userId = req.user?.id;
     const postId = req.params.postId;
     const isExistPost = await this.postsService.getPost(postId);
     if (!isExistPost) {
@@ -262,11 +263,16 @@ export class PostsController {
     }
 
     if (!userLogin) {
+      console.log("userID not found");
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
     const isLikeExist = await this.likesService.isLikeExist(userId, postId);
     if (!isLikeExist) {
       await this.likesService.addLike(userId, postId, likeStatus);
+      console.log(`everything ok , like added ${isLikeExist}`);
+      if (likeStatus === MyStatus.Like) {
+        await this.likesService.lastLiked(userId, userLogin, postId);
+      }
       return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
     const result = await this.likesService.updateLike(
@@ -279,9 +285,7 @@ export class PostsController {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     }
 
-    if (likeStatus === MyStatus.Like) {
-      await this.likesService.lastLiked(userId, userLogin, postId);
-    }
+    console.log(result);
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   }
 }
