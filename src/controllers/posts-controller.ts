@@ -280,6 +280,9 @@ export class PostsController {
       postId,
       likeStatus
     );
+    if (likeStatus === MyStatus.Dislike || likeStatus === MyStatus.None) {
+      await this.likesService.deleteLastLiked(userId, postId);
+    }
 
     if (!result) {
       return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);

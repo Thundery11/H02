@@ -72,6 +72,13 @@ export class LikesRepository {
       return false;
     }
   }
+  async deleteLastLiked(userId: string, postId: string): Promise<boolean> {
+    const result = await LastLikedModel.deleteOne({
+      userId: userId,
+      postId: postId,
+    });
+    return result.deletedCount === 1;
+  }
   async isItFirstLike(
     userId: string,
     postId: string

@@ -71,7 +71,7 @@ export class BLogsController {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     } else {
-      res.status(HTTP_STATUSES.OK_200).send(blog);
+      return res.status(HTTP_STATUSES.OK_200).send(blog);
     }
   }
   async findPostsFromCurrentBLog(

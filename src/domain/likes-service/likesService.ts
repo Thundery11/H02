@@ -67,6 +67,9 @@ export class LikesService {
     // console.log(fu);
     // return res;
   }
+  async deleteLastLiked(userId: string, postId: string): Promise<boolean> {
+    return await this.likesRepository.deleteLastLiked(userId, postId);
+  }
   async getLastLikes(postId: string): Promise<LastLikedOutputType[]> {
     return await this.likesRepository.getLastLikes(postId);
   }
