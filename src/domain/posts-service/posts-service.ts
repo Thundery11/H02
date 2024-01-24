@@ -171,7 +171,7 @@ export class PostsService {
             await this.likesRepository.countDislikes(comment.id)),
           (comment.likesInfo.myStatus =
             await this.likesRepository.whatIsMyStatus(userId, comment.id))
-            ?.myStatus
+            ?.myStatus ?? MyStatus.None
         )
       )
     );
