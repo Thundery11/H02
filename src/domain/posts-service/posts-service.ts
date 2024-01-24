@@ -43,7 +43,7 @@ export class PostsService {
             await this.likesRepository.countDislikes(post.id)),
           (post.extendedLikesInfo.myStatus =
             await this.likesRepository.whatIsMyStatus(userId, post.id))
-            ?.myStatus ?? MyStatus.None,
+            ?.myStatus,
           (post.extendedLikesInfo.newestLikes =
             await this.likesRepository.getLastLikes(post.id))
         )
@@ -58,7 +58,13 @@ export class PostsService {
               myStatus: MyStatus.None,
             },
           }
-        : { ...post }
+        : {
+            ...post,
+            extendedLikesInfo: {
+              ...post.extendedLikesInfo,
+              myStatus: post.extendedLikesInfo.myStatus.myStatus,
+            },
+          }
     );
 
     return outputPosts;
