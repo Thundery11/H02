@@ -1,5 +1,7 @@
 import { body } from "express-validator";
 import { blogsController } from "../routes/blogs-router";
+import { container } from "../composition-root";
+import { BlogsRepository } from "../repositories/blogs-db-repository";
 
 export const postsInputValidation = () => {
   return [
@@ -40,9 +42,13 @@ export const postsInputValidation = () => {
       .isString()
       .bail()
       .custom(async (blogId) => {
-        const blogIsExist = blogsController.findBlog.bind(blogsController);
+        const blogsRepository = container.resolve(BlogsRepository);
+        const blog = await blogsRepository.findBlog.bind(blogsRepository)(
+          blogId
+        );
+        // const blogIsExist = blogsController.findBlog.bind(blogsController)(blogId);
 
-        if (!blogIsExist) {
+        if (!blog) {
           throw new Error("Blog doesnt exist");
         }
         return true;
