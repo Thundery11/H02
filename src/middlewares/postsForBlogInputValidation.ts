@@ -3,7 +3,7 @@ import { blogsController } from "../routes/blogs-router";
 import { container } from "../composition-root";
 import { BlogsRepository } from "../repositories/blogs-db-repository";
 
-export const postsInputValidation = () => {
+export const postsForBlogInputValidation = () => {
   return [
     body("title")
       .trim()
@@ -35,7 +35,7 @@ export const postsInputValidation = () => {
       .bail()
       .withMessage("Invalid title"),
 
-    body("blogId")
+    param("blogId")
       .trim()
       .notEmpty()
       .bail()

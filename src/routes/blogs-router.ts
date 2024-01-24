@@ -7,6 +7,7 @@ import { authGuardMiddleware } from "../middlewares/authorisationMiddleware";
 import { postsInputValidation } from "../middlewares/posts-input-validation";
 import { container } from "../composition-root";
 import { BLogsController } from "../controllers/blogs-controller";
+import { postsForBlogInputValidation } from "../middlewares/postsForBlogInputValidation";
 export const blogsController = container.resolve(BLogsController);
 export const blogsRouter = Router({});
 // export class BLogsController {
@@ -191,7 +192,7 @@ blogsRouter.post(
 blogsRouter.post(
   "/:blogId/posts",
   authGuardMiddleware,
-  postsInputValidation(),
+  postsForBlogInputValidation(),
   errosValidation,
   blogsController.createPost.bind(blogsController)
 );

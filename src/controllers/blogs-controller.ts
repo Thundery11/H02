@@ -15,9 +15,14 @@ import {
 } from "../models/blogsTypes";
 import { PostsType } from "../models/postsTypes";
 import { inject, injectable } from "inversify";
+import { PostsRepository } from "../repositories/posts-db-repository";
+import { PostsService } from "../domain/posts-service/posts-service";
 @injectable()
 export class BLogsController {
-  constructor(protected blogsService: BlogService) {}
+  constructor(
+    protected blogsService: BlogService,
+    protected postsService: PostsService
+  ) {}
   async createBlog(
     req: RequestWithBody<{
       name: string;
@@ -135,11 +140,11 @@ export class BLogsController {
     } else {
       const { title, shortDescription, content } = req.body;
       const blogName = blog.name;
-      const createdPostForBlogs = await this.blogsService.createPostForBlog(
-        blogId,
+      const createdPostForBlogs = await this.postsService.createPost(
         title,
         shortDescription,
         content,
+        blogId,
         blogName
       );
 

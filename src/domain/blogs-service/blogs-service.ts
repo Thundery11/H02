@@ -2,6 +2,7 @@ import { BlogType } from "../../models/blogsTypes";
 import { BlogsRepository } from "../../repositories/blogs-db-repository";
 import { PostsType } from "../../models/postsTypes";
 import { inject, injectable } from "inversify";
+import { MyStatus } from "../../models/likesTypes";
 @injectable()
 export class BlogService {
   constructor(protected blogsRepository: BlogsRepository) {}
@@ -69,28 +70,34 @@ export class BlogService {
     return createdBlog;
   }
 
-  // async createPostForBlog(
-  //   blogId: string,
-  //   title: string,
-  //   shortDescription: string,
-  //   content: string,
-  //   blogName: string
-  // ): Promise<PostsType> {
-  //   const createdat = new Date();
+  async createPostForBlog(
+    blogId: string,
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogName: string
+  ): Promise<PostsType> {
+    const createdat = new Date();
 
-  //   const newPostForBlog = new PostsType(
-  //     Math.floor(Math.random() * 10000).toString(),
-  //     blogId,
-  //     title,
-  //     shortDescription,
-  //     content,
-  //     createdat.toISOString(),
-  //     blogName
-  //   );
-  //   const createdPostForBlog =
-  //     this.blogsRepository.createPostForBlog(newPostForBlog);
-  //   return createdPostForBlog;
-  // }
+    const newPostForBlog = new PostsType(
+      Math.floor(Math.random() * 10000).toString(),
+      title,
+      shortDescription,
+      content,
+      blogId,
+      blogName,
+      createdat.toISOString(),
+      {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: MyStatus.None,
+        newestLikes: [],
+      }
+    );
+    const createdPostForBlog =
+      this.blogsRepository.createPostForBlog(newPostForBlog);
+    return createdPostForBlog;
+  }
 
   async deleteBlog(id: string): Promise<boolean> {
     return await this.blogsRepository.deleteBlog(id);

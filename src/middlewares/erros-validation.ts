@@ -27,7 +27,7 @@ export const errosValidation = (
   next: NextFunction
 ) => {
   const errors = validationResult(req);
-
+  console.log(req.body);
   if (!errors.isEmpty()) {
     const errorsMessages = {
       errorsMessages: errors.array().map(ErrorFormatter),
