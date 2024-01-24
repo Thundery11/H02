@@ -37,24 +37,55 @@ export class PostsController {
     const query = {};
     const skip = (pageNumber - 1) * pageSize;
 
-    const allPosts: postsDbType[] = await this.postsService.getAllPosts(
-      query,
-      sortBy,
-      sortDirection,
-      pageSize,
-      skip
-    );
     const countedDocuments = await this.postsService.countDocuments(query);
 
     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
-    const presentationAllposts = {
-      pagesCount,
-      page: Number(pageNumber),
-      pageSize: Number(pageSize),
-      totalCount: countedDocuments,
-      items: allPosts,
-    };
-    res.status(HTTP_STATUSES.OK_200).send(presentationAllposts);
+
+    if (!req.headers.authorization) {
+      const userId = null;
+      const allPosts: PostsType[] = await this.postsService.getAllPosts(
+        query,
+        userId,
+        sortBy,
+        sortDirection,
+        pageSize,
+        skip
+      );
+      if (!allPosts) {
+        return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      }
+      const presentationAllposts = {
+        pagesCount,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
+        totalCount: countedDocuments,
+        items: allPosts,
+      };
+      return res.status(HTTP_STATUSES.OK_200).send(presentationAllposts);
+    }
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.split(" ")[1];
+      const userId = await jwtService.getUserByToken(token);
+      const allPosts: PostsType[] = await this.postsService.getAllPosts(
+        query,
+        userId,
+        sortBy,
+        sortDirection,
+        pageSize,
+        skip
+      );
+      if (!allPosts) {
+        return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      }
+      const presentationAllposts = {
+        pagesCount,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
+        totalCount: countedDocuments,
+        items: allPosts,
+      };
+      return res.status(HTTP_STATUSES.OK_200).send(presentationAllposts);
+    }
   }
 
   async findPost(req: RequestWithParams<{ id: string }>, res: Response) {

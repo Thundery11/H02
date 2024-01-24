@@ -20,18 +20,48 @@ export class PostsService {
   ) {}
   async getAllPosts(
     query: object,
+    userId: string | null,
     sortBy: string,
     sortDirection: string,
     pageSize: number,
     skip: number
   ): Promise<PostsType[]> {
-    return await this.postsRepository.getAllPosts(
+    const allPosts: PostsType[] = await this.postsRepository.getAllPosts(
       query,
+      userId,
       sortBy,
       sortDirection,
       pageSize,
       skip
     );
+    const result = await Promise.all(
+      allPosts.map(
+        async (post) => (
+          (post.extendedLikesInfo.likesCount =
+            await this.likesRepository.countLikes(post.id)),
+          (post.extendedLikesInfo.dislikesCount =
+            await this.likesRepository.countDislikes(post.id)),
+          (post.extendedLikesInfo.myStatus =
+            await this.likesRepository.whatIsMyStatus(userId, post.id))
+            ?.myStatus ?? MyStatus.None,
+          (post.extendedLikesInfo.newestLikes =
+            await this.likesRepository.getLastLikes(post.id))
+        )
+      )
+    );
+    const outputPosts = allPosts.map((post) =>
+      post.extendedLikesInfo.myStatus === null
+        ? {
+            ...post,
+            extendedLikesInfo: {
+              ...post.extendedLikesInfo,
+              myStatus: MyStatus.None,
+            },
+          }
+        : { ...post }
+    );
+
+    return outputPosts;
   }
 
   async countDocuments(query: object): Promise<number> {
