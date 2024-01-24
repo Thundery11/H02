@@ -41,18 +41,18 @@ export const postsInputValidation = () => {
       .bail()
       .isString()
       .bail()
-      .custom(async (blogId) => {
-        const blogsRepository = container.resolve(BlogsRepository);
-        const blog = await blogsRepository.findBlog.bind(blogsRepository)(
-          blogId
-        );
-        // const blogIsExist = blogsController.findBlog.bind(blogsController)(blogId);
-
-        if (!blog) {
-          throw new Error("Blog doesnt exist");
-        }
-        return true;
-      })
+      // .custom(async (blogId) => {
+      //   const blogsRepository = container.resolve(BlogsRepository);
+      //   const blog = await blogsRepository.findBlog.bind(blogsRepository)(
+      //     blogId
+      //   );
+      //   // const blogIsExist = blogsController.findBlog.bind(blogsController)(blogId);
+      //   console.log(`blog: ${blog}`);
+      //   if (!blog) {
+      //     throw new Error("Blog doesnt exist");
+      //   }
+      //   return true;
+      // })
       .withMessage("Invalid blogId"),
   ];
 };
