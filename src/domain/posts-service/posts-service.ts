@@ -28,7 +28,6 @@ export class PostsService {
   ): Promise<PostsType[]> {
     const allPosts: PostsType[] = await this.postsRepository.getAllPosts(
       query,
-      userId,
       sortBy,
       sortDirection,
       pageSize,

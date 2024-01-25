@@ -17,6 +17,7 @@ import { PostsType } from "../models/postsTypes";
 import { inject, injectable } from "inversify";
 import { PostsRepository } from "../repositories/posts-db-repository";
 import { PostsService } from "../domain/posts-service/posts-service";
+import { jwtService } from "../application/jwt-service";
 @injectable()
 export class BLogsController {
   constructor(
@@ -92,26 +93,30 @@ export class BLogsController {
 
     const blogId = req.params.blogId;
 
-    const skip = (pageNumber - 1) * pageSize;
-    // const sorting = sortDirection === "ask" ? 1 : -1;
     const blog: BlogType | null = await this.blogsService.findBlog(blogId);
     if (!blog) {
-      res.sendStatus(404);
-      return;
-    } else {
+      return res.sendStatus(404);
+    }
+    const skip = (pageNumber - 1) * pageSize;
+    const countedDocuments = await this.blogsService.countAllDocuments(blogId);
+    const pagesCount: number = Math.ceil(countedDocuments / pageSize);
+
+    if (!req.headers.authorization) {
+      const userId = null;
+
       const allPostsForBlog: PostsType[] =
         await this.blogsService.getAllPostsForBlogs(
+          userId,
           blogId,
           sortBy,
           sortDirection,
           pageSize,
           skip
         );
-      const countedDocuments = await this.blogsService.countAllDocuments(
-        blogId
-      );
+      if (!allPostsForBlog) {
+        return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      }
 
-      const pagesCount: number = Math.ceil(countedDocuments / pageSize);
       const presentationPostsForBlogs = {
         pagesCount,
         page: Number(pageNumber),
@@ -119,8 +124,32 @@ export class BLogsController {
         totalCount: countedDocuments,
         items: allPostsForBlog,
       };
+      return res.status(HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
+    }
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.split(" ")[1];
+      const userId = await jwtService.getUserByToken(token);
+      const allPostsForBlog: PostsType[] =
+        await this.blogsService.getAllPostsForBlogs(
+          userId,
+          blogId,
+          sortBy,
+          sortDirection,
+          pageSize,
+          skip
+        );
+      if (!allPostsForBlog) {
+        return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      }
 
-      res.status(HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
+      const presentationPostsForBlogs = {
+        pagesCount,
+        page: Number(pageNumber),
+        pageSize: Number(pageSize),
+        totalCount: countedDocuments,
+        items: allPostsForBlog,
+      };
+      return res.status(HTTP_STATUSES.OK_200).send(presentationPostsForBlogs);
     }
   }
   async createPost(

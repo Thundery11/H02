@@ -6,7 +6,6 @@ import { CommentsModel, PostModel } from "./dataBase/blogsDb";
 export class PostsRepository {
   async getAllPosts(
     query: object,
-    userId: string | null,
     sortBy: string,
     sortDirection: string,
     pageSize: number,

@@ -3,9 +3,15 @@ import { BlogsRepository } from "../../repositories/blogs-db-repository";
 import { PostsType } from "../../models/postsTypes";
 import { inject, injectable } from "inversify";
 import { MyStatus } from "../../models/likesTypes";
+import { LikesRepository } from "../../repositories/likes-repository/likesRepository";
+import { LikesService } from "../likes-service/likesService";
 @injectable()
 export class BlogService {
-  constructor(protected blogsRepository: BlogsRepository) {}
+  constructor(
+    protected blogsRepository: BlogsRepository,
+    protected likesRepository: LikesRepository,
+    protected likesService: LikesService
+  ) {}
   async getAllBlogs(
     query: object,
     sortBy: string,
@@ -31,19 +37,54 @@ export class BlogService {
   }
 
   async getAllPostsForBlogs(
+    userId: string | null,
     blogId: string,
     sortBy: string,
     sortDirection: string,
     pageSize: number,
     skip: number
   ): Promise<PostsType[]> {
-    return await this.blogsRepository.getAllPostsForBlogs(
+    const allPosts = await this.blogsRepository.getAllPostsForBlogs(
       sortBy,
       sortDirection,
       pageSize,
       skip,
       blogId
     );
+    const result = await Promise.all(
+      allPosts.map(
+        async (post) => (
+          (post.extendedLikesInfo.likesCount =
+            await this.likesRepository.countLikes(post.id)),
+          (post.extendedLikesInfo.dislikesCount =
+            await this.likesRepository.countDislikes(post.id)),
+          (post.extendedLikesInfo.myStatus =
+            await this.likesRepository.whatIsMyStatus(userId, post.id))
+            ?.myStatus,
+          (post.extendedLikesInfo.newestLikes =
+            await this.likesRepository.getLastLikes(post.id))
+        )
+      )
+    );
+    const outputPosts = allPosts.map((post) =>
+      post.extendedLikesInfo.myStatus === null
+        ? {
+            ...post,
+            extendedLikesInfo: {
+              ...post.extendedLikesInfo,
+              myStatus: MyStatus.None,
+            },
+          }
+        : {
+            ...post,
+            extendedLikesInfo: {
+              ...post.extendedLikesInfo,
+              myStatus: post.extendedLikesInfo.myStatus.myStatus,
+            },
+          }
+    );
+
+    return outputPosts;
   }
 
   async findBlog(id: string): Promise<BlogType | null> {
