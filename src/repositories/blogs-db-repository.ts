@@ -23,7 +23,7 @@ export class BlogsRepository {
     return await BlogModel.countDocuments(query);
   }
   async countAllDocuments(blogId: string): Promise<number> {
-    return await BlogModel.countDocuments({ blogId });
+    return await PostModel.countDocuments({ blogId: blogId });
   }
 
   async getAllPostsForBlogs(

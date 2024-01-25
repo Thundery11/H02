@@ -99,6 +99,7 @@ export class BLogsController {
     }
     const skip = (pageNumber - 1) * pageSize;
     const countedDocuments = await this.blogsService.countAllDocuments(blogId);
+    console.log(`countedDocuments ${countedDocuments}`);
     const pagesCount: number = Math.ceil(countedDocuments / pageSize);
 
     if (!req.headers.authorization) {
